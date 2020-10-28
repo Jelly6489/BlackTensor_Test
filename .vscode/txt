@@ -9,10 +9,12 @@ CREATE TABLE a_005930 (
     -> low int(11),
     -> volume int(11),
     -> PRIMARY KEY(seq)
-    -> ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+    -> ) ENGINE=InnoDB DEFAULT CHARS ET=utf8;
 
 # naver crowling(stock)
 https://excelsior-cjh.tistory.com/109
 
 # git flask stock
 https://github.com/myungseokang/PaperStock
+
+#

@@ -10,7 +10,7 @@ code_df = code_df[['회사명', '종목코드']]
 
 # 한글로된 컬럼명을 영어로 변환
 code_df = code_df.rename(columns={'회사명' : 'name', '종목코드' : 'code'})
-code_df.head()
+code_df.head() 
 print(code_df.head())
 
 # https://finance.naver.com/item/sise.nhn?code=005930(삼성전자)
@@ -59,3 +59,4 @@ df = df.sort_values(by=['date'], ascending=False)
 # 상위 5개 데이터 확인
 df.head()
 print(df.head())
+#
