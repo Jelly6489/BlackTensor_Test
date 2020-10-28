@@ -59,4 +59,3 @@ df = df.sort_values(by=['date'], ascending=False)
 # 상위 5개 데이터 확인
 df.head()
 print(df.head())
-#
