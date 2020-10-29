@@ -83,11 +83,12 @@ for i in item_name:
     sql_table = 'SHOW TABLES LIKE \'' + code + '\''
     result = cursor.execute(sql_table)
     if result == 0:
-        # sql_crTable = 'CREATE TABLE ' + code + ' (index int not null auto_increment,Date date primary key, close int(11), diff int(11), open int(11), high int(11), low int(11), volume int(11));'
-        sql_crTable = 'CREATE TABLE ' + code + ' (Date date primary key, close int(11), diff int(11), open int(11), high int(11), low int(11), volume int(11));'
+        sql_crTable = 'CREATE TABLE ' + code + ' (Date date not null primary key, close int(11), diff int(11), open int(11), high int(11), low int(11), volume int(11));'
         cursor.execute(sql_crTable)
-        conn.commit
 
-    # Table에 Data Insert(append)
-    df.to_sql(name=code, con=engine, if_exists='replace')
-    conn.commit
+        # Table에 Data Insert(append)
+        df.to_sql(name=code, con=engine, if_exists='replace')
+        conn.commit
+conn.close()
+    
+
