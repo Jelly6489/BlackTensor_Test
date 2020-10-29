@@ -6,11 +6,11 @@ from sqlalchemy import create_engine
 
 #Mysql 연결
 engine = create_engine("mysql+mysqldb://blackTensorStock:"+"456123"+"@localhost/blacktensorstock")
-# conn = engine.connect()
-
 conn = pymysql.connect(host='localhost', user='blackTensorStock', password="456123", db='blacktensorstock')
+# cursor 객체 -> Fetch 동작 관리
 cursor = conn.cursor()
 
+# 한국거래소(krx)
 code_df = pd.read_html('http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13',header=0)[0]
 
 # 종목코드가 6자리이기 때문에 6자리를 맞춰주기 위해 설정해둠
@@ -72,9 +72,11 @@ for i in item_name:
     # date 기준으로 내림차순 sort
     df = df.sort_values(by=['date'], ascending=False)
     
-    # 상위 5개 데이터 확인
     df.head()
+    print('-------------------- head -------------------')
     print(df.head())
+    print('\n-------------------- 전체 -------------------')
+    print(df)
     
     # csv file create
     df.to_csv(i + '.csv', mode = 'a', header = False)
