@@ -4,12 +4,6 @@ import pandas as pd
 pymysql.install_as_MySQLdb()
 from sqlalchemy import create_engine
 
-#Mysql 연결
-engine = create_engine("mysql+mysqldb://blackTensorStock:"+"456123"+"@localhost/blacktensorstock")
-conn = pymysql.connect(host='localhost', user='blackTensorStock', password="456123", db='blacktensorstock')
-# cursor 객체 -> Fetch 동작 관리
-cursor = conn.cursor()
-
 # 한국거래소(krx)
 code_df = pd.read_html('http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13',header=0)[0]
 
@@ -56,15 +50,15 @@ for i in item_name:
     # df.dropna()를 이용해 결측값 있는 행 제거
     df = df.dropna()
 
+    # df.drop()을 이용해 columns 삭제
+    df = df.drop(columns= {'전일비', '고가', '저가'})
+
     # 한글 -> 영어
     df = df.rename(columns= {
-        '날짜': 'date', '종가': 'close', '전일비': 'diff', '시가': 'open',
-        '고가': 'high', '저가': 'low', '거래량': 'volume'
-        })
+        '날짜': 'date', '종가': 'close', '시가': 'open', '거래량': 'volume'})
 
     # 데이터 타입 int 변환
-    df[['close', 'diff', 'open', 'high', 'low', 'volume']] \
-        = df[['close', 'diff', 'open', 'high', 'low', 'volume']].astype(int)
+    df[['close', 'open', 'volume']] = df[['close', 'open', 'volume']].astype(int)
 
     # date를 date type 변환
     df['date'] = pd.to_datetime(df['date'])
@@ -78,19 +72,5 @@ for i in item_name:
     print('\n-------------------- 전체 -------------------')
     print(df)
     
-    # csv file create
+    # csv file 저장
     df.to_csv(i + '.csv', mode = 'a', header = False)
-
-    # Mysql Table이 존재하지 않다면 코드 이름으로 생성
-    sql_table = 'SHOW TABLES LIKE \'' + code + '\''
-    result = cursor.execute(sql_table)
-    if result == 0:
-        sql_crTable = 'CREATE TABLE ' + code + ' (Date date not null primary key, close int(11), diff int(11), open int(11), high int(11), low int(11), volume int(11));'
-        cursor.execute(sql_crTable)
-
-        # Table에 Data Insert(append)
-        df.to_sql(name=code, con=engine, if_exists='replace')
-        conn.commit
-conn.close()
-    
-

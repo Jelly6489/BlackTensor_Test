@@ -35,3 +35,44 @@ https://parksrazor.tistory.com/461
 https://parksrazor.tistory.com/425
 ###mento 4 : Flask-Restful 
 https://skylit.tistory.com/286
+
+
+### Java에서 getter&setter에 해당
+context : str = ''
+fname: str = ''
+train: object = None
+test: object = None
+id : str = ''
+lable : str = ''
+
+DAO == Repository
+
+ENtity == dto
+- getter setter
+
+vo == 
+- readOnly 특징
+
+com -> domain -> java 소스에 해당
+requirements.txt -> dependency 외부 라이브러리 -> gradile -->> di
+pip 
+
+setup.py --> com_sba_api 제어 
+
+설정파일 제외하고는 모두 com_sba_api에 있어야 함.
+
+1. requirements -> setup
+2. 
+
+python run.py
+
+CORS -->
+
+init 
+
+## ORM Model
+https://beomi.github.io/2017/10/20/DB-To-SQLAlchemy-Model/
+
+
+### mento git
+https://github.com/parkjungkwan/sba-4-api/blob/ducks/com_sba_api/resources/cabbage.py
