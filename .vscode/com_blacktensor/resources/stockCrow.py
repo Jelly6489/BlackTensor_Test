@@ -42,7 +42,6 @@ for i in item_name:
     print('\n'+i)
     url = get_url(i, code_df)
 
-    def get_data(self, url):
         # 일자 데이터를 담을 df라는 DataFrame 정의
         self.df = pd.DataFrame()
         #
