@@ -1,9 +1,9 @@
 from flask import Flask
 from flask_restful import Api
-from com_blacktensor_api.ext.db import url, db
-from com_blacktensor_api.ext.routes import initialize_routes
-from com_blacktensor_api.resources.user import UserDao
-from com_blacktensor_api.resources.cabbage import CabbageDao
+from com_blacktensor.ext.db import url, db
+# from com_blacktensor_api.ext.routes import initialize_routes
+# from com_blacktensor_api.resources.user import UserDao
+# from com_blacktensor_api.resources.cabbage import CabbageDao
 from flask_cors import CORS
 
 app = Flask(__name__)

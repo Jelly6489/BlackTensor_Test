@@ -6,7 +6,7 @@ from sqlalchemy import create_engine
 # from com_blacktensor.ext.db import db, openSession, engine
 
 class StockCrow():
-    def __init__(self):
+    def __init__(self, code_df, code, url):
         # 삼성전자의 일자 데이터 url
         self.item_name=['셀트리온', '삼성전자', '하나투어']
         self.code_df = code_df
@@ -24,29 +24,29 @@ class StockCrow():
         code_df = self.code_df[['회사명', '종목코드']]
 
         # 한글로된 컬럼명을 영어로 변환
-        code_df = code_df.rename(columns={'회사명' : 'name', '종목코드' : 'code'})
+        code_df = self.code_df.rename(columns={'회사명' : 'name', '종목코드' : 'code'})
         code_df.head()
         print(code_df.head())
 
     # https://finance.naver.com/item/sise.nhn?code=005930(삼성전자)
-    def get_url(self, item_name, code_df, url):
-        self.code = code_df.query("name=='{}'".format(item_name))['code'].to_string(index=False)
-        code = code.strip()
+    def get_url(self, item_name, code_df, code):
+        self.code = code_df.query("name=='{}'".format(item_name))['code'].to_string(index=False).strip()
+        # code = code.strip()
 
         url = 'http://finance.naver.com/item/sise_day.nhn?code={code}'.format(code=code)
 
         print("요청 URL = {}".format(url))
-        return url
+        
+        # return url
 
-for i in item_name:
-    print('\n'+i)
-    url = get_url(i, code_df)
+    def get_data(self, get_url, item_name, code_df):
+        for i in item_name:
+            print('\n'+i)
+            url = get_url(i, code_df)
 
         # 일자 데이터를 담을 df라는 DataFrame 정의
         self.df = pd.DataFrame()
-        #
-        url = self.url
-        #
+
         # 1페이지에서 15페이지의 데이터만 가져오기(약 6개월치)
         for page in range(1, 16): 
             pg_url = '{url}&page={page}'.format(url=url, page=page) 
