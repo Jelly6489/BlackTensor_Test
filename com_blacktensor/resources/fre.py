@@ -1,40 +1,47 @@
+from konlpy.tag import Okt
+from collections import Counter
+from wordcloud import WordCloud
+import matplotlib.pyplot as plt
+import pandas as pd
+
+from flask_restful import Resource
+from com_blackTensor.util.file_hander import FileHandler as handler
+
+
 # ============================================================
 # ==================                     =====================
 # ==================         KDD         =====================
 # ==================                     =====================
 # ============================================================
-class UserKdd():
-    ...
+class FrequencyNaverNewsKdd(object):
+   ...    
 
 # ============================================================
 # ==================                     =====================
 # ==================    Preprocessing    =====================
 # ==================                     =====================
 # ============================================================
-class UserDf():
+class FrequencyNaverNewsDf(object):
     ...
-
 # ============================================================
 # ==================                     =====================
 # ==================       Modeling      =====================
 # ==================                     =====================
 # ============================================================
-class UserDto():
+# class FrequencyNaverNewsDto(db.Model):
+#     ...
+# class FrequencyNaverNewsDao(StockDto):
+#     ...
+class FrequencyNaverNewsVo(object):
     ...
-
-class UserVo():
+class FrequencyNaverNewsTf(object):
     ...
-
-class UserTf():
+class FrequencyNaverNewsAi(object):
     ...
-
-class UserAi():
-    ...
-
 # ============================================================
 # ==================                     =====================
 # ==================      Resourcing     =====================
 # ==================                     =====================
 # ============================================================
-class User():
-    ...
+class FrequencyNaverNews(Resource):
+     ...

@@ -76,3 +76,21 @@ https://beomi.github.io/2017/10/20/DB-To-SQLAlchemy-Model/
 
 ### mento git
 https://github.com/parkjungkwan/sba-4-api/blob/ducks/com_sba_api/resources/cabbage.py
+
+주식
+1. 긍정부정 <월>
+https://somjang.tistory.com/entry/Keras%EA%B8%B0%EC%82%AC-%EC%A0%9C%EB%AA%A9%EC%9D%84-%EA%B0%80%EC%A7%80%EA%B3%A0-%EA%B8%8D%EC%A0%95-%EB%B6%80%EC%A0%95-%EC%A4%91%EB%A6%BD-%EB%B6%84%EB%A5%98%ED%95%98%EB%8A%94-%EB%AA%A8%EB%8D%B8-%EB%A7%8C%EB%93%A4%EC%96%B4%EB%B3%B4%EA%B8%B0
+
+# 검색어 기반 크롤링
+https://m.blog.naver.com/PostView.nhn?blogId=seodaeho91&logNo=221269288709&proxyReferer=https:%2F%2Fwww.google.com%2F
+
+# 크롤링
+https://koreanfoodie.me/118
+
+2. 예상 순익 예측<수>
+https://gem1n1.tistory.com/75
+3. 특정일 주가예측<금>
+
+코로나 
+1. 현황판 <월>
+2. 경제뉴스 요약<수>
