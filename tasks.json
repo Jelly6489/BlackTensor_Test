@@ -9,7 +9,7 @@
             "label": "echo",
             "type": "shell",
             "command": "python",
-            "args": ["${file}"],
+            "args": ["${file}"]
         }
     ]
 }
