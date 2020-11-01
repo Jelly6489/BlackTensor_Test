@@ -21,6 +21,11 @@ CREATE TABLE a_005930 (
 # naver crowling(stock)
 https://excelsior-cjh.tistory.com/109
 
+http://blog.daum.net/sualchi/13720561
+
+https://bumcrush.tistory.com/116
+
+
 # git flask stock
 https://github.com/myungseokang/PaperStock
 
@@ -35,6 +40,9 @@ https://parksrazor.tistory.com/461
 https://parksrazor.tistory.com/425
 ###mento 4 : Flask-Restful 
 https://skylit.tistory.com/286
+
+
+
 
 
 ### Java에서 getter&setter에 해당
