@@ -4,7 +4,7 @@ import codecs
 from bs4 import BeautifulSoup
 from konlpy.tag import Twitter
 from collections import Counter
-
+# pip install lxml
 # ============================================================
 # ==================                     =====================
 # ==================         KDD         =====================
@@ -97,12 +97,7 @@ from collections import Counter
 
 ##################################################################################################################################################
 
-##  HeadLine
-# pip install lxml
-# import requests
-# import pandas as pd
-# import codecs
-# from bs4 import BeautifulSoup
+#  HeadLine
 # class CrowKdd(object):
 #     # results = ['']
 #     keyword = '삼성전자'
@@ -111,7 +106,7 @@ from collections import Counter
 #         results = []
 #         # a = ''
         
-#         for i in range(20)[1:]:
+#         for i in range(500)[1:]:
 #             url = r'https://search.naver.com/search.naver?&where=news&query={}&sm=tab_pge&sort={}&&photo=0&field=0&reporter_article=&pd=0&ds=&de=&docid=&nso=so:r,p:all,a:all&mynews=0&cluster_rank=287&start={}&refresh_start=0'.format(keyword, order, 10*(i-1)+1)
 #             resp = requests.get(url)
 #             soup = BeautifulSoup(resp.text, 'lxml')
@@ -302,7 +297,7 @@ class CrowDf(object):
     poflag = []
     neflag = []
 
-    file = open('삼성전자.csv', 'r', encoding='UTF8')
+    file = open('셀트리온.csv', 'r', encoding='UTF8')
     lists = file.readlines()
     file.close()
     # lists
@@ -337,31 +332,31 @@ class CrowDf(object):
         if not line: break
     neg.close()
 
-    # for sentence in morphs : 
-    #     for word, text_tag in sentence :
-    #         for x in range(len(keyword_text)):
-    #             posflag = False
-    #             negflag = False
+# #     # for sentence in morphs : 
+# #     #     for word, text_tag in sentence :
+# #     #         for x in range(len(keyword_text)):
+# #     #             posflag = False
+# #     #             negflag = False
 
-    #             if x < len(positive_word)-1:
-    #                 if word.find(keyword_text[x] != -1):
-    #                     posflag = True
-    #                     print(x, "positive_word?", "테스트 : ", word.find(keyword_text[x]), "비교 단어 : ", keyword_text[x], "인덱스 : ", x, word)
-    #                     break
-    #             if x > (len(positive_word)-2):
-    #                 if word.find(keyword_text[x] != -1):
-    #                     negflag = True
-    #                     print(x, "negative?","테스트 : ", word.find(keyword_text[i]),"비교단어 : ", keyword_text[i], "인덱스 : ", x, word)
-    #                     break
+# #     #             if x < len(positive_word)-1:
+# #     #                 if word.find(keyword_text[x] != -1):
+# #     #                     posflag = True
+# #     #                     print(x, "positive_word?", "테스트 : ", word.find(keyword_text[x]), "비교 단어 : ", keyword_text[x], "인덱스 : ", x, word)
+# #     #                     break
+# #     #             if x > (len(positive_word)-2):
+# #     #                 if word.find(keyword_text[x] != -1):
+# #     #                     negflag = True
+# #     #                     print(x, "negative?","테스트 : ", word.find(keyword_text[i]),"비교단어 : ", keyword_text[i], "인덱스 : ", x, word)
+# #     #                     break
 
-    #                 if posflag == True:
+# #     #                 if posflag == True:
     
 
-    # print(type(positive_word))
+# #     # print(type(positive_word))
 
  
 
-#==========================================================================================================
+# # #==========================================================================================================
     for sentence in morphs : 
         for word, text_tag in sentence :
             if text_tag in ['Noun']:
@@ -374,53 +369,53 @@ class CrowDf(object):
                     if y == word:
                         neflag.append(y)
 
-                    # print("부정적 :", y)
-            # if text_tag in ['Noun'] and ("것" not in word) and ("내" not in word) and ("첫" not in word) and \
-            #     ("나" not in word) and ("와" not in word) and ("식" not in word) and ("수" not in word) and \
-            #     ("게" not in word) and ("말" not in word):
-                #  noun_list.append(word)
+# #                     # print("부정적 :", y)
+# #             # if text_tag in ['Noun'] and ("것" not in word) and ("내" not in word) and ("첫" not in word) and \
+# #             #     ("나" not in word) and ("와" not in word) and ("식" not in word) and ("수" not in word) and \
+# #             #     ("게" not in word) and ("말" not in word):
+# #                 #  noun_list.append(word)
                 
-            # if text_tag in ['Noun'] and ("갑질" not in word) and ("논란" not in word) and ("폭리" not in word) and \
-            #     ("허위" not in word) and ("과징금" not in word) and ("눈물" not in word) and ("피해" not in word) and \
-            #     ("포화" not in word) and ("우롱" not in word) and ("위반" not in word) and ("리스크" not in word) and \
-            #     ("사퇴" not in word) and ("급락" not in word) and ("하락" not in word) and ("폐업" not in word) and \
-            #     ("불만" not in word) and ("산재" not in word) and ("닫아" not in word) and ("손해배상" not in word) and \
-            #     ("구설수" not in word) and ("적발" not in word) and ("침해" not in word) and ("빨간불" not in word) and \
-            #     ("취약" not in word) and ("불명예" not in word) and ("구형" not in word) and ("기소" not in word) and \
-            #     ("반토막" not in word) and ("호소" not in word) and ("불매" not in word) and ("냉담" not in word) and \
-            #     ("문제" not in word) and ("직격탄" not in word) and ("한숨" not in word) and ("불똥" not in word) and \
-            #     ("항의" not in word) and ("싸늘" not in word) and ("일탈" not in word) and ("파문" not in word) and \
-            #     ("횡령" not in word) and ("사과문" not in word) and ("여파" not in word) and ("울상" not in word) and \
-            #     ("초토화" not in word) and ("급감" not in word) and ("우려" not in word) and ("중단" not in word) and \
-            #     ("퇴출" not in word) and ("해지" not in word) and ("일베" not in word) and ("이물질" not in word) and \
-            #     ("엉망" not in word) and ("소송" not in word) and ("하락" not in word) and ("매출하락" not in word) and \
-            #     ("혐의" not in word) and ("부채" not in word) and ("과징금" not in word) and ("포기" not in word) and \
-            #     ("약세" not in word) and ("최악" not in word) and ("손실" not in word) and ("의혹" not in word):
-            #     positive_word.append(word)
+# #             # if text_tag in ['Noun'] and ("갑질" not in word) and ("논란" not in word) and ("폭리" not in word) and \
+# #             #     ("허위" not in word) and ("과징금" not in word) and ("눈물" not in word) and ("피해" not in word) and \
+# #             #     ("포화" not in word) and ("우롱" not in word) and ("위반" not in word) and ("리스크" not in word) and \
+# #             #     ("사퇴" not in word) and ("급락" not in word) and ("하락" not in word) and ("폐업" not in word) and \
+# #             #     ("불만" not in word) and ("산재" not in word) and ("닫아" not in word) and ("손해배상" not in word) and \
+# #             #     ("구설수" not in word) and ("적발" not in word) and ("침해" not in word) and ("빨간불" not in word) and \
+# #             #     ("취약" not in word) and ("불명예" not in word) and ("구형" not in word) and ("기소" not in word) and \
+# #             #     ("반토막" not in word) and ("호소" not in word) and ("불매" not in word) and ("냉담" not in word) and \
+# #             #     ("문제" not in word) and ("직격탄" not in word) and ("한숨" not in word) and ("불똥" not in word) and \
+# #             #     ("항의" not in word) and ("싸늘" not in word) and ("일탈" not in word) and ("파문" not in word) and \
+# #             #     ("횡령" not in word) and ("사과문" not in word) and ("여파" not in word) and ("울상" not in word) and \
+# #             #     ("초토화" not in word) and ("급감" not in word) and ("우려" not in word) and ("중단" not in word) and \
+# #             #     ("퇴출" not in word) and ("해지" not in word) and ("일베" not in word) and ("이물질" not in word) and \
+# #             #     ("엉망" not in word) and ("소송" not in word) and ("하락" not in word) and ("매출하락" not in word) and \
+# #             #     ("혐의" not in word) and ("부채" not in word) and ("과징금" not in word) and ("포기" not in word) and \
+# #             #     ("약세" not in word) and ("최악" not in word) and ("손실" not in word) and ("의혹" not in word):
+# #             #     positive_word.append(word)
 
-            # elif text_tag in ['Noun'] and ("MOU" not in word) and ("제휴" not in word) and ("주목" not in word) and \
-            #     ("호응" not in word) and ("돌파" not in word) and ("이목" not in word) and ("수상" not in word) and \
-            #     ("입점" not in word) and ("인기" not in word) and ("열풍" not in word) and ("진화" not in word) and \
-            #     ("대박" not in word) and ("순항" not in word) and ("유치" not in word) and ("1위" not in word) and \
-            #     ("출시" not in word) and ("오픈" not in word) and ("돌풍" not in word) and ("인싸" not in word) and \
-            #     ("줄서서" not in word) and ("대세" not in word) and ("트렌드" not in word) and ("불티" not in word) and \
-            #     ("진출" not in word) and ("체결" not in word) and ("증가" not in word) and ("기부" not in word) and \
-            #     ("신제품" not in word) and ("신상" not in word) and ("최고" not in word) and ("새로운" not in word) and \
-            #     ("착한" not in word) and ("신기록" not in word) and ("전망" not in word) and ("협력" not in word) and \
-            #     ("역대" not in word) and ("상승" not in word) and ("늘어" not in word) and ("승인" not in word):
-            #     negative_word.append(word)
+# #             # elif text_tag in ['Noun'] and ("MOU" not in word) and ("제휴" not in word) and ("주목" not in word) and \
+# #             #     ("호응" not in word) and ("돌파" not in word) and ("이목" not in word) and ("수상" not in word) and \
+# #             #     ("입점" not in word) and ("인기" not in word) and ("열풍" not in word) and ("진화" not in word) and \
+# #             #     ("대박" not in word) and ("순항" not in word) and ("유치" not in word) and ("1위" not in word) and \
+# #             #     ("출시" not in word) and ("오픈" not in word) and ("돌풍" not in word) and ("인싸" not in word) and \
+# #             #     ("줄서서" not in word) and ("대세" not in word) and ("트렌드" not in word) and ("불티" not in word) and \
+# #             #     ("진출" not in word) and ("체결" not in word) and ("증가" not in word) and ("기부" not in word) and \
+# #             #     ("신제품" not in word) and ("신상" not in word) and ("최고" not in word) and ("새로운" not in word) and \
+# #             #     ("착한" not in word) and ("신기록" not in word) and ("전망" not in word) and ("협력" not in word) and \
+# #             #     ("역대" not in word) and ("상승" not in word) and ("늘어" not in word) and ("승인" not in word):
+# #             #     negative_word.append(word)
 
-    # print(noun_list)
+# #     # print(noun_list)
     
-    # count = Counter(noun_list)
-    # words = dict(count.most_common())
-    # print(words)
+# #     # count = Counter(noun_list)
+# #     # words = dict(count.most_common())
+# #     # print(words)
     
-    # print(positive_word)
-    # print(negative_word)
+# #     # print(positive_word)
+# #     # print(negative_word)
     count_po = Counter(poflag)
     count_ne = Counter(neflag)
-    # po_words = count_po.most_common()
+#     # po_words = count_po.most_common()
     po_words = dict(count_po.most_common())
     ne_words = dict(count_ne.most_common())
 
@@ -438,10 +433,10 @@ class CrowDf(object):
     '''
 
     # 
-    print("\n긍정적인 단어", po_words)
+    print("\n긍정적인 단어 :", po_words)
     # print("긍정적인 단어", positive_word)
     # print(type(po_words))
-    print("부정적인 단어", ne_words)
+    print("부정적인 단어 :", ne_words)
     
     '''
     긍정적인 단어 {'협력': 4, '상승': 3, '신제품': 3, '진화': 3, '역대': 2, '새로운': 1, '증가': 1}
