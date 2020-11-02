@@ -97,63 +97,63 @@ from collections import Counter
 
 ##################################################################################################################################################
 
-#  HeadLine
-# class CrowKdd(object):
-#     # results = ['']
-#     keyword = '삼성전자'
-#     def naver_news(self, keyword, order):
-#         # tag = ['']
-#         results = []
-#         # a = ''
+# ##  HeadLine
+class CrowKdd(object):
+    # results = ['']
+    keyword = '삼성전자'
+    def naver_news(self, keyword, order):
+        # tag = ['']
+        results = []
+        # a = ''
         
-#         for i in range(500)[1:]:
-#             url = r'https://search.naver.com/search.naver?&where=news&query={}&sm=tab_pge&sort={}&&photo=0&field=0&reporter_article=&pd=0&ds=&de=&docid=&nso=so:r,p:all,a:all&mynews=0&cluster_rank=287&start={}&refresh_start=0'.format(keyword, order, 10*(i-1)+1)
-#             resp = requests.get(url)
-#             soup = BeautifulSoup(resp.text, 'lxml')
-#         #     article_title = soup.find_all('a', class_ = 'news_tit')
+        for i in range(500)[1:]:
+            url = r'https://search.naver.com/search.naver?&where=news&query={}&sm=tab_pge&sort={}&&photo=0&field=0&reporter_article=&pd=0&ds=&de=&docid=&nso=so:r,p:all,a:all&mynews=0&cluster_rank=287&start={}&refresh_start=0'.format(keyword, order, 10*(i-1)+1)
+            resp = requests.get(url)
+            soup = BeautifulSoup(resp.text, 'lxml')
+        #     article_title = soup.find_all('a', class_ = 'news_tit')
             
 
-#         #     for j in article_title:
-#         #         a += j.get_text()
-#         # return a
+        #     for j in article_title:
+        #         a += j.get_text()
+        # return a
 
 
 
 
-#             # # title_list = soup.select('.news_tit')
-#             # title_list = soup.find_all('a', class_ = 'news_tit')
+            # # title_list = soup.select('.news_tit')
+            # title_list = soup.find_all('a', class_ = 'news_tit')
 
-#             # for tag in title_list:
-#             # #     # print(tag.text)
-#             # #     # df = pd.DataFrame(tag.text)
-#             # #     # print(df.head())
-#             #     # results.append(tag.text)
-#             #     results += tag.get_text()
-#         # return results
+            # for tag in title_list:
+            # #     # print(tag.text)
+            # #     # df = pd.DataFrame(tag.text)
+            # #     # print(df.head())
+            #     # results.append(tag.text)
+            #     results += tag.get_text()
+        # return results
 
-#             title_list = soup.find_all('a', class_ = 'news_tit')
+            title_list = soup.find_all('a', class_ = 'news_tit')
             
 
-#             for tag in title_list:
-#                 # results += tag.get_text()
-#                 results.append(tag.text)
-#         return results
+            for tag in title_list:
+                # results += tag.get_text()
+                results.append(tag.text)
+        return results
 
-#     result = naver_news(object, keyword, 1) # 0 = 관련도순, 1 = 최신순, 2 = 오래된 순
-#     # print(result)
-#     df = pd.DataFrame(result)
-#     # print(df)
-#     df.columns = ['title']
-#     print(df.head())
-#     df.to_csv(keyword + '.csv', encoding='utf8')
+    result = naver_news(object, keyword, 1) # 0 = 관련도순, 1 = 최신순, 2 = 오래된 순
+    # print(result)
+    df = pd.DataFrame(result)
+    # print(df)
+    df.columns = ['title']
+    print(df.head())
+    df.to_csv(keyword + '.csv', encoding='utf8')
 
-# '''
-# 0   논어, 새로운 가르침에 겁내지 않으려면 그간의 가르침을 실행해야 한다!       
-# 1  "전 세계 AI 전문가 모여라"…'삼성 AI 포럼 2020' 온라인 개최
-# 2              비트코인 지갑서비스 사업자도 자금세탁방지 의무 부과
-# 3                  [연합뉴스 이 시각 헤드라인] - 12:00
-# 4   “이건희 회장의 ‘도전 DNA’ 계승… 판도 바꾸는 기업으로 진화하자”
-# '''
+'''
+0   논어, 새로운 가르침에 겁내지 않으려면 그간의 가르침을 실행해야 한다!       
+1  "전 세계 AI 전문가 모여라"…'삼성 AI 포럼 2020' 온라인 개최
+2              비트코인 지갑서비스 사업자도 자금세탁방지 의무 부과
+3                  [연합뉴스 이 시각 헤드라인] - 12:00
+4   “이건희 회장의 ‘도전 DNA’ 계승… 판도 바꾸는 기업으로 진화하자”
+'''
 
 
 # =======================================================================================================================================
@@ -439,8 +439,17 @@ class CrowDf(object):
     print("부정적인 단어 :", ne_words)
     
     '''
-    긍정적인 단어 {'협력': 4, '상승': 3, '신제품': 3, '진화': 3, '역대': 2, '새로운': 1, '증가': 1}
-    부정적인 단어 {'문제': 2, '위반': 1, '기소': 1, '급락': 1}
+    긍정적인 단어 : {'상승': 141, '인기': 66, '출시': 60, '전망': 36, '오픈': 30, 
+    '돌파': 19, '트렌드': 12, '체결': 12, '증가': 12, '역대': 11, '협력': 11, 
+    '주목': 11, '미소': 8, '기부': 8, '승인': 6, '최고': 6, '대세': 5, '유치': 4, 
+    '수상': 4, '불티': 2, '부상': 2, '순항': 2, '호응': 1, '진출': 1}
+    부정적인 단어 : {'급감': 233, '여파': 163, '하락': 162, '피해': 115, 
+    '직격탄': 83, '논란': 61, '중단': 41, '손실': 39, '반토 막': 34, '최악': 33, 
+    '포기': 32, '폐업': 25, '급락': 25, '우려': 24, '불매': 14, '눈물': 13, '
+    매각': 10, '호소': 9, '울상': 7, '문제': 6, '불만': 6, '약세': 5, '한숨': 5, 
+    '일베': 4, '해지': 4, '초토화': 3, '참혹': 3, '폐점': 2, '파문': 2, 
+    '과징금': 2, '항의': 1, '소송': 1, '불명예': 1, '리스크': 1, '갑질': 1, 
+    '침해': 1, '발끈': 1}
     '''
 
 
