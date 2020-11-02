@@ -488,3 +488,61 @@ class StockKdd(object):
             df.to_sql(name=code, con=engine, if_exists='replace')
             conn.commit
     conn.close()
+
+===================================================================================================================================================================================
+                                crow_naver
+===================================================================================================================================================================================
+##  HeadLine
+# pip install lxml
+import requests
+import pandas as pd
+from bs4 import BeautifulSoup
+class CrowKdd(object):
+    # results = ['']
+    keyword = '삼성전자'
+    def naver_news(self, keyword, order):
+        # tag = ['']
+        results = []
+        # a = ''
+        
+        for i in range(20)[1:]:
+            url = r'https://search.naver.com/search.naver?&where=news&query={}&sm=tab_pge&sort={}&&photo=0&field=0&reporter_article=&pd=0&ds=&de=&docid=&nso=so:r,p:all,a:all&mynews=0&cluster_rank=287&start={}&refresh_start=0'.format(keyword, order, 10*(i-1)+1)
+            resp = requests.get(url)
+            soup = BeautifulSoup(resp.text, 'lxml')
+        #     article_title = soup.find_all('a', class_ = 'news_tit')
+            
+
+        #     for j in article_title:
+        #         a += j.get_text()
+        # return a
+
+
+            title_list = soup.find_all('a', class_ = 'news_tit')
+            
+
+            for tag in title_list:
+                # results += tag.get_text()
+                results.append(tag.text)
+        return results
+
+            # # title_list = soup.select('.news_tit')
+            # title_list = soup.find_all('a', class_ = 'news_tit')
+
+            # for tag in title_list:
+            # #     # print(tag.text)
+            # #     # df = pd.DataFrame(tag.text)
+            # #     # print(df.head())
+            #     # results.append(tag.text)
+            #     results += tag.get_text()
+            # return results
+
+    result = naver_news(object, keyword, 1) # 0 = 관련도순, 1 = 최신순, 2 = 오래된 순
+    # print(result)
+    df = pd.DataFrame(result)
+    # print(df)
+    df.columns = ['title']
+    print(df.head())
+    df.to_csv(keyword + '.csv', encoding='utf8')
+
+
+
