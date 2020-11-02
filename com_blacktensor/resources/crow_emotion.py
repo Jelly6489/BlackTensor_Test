@@ -364,14 +364,16 @@ class CrowDf(object):
 #==========================================================================================================
     for sentence in morphs : 
         for word, text_tag in sentence :
-            for x in positive_word:
-                if x == word: 
-                    # print(x)
-                    poflag.append(x)
-                
-            for y in negative_word:
-                if y == word:
-                    neflag.append(y)
+            if text_tag in ['Noun']:
+                noun_list.append(word)
+                for x in positive_word:
+                    if x == word: 
+                        poflag.append(x)
+                    
+                for y in negative_word:
+                    if y == word:
+                        neflag.append(y)
+
                     # print("부정적 :", y)
             # if text_tag in ['Noun'] and ("것" not in word) and ("내" not in word) and ("첫" not in word) and \
             #     ("나" not in word) and ("와" not in word) and ("식" not in word) and ("수" not in word) and \
@@ -396,17 +398,17 @@ class CrowDf(object):
             #     ("약세" not in word) and ("최악" not in word) and ("손실" not in word) and ("의혹" not in word):
             #     positive_word.append(word)
 
-    #         elif text_tag in ['Noun'] and ("MOU" not in word) and ("제휴" not in word) and ("주목" not in word) and \
-    #             ("호응" not in word) and ("돌파" not in word) and ("이목" not in word) and ("수상" not in word) and \
-    #             ("입점" not in word) and ("인기" not in word) and ("열풍" not in word) and ("진화" not in word) and \
-    #             ("대박" not in word) and ("순항" not in word) and ("유치" not in word) and ("1위" not in word) and \
-    #             ("출시" not in word) and ("오픈" not in word) and ("돌풍" not in word) and ("인싸" not in word) and \
-    #             ("줄서서" not in word) and ("대세" not in word) and ("트렌드" not in word) and ("불티" not in word) and \
-    #             ("진출" not in word) and ("체결" not in word) and ("증가" not in word) and ("기부" not in word) and \
-    #             ("신제품" not in word) and ("신상" not in word) and ("최고" not in word) and ("새로운" not in word) and \
-    #             ("착한" not in word) and ("신기록" not in word) and ("전망" not in word) and ("협력" not in word) and \
-    #             ("역대" not in word) and ("상승" not in word) and ("늘어" not in word) and ("승인" not in word):
-    #             negative_word.append(word)
+            # elif text_tag in ['Noun'] and ("MOU" not in word) and ("제휴" not in word) and ("주목" not in word) and \
+            #     ("호응" not in word) and ("돌파" not in word) and ("이목" not in word) and ("수상" not in word) and \
+            #     ("입점" not in word) and ("인기" not in word) and ("열풍" not in word) and ("진화" not in word) and \
+            #     ("대박" not in word) and ("순항" not in word) and ("유치" not in word) and ("1위" not in word) and \
+            #     ("출시" not in word) and ("오픈" not in word) and ("돌풍" not in word) and ("인싸" not in word) and \
+            #     ("줄서서" not in word) and ("대세" not in word) and ("트렌드" not in word) and ("불티" not in word) and \
+            #     ("진출" not in word) and ("체결" not in word) and ("증가" not in word) and ("기부" not in word) and \
+            #     ("신제품" not in word) and ("신상" not in word) and ("최고" not in word) and ("새로운" not in word) and \
+            #     ("착한" not in word) and ("신기록" not in word) and ("전망" not in word) and ("협력" not in word) and \
+            #     ("역대" not in word) and ("상승" not in word) and ("늘어" not in word) and ("승인" not in word):
+            #     negative_word.append(word)
 
     # print(noun_list)
     
@@ -421,12 +423,30 @@ class CrowDf(object):
     # po_words = count_po.most_common()
     po_words = dict(count_po.most_common())
     ne_words = dict(count_ne.most_common())
-    print("긍정적인 단어", po_words)
+
+    # 워드클라우드로 명사만 추출
+    print(noun_list)
+    '''
+    ['창립', '주년', '삼성', '전자', '이건희', '회장', '도전', '혁신', '삼성', '전자', '삼성', '포럼', '개최', '김기남', '대표', 
+    '핵심', '기술', '발전', '현', '코스피', '코스닥', '장', '동반', '상승', '덕성', '시스', '웍', '한국', '컴퓨터', '삼성', '전자
+    ', '창립', '주년', '기념', '개최', '이재용', '부회장', '불참', '롯데', '하이마트', '온라인', '오늘', '역대', '빅', '하트', ' 
+    일', '시작', '손연기', '칼럼', '차', '산업혁명', '시대', '문제', '일자리', '삼성', '전자', '모바일', '신제품', '엑시노스', ' 
+    ...
+    '멘토', '체험', '활동', '김기남', '삼성', '부회장', '로', '코로나', '해결', '위해', '전세계', '연구자', '협력', '순위', '주식
+    ', '부자', '위', '눈앞', '이재용', '뉴', '파워', '프라', '마', '규모', '유상증자', '결정', '삼성', '전자', '창립', '주념', ' 
+    기념', '회장', '도전', '혁신', '계승', '삼성', '전자', '창립', '주년', '기념', '개최']
+    '''
+
+    # 
+    print("\n긍정적인 단어", po_words)
     # print("긍정적인 단어", positive_word)
     # print(type(po_words))
     print("부정적인 단어", ne_words)
     
-
+    '''
+    긍정적인 단어 {'협력': 4, '상승': 3, '신제품': 3, '진화': 3, '역대': 2, '새로운': 1, '증가': 1}
+    부정적인 단어 {'문제': 2, '위반': 1, '기소': 1, '급락': 1}
+    '''
 
 
 # ============================================================
