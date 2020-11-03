@@ -97,19 +97,46 @@ from collections import Counter
 
 ##################################################################################################################################################
 
-# ##  HeadLine
+##  HeadLine
 class CrowKdd(object):
-    # results = ['']
-    keyword = '삼성전자'
-    def naver_news(self, keyword, order):
+    # ##keyword = '삼성전자'
+    
+    info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+"시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
+    maxpage = int(input("최대 크롤링할 페이지 수 입력하시오: "))
+    keyword = input("검색어 입력: ")
+    order = input("뉴스 검색 방식 입력(관련도순=0 최신순=1 오래된순=2): ") #관련도순=0 최신순=1 오래된순=2
+    s_date = input("시작날짜 입력(예: 2020.07.20):")
+    e_date = input("끝날짜 입력(예: 2020.10.30):")
+
+    # def __init__(self, maxpage, keyword, order, s_date, e_date):
+    #     self.maxpage = maxpage
+    #     self.keyword = keyword
+    #     self.order = order
+    #     self.s_date = s_date
+    #     self.e_date = e_date
+
+    def __init__(self):
+        maxpage = self.maxpage
+        keyword = self.keyword
+        order = self.order
+        s_date = self.s_date
+        e_date = self.e_date
+
+    def naver_news(self, maxpage, keyword, order, s_date, e_date):
         # tag = ['']
+
         results = []
         # a = ''
-        
-        for i in range(500)[1:]:
-            url = r'https://search.naver.com/search.naver?&where=news&query={}&sm=tab_pge&sort={}&&photo=0&field=0&reporter_article=&pd=0&ds=&de=&docid=&nso=so:r,p:all,a:all&mynews=0&cluster_rank=287&start={}&refresh_start=0'.format(keyword, order, 10*(i-1)+1)
+        # https://search.naver.com/search.naver?where=news&query={}&sm=tab_opt&sort={}&photo=0&field=0&reporter_article=&pd=3&ds={}&de={}&docid=&nso=so%3Ar%2Cp%3Afrom20201020to20201030%2Ca%3Aall&mynews=0&refresh_start={}&related=0
+        # url = r'https://search.naver.com/search.naver?&where=news&query={}&sm=tab_pge&sort={}&photo=0&field=0&reporter_article=&pd=3&ds={}&de={}&docid=&nso=so:da,p:from20201028to20201030,a:all&mynews=0&start={}&refresh_start=0'.format(keyword, order, s_date, e_date, 10*(i-1)+1)
+        # url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort=1&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
+        for i in range(maxpage)[1:]:
+            url = r'https://search.naver.com/search.naver?&where=news&query={}&sm=tab_pge&sort={}&photo=0&field=0&reporter_article=&pd=3&ds={}&de={}&docid=&nso=so:da,p:from20201028to20201030,a:all&mynews=0&start={}&refresh_start=0'.format(keyword, order, s_date, e_date, 10*(i-1)+1)
+            # url = r'https://search.naver.com/search.naver?&where=news&query={}&sm=tab_pge&sort={}&&photo=0&field=0&reporter_article=&pd=0&ds=&de=&docid=&nso=so:r,p:all,a:all&mynews=0&cluster_rank=287&start={}&refresh_start=0'.format(keyword, order, 10*(i-1)+1)
             resp = requests.get(url)
             soup = BeautifulSoup(resp.text, 'lxml')
+            if i % 100 == 0:
+                print(i,"번째 크롤링")
         #     article_title = soup.find_all('a', class_ = 'news_tit')
             
 
@@ -139,7 +166,8 @@ class CrowKdd(object):
                 results.append(tag.text)
         return results
 
-    result = naver_news(object, keyword, 1) # 0 = 관련도순, 1 = 최신순, 2 = 오래된 순
+    # result = naver_news(object, keyword, 1)
+    result = naver_news(object, maxpage, keyword, order, s_date, e_date)
     # print(result)
     df = pd.DataFrame(result)
     # print(df)
@@ -157,11 +185,6 @@ class CrowKdd(object):
 
 
 # =======================================================================================================================================
-# from bs4 import BeautifulSoup
-# from datetime import datetime
-# import requests
-# import pandas as pd
-# import re
 
 # # title_text = []
 # # link_text = []
@@ -287,171 +310,214 @@ class CrowKdd(object):
 # ==================                     =====================
 # ============================================================
 class CrowDf(object):
+    def __init__(self):
+        self.ck = CrowKdd()
+        this = self.ck
+        self.keyword = this.keyword
+        print("검색어1: ", self.keyword)
+        # this.maxpage = self.maxpage
+        # this.keyword = self.ck.keyword
+        # this.order = self.order
+        # this.s_date = self.s_date
+        # this.e_date = self.e_date
 
-    word = []
-    noun_list =[]
-    positive_word = []
-    negative_word = []
-    keyword_text = []
+        self.word = []
+        self.noun_list =[]
+        self.positive_word = []
+        self.negative_word = []
 
-    poflag = []
-    neflag = []
+        self.poflag = []
+        self.neflag = []
 
-    file = open('셀트리온.csv', 'r', encoding='UTF8')
-    lists = file.readlines()
-    file.close()
-    # lists
+    # def DataPro(self, keyword, word, positive_word, negative_word, poflag, neflag):
+    def DataPro(self):
+        # 
+        keyword = str(self.keyword)
+        word = self.word
+        noun_list = self.noun_list
+        positive_word = self.positive_word
+        negative_word = self.negative_word
+        poflag = self.poflag
+        neflag = self.neflag
+        
+        # this = self.ck
+        # this.keyword = self.keyword
+
+        print("검색어2: ", keyword)
+        # 
+        # word = []
+        # noun_list =[]
+        # positive_word = []
+        # negative_word = []
+        # keyword_text = []
+
+        # poflag = []
+        # neflag = []
+
+        
+
+        file = open('{}.csv'.format(keyword), 'r', encoding='utf-8')
+        # file = open('대한항공.csv', 'r', encoding='utf-8')
+        lists = file.readlines()
+        file.close()
+        # lists
+        
+        twitter = Twitter()
+        morphs = []
+
+        for sentence in lists:
+            morphs.append(twitter.pos(sentence))
+
+        # print(morphs)
+
+        pos = codecs.open('positive_words_self.txt', 'rb', encoding='UTF-8')
+
+        while True:
+            line = pos.readline()
+            line = line.replace('\n', '')
+            positive_word.append(line)
+            # keyword_text.append(line)
+
+            if not line: break
+        pos.close()
+
+        neg = codecs.open('negative_words_self.txt', 'rb', encoding='UTF-8')
+
+        while True:
+            line = neg.readline()
+            line = line.replace('\n', '')
+            negative_word.append(line)
+            # keyword_text.append(line)
+
+            if not line: break
+        neg.close()
+
+    # #     # for sentence in morphs : 
+    # #     #     for word, text_tag in sentence :
+    # #     #         for x in range(len(keyword_text)):
+    # #     #             posflag = False
+    # #     #             negflag = False
+
+    # #     #             if x < len(positive_word)-1:
+    # #     #                 if word.find(keyword_text[x] != -1):
+    # #     #                     posflag = True
+    # #     #                     print(x, "positive_word?", "테스트 : ", word.find(keyword_text[x]), "비교 단어 : ", keyword_text[x], "인덱스 : ", x, word)
+    # #     #                     break
+    # #     #             if x > (len(positive_word)-2):
+    # #     #                 if word.find(keyword_text[x] != -1):
+    # #     #                     negflag = True
+    # #     #                     print(x, "negative?","테스트 : ", word.find(keyword_text[i]),"비교단어 : ", keyword_text[i], "인덱스 : ", x, word)
+    # #     #                     break
+
+    # #     #                 if posflag == True:
+        
+
+    # #     # print(type(positive_word))
+
     
-    twitter = Twitter()
-    morphs = []
 
-    for sentence in lists:
-        morphs.append(twitter.pos(sentence))
+    # # #==========================================================================================================
+        for sentence in morphs : 
+            for word, text_tag in sentence :
+                if text_tag in ['Noun']:
+                    noun_list.append(word)
+                    for x in positive_word:
+                        if x == word: 
+                            poflag.append(x)
+                        
+                    for y in negative_word:
+                        if y == word:
+                            neflag.append(y)
 
-    # print(morphs)
-
-    pos = codecs.open('positive_words_self.txt', 'rb', encoding='UTF-8')
-
-    while True:
-        line = pos.readline()
-        line = line.replace('\n', '')
-        positive_word.append(line)
-        keyword_text.append(line)
-
-        if not line: break
-    pos.close()
-
-    neg = codecs.open('negative_words_self.txt', 'rb', encoding='UTF-8')
-
-    while True:
-        line = neg.readline()
-        line = line.replace('\n', '')
-        negative_word.append(line)
-        keyword_text.append(line)
-
-        if not line: break
-    neg.close()
-
-# #     # for sentence in morphs : 
-# #     #     for word, text_tag in sentence :
-# #     #         for x in range(len(keyword_text)):
-# #     #             posflag = False
-# #     #             negflag = False
-
-# #     #             if x < len(positive_word)-1:
-# #     #                 if word.find(keyword_text[x] != -1):
-# #     #                     posflag = True
-# #     #                     print(x, "positive_word?", "테스트 : ", word.find(keyword_text[x]), "비교 단어 : ", keyword_text[x], "인덱스 : ", x, word)
-# #     #                     break
-# #     #             if x > (len(positive_word)-2):
-# #     #                 if word.find(keyword_text[x] != -1):
-# #     #                     negflag = True
-# #     #                     print(x, "negative?","테스트 : ", word.find(keyword_text[i]),"비교단어 : ", keyword_text[i], "인덱스 : ", x, word)
-# #     #                     break
-
-# #     #                 if posflag == True:
-    
-
-# #     # print(type(positive_word))
-
- 
-
-# # #==========================================================================================================
-    for sentence in morphs : 
-        for word, text_tag in sentence :
-            if text_tag in ['Noun']:
-                noun_list.append(word)
-                for x in positive_word:
-                    if x == word: 
-                        poflag.append(x)
+    # #                     # print("부정적 :", y)
+    # #             # if text_tag in ['Noun'] and ("것" not in word) and ("내" not in word) and ("첫" not in word) and \
+    # #             #     ("나" not in word) and ("와" not in word) and ("식" not in word) and ("수" not in word) and \
+    # #             #     ("게" not in word) and ("말" not in word):
+    # #                 #  noun_list.append(word)
                     
-                for y in negative_word:
-                    if y == word:
-                        neflag.append(y)
+    # #             # if text_tag in ['Noun'] and ("갑질" not in word) and ("논란" not in word) and ("폭리" not in word) and \
+    # #             #     ("허위" not in word) and ("과징금" not in word) and ("눈물" not in word) and ("피해" not in word) and \
+    # #             #     ("포화" not in word) and ("우롱" not in word) and ("위반" not in word) and ("리스크" not in word) and \
+    # #             #     ("사퇴" not in word) and ("급락" not in word) and ("하락" not in word) and ("폐업" not in word) and \
+    # #             #     ("불만" not in word) and ("산재" not in word) and ("닫아" not in word) and ("손해배상" not in word) and \
+    # #             #     ("구설수" not in word) and ("적발" not in word) and ("침해" not in word) and ("빨간불" not in word) and \
+    # #             #     ("취약" not in word) and ("불명예" not in word) and ("구형" not in word) and ("기소" not in word) and \
+    # #             #     ("반토막" not in word) and ("호소" not in word) and ("불매" not in word) and ("냉담" not in word) and \
+    # #             #     ("문제" not in word) and ("직격탄" not in word) and ("한숨" not in word) and ("불똥" not in word) and \
+    # #             #     ("항의" not in word) and ("싸늘" not in word) and ("일탈" not in word) and ("파문" not in word) and \
+    # #             #     ("횡령" not in word) and ("사과문" not in word) and ("여파" not in word) and ("울상" not in word) and \
+    # #             #     ("초토화" not in word) and ("급감" not in word) and ("우려" not in word) and ("중단" not in word) and \
+    # #             #     ("퇴출" not in word) and ("해지" not in word) and ("일베" not in word) and ("이물질" not in word) and \
+    # #             #     ("엉망" not in word) and ("소송" not in word) and ("하락" not in word) and ("매출하락" not in word) and \
+    # #             #     ("혐의" not in word) and ("부채" not in word) and ("과징금" not in word) and ("포기" not in word) and \
+    # #             #     ("약세" not in word) and ("최악" not in word) and ("손실" not in word) and ("의혹" not in word):
+    # #             #     positive_word.append(word)
 
-# #                     # print("부정적 :", y)
-# #             # if text_tag in ['Noun'] and ("것" not in word) and ("내" not in word) and ("첫" not in word) and \
-# #             #     ("나" not in word) and ("와" not in word) and ("식" not in word) and ("수" not in word) and \
-# #             #     ("게" not in word) and ("말" not in word):
-# #                 #  noun_list.append(word)
-                
-# #             # if text_tag in ['Noun'] and ("갑질" not in word) and ("논란" not in word) and ("폭리" not in word) and \
-# #             #     ("허위" not in word) and ("과징금" not in word) and ("눈물" not in word) and ("피해" not in word) and \
-# #             #     ("포화" not in word) and ("우롱" not in word) and ("위반" not in word) and ("리스크" not in word) and \
-# #             #     ("사퇴" not in word) and ("급락" not in word) and ("하락" not in word) and ("폐업" not in word) and \
-# #             #     ("불만" not in word) and ("산재" not in word) and ("닫아" not in word) and ("손해배상" not in word) and \
-# #             #     ("구설수" not in word) and ("적발" not in word) and ("침해" not in word) and ("빨간불" not in word) and \
-# #             #     ("취약" not in word) and ("불명예" not in word) and ("구형" not in word) and ("기소" not in word) and \
-# #             #     ("반토막" not in word) and ("호소" not in word) and ("불매" not in word) and ("냉담" not in word) and \
-# #             #     ("문제" not in word) and ("직격탄" not in word) and ("한숨" not in word) and ("불똥" not in word) and \
-# #             #     ("항의" not in word) and ("싸늘" not in word) and ("일탈" not in word) and ("파문" not in word) and \
-# #             #     ("횡령" not in word) and ("사과문" not in word) and ("여파" not in word) and ("울상" not in word) and \
-# #             #     ("초토화" not in word) and ("급감" not in word) and ("우려" not in word) and ("중단" not in word) and \
-# #             #     ("퇴출" not in word) and ("해지" not in word) and ("일베" not in word) and ("이물질" not in word) and \
-# #             #     ("엉망" not in word) and ("소송" not in word) and ("하락" not in word) and ("매출하락" not in word) and \
-# #             #     ("혐의" not in word) and ("부채" not in word) and ("과징금" not in word) and ("포기" not in word) and \
-# #             #     ("약세" not in word) and ("최악" not in word) and ("손실" not in word) and ("의혹" not in word):
-# #             #     positive_word.append(word)
+    # #             # elif text_tag in ['Noun'] and ("MOU" not in word) and ("제휴" not in word) and ("주목" not in word) and \
+    # #             #     ("호응" not in word) and ("돌파" not in word) and ("이목" not in word) and ("수상" not in word) and \
+    # #             #     ("입점" not in word) and ("인기" not in word) and ("열풍" not in word) and ("진화" not in word) and \
+    # #             #     ("대박" not in word) and ("순항" not in word) and ("유치" not in word) and ("1위" not in word) and \
+    # #             #     ("출시" not in word) and ("오픈" not in word) and ("돌풍" not in word) and ("인싸" not in word) and \
+    # #             #     ("줄서서" not in word) and ("대세" not in word) and ("트렌드" not in word) and ("불티" not in word) and \
+    # #             #     ("진출" not in word) and ("체결" not in word) and ("증가" not in word) and ("기부" not in word) and \
+    # #             #     ("신제품" not in word) and ("신상" not in word) and ("최고" not in word) and ("새로운" not in word) and \
+    # #             #     ("착한" not in word) and ("신기록" not in word) and ("전망" not in word) and ("협력" not in word) and \
+    # #             #     ("역대" not in word) and ("상승" not in word) and ("늘어" not in word) and ("승인" not in word):
+    # #             #     negative_word.append(word)
 
-# #             # elif text_tag in ['Noun'] and ("MOU" not in word) and ("제휴" not in word) and ("주목" not in word) and \
-# #             #     ("호응" not in word) and ("돌파" not in word) and ("이목" not in word) and ("수상" not in word) and \
-# #             #     ("입점" not in word) and ("인기" not in word) and ("열풍" not in word) and ("진화" not in word) and \
-# #             #     ("대박" not in word) and ("순항" not in word) and ("유치" not in word) and ("1위" not in word) and \
-# #             #     ("출시" not in word) and ("오픈" not in word) and ("돌풍" not in word) and ("인싸" not in word) and \
-# #             #     ("줄서서" not in word) and ("대세" not in word) and ("트렌드" not in word) and ("불티" not in word) and \
-# #             #     ("진출" not in word) and ("체결" not in word) and ("증가" not in word) and ("기부" not in word) and \
-# #             #     ("신제품" not in word) and ("신상" not in word) and ("최고" not in word) and ("새로운" not in word) and \
-# #             #     ("착한" not in word) and ("신기록" not in word) and ("전망" not in word) and ("협력" not in word) and \
-# #             #     ("역대" not in word) and ("상승" not in word) and ("늘어" not in word) and ("승인" not in word):
-# #             #     negative_word.append(word)
+    # #     # print(noun_list)
+        
+    # #     # count = Counter(noun_list)
+    # #     # words = dict(count.most_common())
+    # #     # print(words)
+        
+    # #     # print(positive_word)
+    # #     # print(negative_word)
+        count_po = Counter(poflag)
+        count_ne = Counter(neflag)
+    #     # po_words = count_po.most_common()
+        po_words = dict(count_po.most_common())
+        ne_words = dict(count_ne.most_common())
 
-# #     # print(noun_list)
-    
-# #     # count = Counter(noun_list)
-# #     # words = dict(count.most_common())
-# #     # print(words)
-    
-# #     # print(positive_word)
-# #     # print(negative_word)
-    count_po = Counter(poflag)
-    count_ne = Counter(neflag)
-#     # po_words = count_po.most_common()
-    po_words = dict(count_po.most_common())
-    ne_words = dict(count_ne.most_common())
+        # 워드클라우드로 명사만 추출
+        # print(noun_list)
+        '''
+        ['창립', '주년', '삼성', '전자', '이건희', '회장', '도전', '혁신', '삼성', '전자', '삼성', '포럼', '개최', '김기남', '대표', 
+        '핵심', '기술', '발전', '현', '코스피', '코스닥', '장', '동반', '상승', '덕성', '시스', '웍', '한국', '컴퓨터', '삼성', '전자
+        ', '창립', '주년', '기념', '개최', '이재용', '부회장', '불참', '롯데', '하이마트', '온라인', '오늘', '역대', '빅', '하트', ' 
+        일', '시작', '손연기', '칼럼', '차', '산업혁명', '시대', '문제', '일자리', '삼성', '전자', '모바일', '신제품', '엑시노스', ' 
+        ...
+        '멘토', '체험', '활동', '김기남', '삼성', '부회장', '로', '코로나', '해결', '위해', '전세계', '연구자', '협력', '순위', '주식
+        ', '부자', '위', '눈앞', '이재용', '뉴', '파워', '프라', '마', '규모', '유상증자', '결정', '삼성', '전자', '창립', '주념', ' 
+        기념', '회장', '도전', '혁신', '계승', '삼성', '전자', '창립', '주년', '기념', '개최']
+        '''
 
-    # 워드클라우드로 명사만 추출
-    print(noun_list)
-    '''
-    ['창립', '주년', '삼성', '전자', '이건희', '회장', '도전', '혁신', '삼성', '전자', '삼성', '포럼', '개최', '김기남', '대표', 
-    '핵심', '기술', '발전', '현', '코스피', '코스닥', '장', '동반', '상승', '덕성', '시스', '웍', '한국', '컴퓨터', '삼성', '전자
-    ', '창립', '주년', '기념', '개최', '이재용', '부회장', '불참', '롯데', '하이마트', '온라인', '오늘', '역대', '빅', '하트', ' 
-    일', '시작', '손연기', '칼럼', '차', '산업혁명', '시대', '문제', '일자리', '삼성', '전자', '모바일', '신제품', '엑시노스', ' 
-    ...
-    '멘토', '체험', '활동', '김기남', '삼성', '부회장', '로', '코로나', '해결', '위해', '전세계', '연구자', '협력', '순위', '주식
-    ', '부자', '위', '눈앞', '이재용', '뉴', '파워', '프라', '마', '규모', '유상증자', '결정', '삼성', '전자', '창립', '주념', ' 
-    기념', '회장', '도전', '혁신', '계승', '삼성', '전자', '창립', '주년', '기념', '개최']
-    '''
+        # 
+        print("\n긍정적인 단어 :", po_words)
+        # print("긍정적인 단어", positive_word)
+        # print(type(po_words))
+        print("부정적인 단어 :", ne_words)
+        
+        '''
+        긍정적인 단어 : {'상승': 141, '인기': 66, '출시': 60, '전망': 36, '오픈': 30, 
+        '돌파': 19, '트렌드': 12, '체결': 12, '증가': 12, '역대': 11, '협력': 11, 
+        '주목': 11, '미소': 8, '기부': 8, '승인': 6, '최고': 6, '대세': 5, '유치': 4, 
+        '수상': 4, '불티': 2, '부상': 2, '순항': 2, '호응': 1, '진출': 1}
+        부정적인 단어 : {'급감': 233, '여파': 163, '하락': 162, '피해': 115, 
+        '직격탄': 83, '논란': 61, '중단': 41, '손실': 39, '반토 막': 34, '최악': 33, 
+        '포기': 32, '폐업': 25, '급락': 25, '우려': 24, '불매': 14, '눈물': 13, '
+        매각': 10, '호소': 9, '울상': 7, '문제': 6, '불만': 6, '약세': 5, '한숨': 5, 
+        '일베': 4, '해지': 4, '초토화': 3, '참혹': 3, '폐점': 2, '파문': 2, 
+        '과징금': 2, '항의': 1, '소송': 1, '불명예': 1, '리스크': 1, '갑질': 1, 
+        '침해': 1, '발끈': 1}
+        '''
+# ck = CrowKdd(maxpage, keyword, order, s_date, e_date)
 
-    # 
-    print("\n긍정적인 단어 :", po_words)
-    # print("긍정적인 단어", positive_word)
-    # print(type(po_words))
-    print("부정적인 단어 :", ne_words)
-    
-    '''
-    긍정적인 단어 : {'상승': 141, '인기': 66, '출시': 60, '전망': 36, '오픈': 30, 
-    '돌파': 19, '트렌드': 12, '체결': 12, '증가': 12, '역대': 11, '협력': 11, 
-    '주목': 11, '미소': 8, '기부': 8, '승인': 6, '최고': 6, '대세': 5, '유치': 4, 
-    '수상': 4, '불티': 2, '부상': 2, '순항': 2, '호응': 1, '진출': 1}
-    부정적인 단어 : {'급감': 233, '여파': 163, '하락': 162, '피해': 115, 
-    '직격탄': 83, '논란': 61, '중단': 41, '손실': 39, '반토 막': 34, '최악': 33, 
-    '포기': 32, '폐업': 25, '급락': 25, '우려': 24, '불매': 14, '눈물': 13, '
-    매각': 10, '호소': 9, '울상': 7, '문제': 6, '불만': 6, '약세': 5, '한숨': 5, 
-    '일베': 4, '해지': 4, '초토화': 3, '참혹': 3, '폐점': 2, '파문': 2, 
-    '과징금': 2, '항의': 1, '소송': 1, '불명예': 1, '리스크': 1, '갑질': 1, 
-    '침해': 1, '발끈': 1}
-    '''
-
+# ck = CrowKdd('maxpage', 'keyword', 'order', 's_date', 'e_date').format(ck.keyword)
+# ck = CrowKdd.__init__(keyword)
+# print(ck.keyword)
+cd = CrowDf()
+cd.DataPro()
 
 # ============================================================
 # ==================                     =====================
