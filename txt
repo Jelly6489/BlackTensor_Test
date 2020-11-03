@@ -95,6 +95,9 @@ https://m.blog.naver.com/PostView.nhn?blogId=seodaeho91&logNo=221269288709&proxy
 # 크롤링
 https://koreanfoodie.me/118
 
+# multiprocessing 크롤링
+https://beomi.github.io/2017/07/05/HowToMakeWebCrawler-with-Multiprocess/
+
 2. 예상 순익 예측<수>
 https://gem1n1.tistory.com/75
 3. 특정일 주가예측<금>
@@ -102,3 +105,24 @@ https://gem1n1.tistory.com/75
 코로나 
 1. 현황판 <월>
 2. 경제뉴스 요약<수>
+
+
+####
+예상 주당 순이익(EPS) * 정상 PER = 적정주가(기업의 가치)
+
+# PER, PBR 지표와 수익률 상관관계
+https://www.snek.ai/alpha/article/108784
+
+# 주가 예측1 (keras)
+https://keraskorea.github.io/posts/2018-10-25-Keras%EB%A5%BC%20%ED%99%9C%EC%9A%A9%ED%95%9C%20%EC%A3%BC%EC%8B%9D%20%EA%B0%80%EA%B2%A9%20%EC%98%88%EC%B8%A1/
+
+# 주가 예측2 (keras)
+https://diane-space.tistory.com/115
+
+# 주가 예측3
+https://m.post.naver.com/viewer/postView.nhn?volumeNo=29132930&memberNo=18071586
+
+# 주가 예측4
+https://m.blog.naver.com/wideeyed/221160038616
+
+

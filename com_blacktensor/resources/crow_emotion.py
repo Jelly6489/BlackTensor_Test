@@ -4,6 +4,9 @@ import codecs
 from bs4 import BeautifulSoup
 from konlpy.tag import Twitter
 from collections import Counter
+
+import time
+import multiprocessing
 # pip install lxml
 # ============================================================
 # ==================                     =====================
@@ -100,7 +103,6 @@ from collections import Counter
 ##  HeadLine
 class CrowKdd(object):
     # ##keyword = '삼성전자'
-    
     info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+"시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
     maxpage = int(input("최대 크롤링할 페이지 수 입력하시오: "))
     keyword = input("검색어 입력: ")
@@ -108,14 +110,8 @@ class CrowKdd(object):
     s_date = input("시작날짜 입력(예: 2020.07.20):")
     e_date = input("끝날짜 입력(예: 2020.10.30):")
 
-    # def __init__(self, maxpage, keyword, order, s_date, e_date):
-    #     self.maxpage = maxpage
-    #     self.keyword = keyword
-    #     self.order = order
-    #     self.s_date = s_date
-    #     self.e_date = e_date
-
     def __init__(self):
+        info_main = self.info_main
         maxpage = self.maxpage
         keyword = self.keyword
         order = self.order
@@ -174,7 +170,6 @@ class CrowKdd(object):
     df.columns = ['title']
     print(df.head())
     df.to_csv(keyword + '.csv', encoding='utf8')
-
 '''
 0   논어, 새로운 가르침에 겁내지 않으려면 그간의 가르침을 실행해야 한다!       
 1  "전 세계 AI 전문가 모여라"…'삼성 AI 포럼 2020' 온라인 개최
@@ -219,26 +214,26 @@ class CrowKdd(object):
 #         #태그에서 제목과 링크주소 추출
 #         atags = soup.select('.news_tit')
 #         for atag in atags:
-#             title_text.append(atag.text) #제목
-#             link_text.append(atag['href']) #링크주소
+#             title_text.append(atag.text)
+#             link_text.append(atag['href'])
 
 #         #신문사 추출
 #         source_lists = soup.select('.thumb_box')
 #         for source_list in source_lists:
-#             source_text.append(source_list.text) #신문사
+#             source_text.append(source_list.text)
 
 #         #날짜 추출
 #         date_lists = soup.select('.info')
 #         for date_list in date_lists:
 #             test=date_list.text
-#             date_cleansing(test) #날짜 정제 함수사용
+#             date_cleansing(test)
 
 #         #본문요약본
 #         contents_lists = soup.select('a.api_txt_lines.dsc_txt_wrap')
 #         for contents_list in contents_lists:
 #             #print('==='*40)
 #             #print(contents_list)
-#             contents_cleansing(contents_list) #본문요약 정제화
+#             contents_cleansing(contents_list)
 
 #         #모든 리스트 딕셔너리형태로 저장
 #         result= {"date" : date_text , "title":title_text , "source" : source_text ,"contents": contents_text ,"link":link_text }
@@ -250,16 +245,13 @@ class CrowKdd(object):
 # #날짜 정제화 함수
 # def date_cleansing(test):
 #     try:
-#         #지난 뉴스
-#         #머니투데이 10면1단 2018.11.05. 네이버뉴스 보내기
-#         pattern = '\d+.(\d+).(\d+).' #정규표현식
+#         pattern = '\d+.(\d+).(\d+).'
 #         r = re.compile(pattern)
 #         match = r.search(test).group(0) # 2018.11.05.
 #         date_text.append(match)
 #     except AttributeError:
-#         #최근 뉴스
-#         #이데일리 1시간 전 네이버뉴스 보내기
-#         pattern = '\w* (\d\w*)' #정규표현식
+
+#         pattern = '\w* (\d\w*)'
 
 #         r = re.compile(pattern)
 #         match = r.search(test).group(1)
@@ -269,17 +261,17 @@ class CrowKdd(object):
 # #내용 정제화 함수
 # def contents_cleansing(contents):
 #     first_cleansing_contents = re.sub('<dl>.*?</a> </div> </dd> <dd>', '',
-#     str(contents)).strip() #앞에 필요없는 부분 제거
+#     str(contents)).strip()
 #     second_cleansing_contents = re.sub('<ul class="relation_lst">.*?</dd>', '',
-#     first_cleansing_contents).strip()#뒤에 필요없는 부분 제거 (새끼 기사)
+#     first_cleansing_contents).strip()
 #     third_cleansing_contents = re.sub('<.+?>', '', second_cleansing_contents).strip()
 #     contents_text.append(third_cleansing_contents)
 #     #print(contents_text)
 
 
 # #엑셀로 저장하기 위한 변수
-# RESULT_PATH ='C:/Users/User/Desktop/python study/beautifulSoup_ws/crawling_result/' #결과 저장할 경로
-# now = datetime.now() #파일이름 현 시간으로 저장하기
+# RESULT_PATH ='C:/Users/User/Desktop/python study/beautifulSoup_ws/crawling_result/'
+# now = datetime.now()
 
 # # 새로 만들 파일이름 지정
 # outputFileName = '%s-%s-%s %s시 %s분 %s초 merging.xlsx' % (now.year, now.month, now.day, now.hour, now.minute, now.second)
@@ -301,6 +293,44 @@ class CrowKdd(object):
 
 # for tag in title_list:
 #     print(tag.text)
+
+    # ### 네이버 금융 재무정보 크롤링 테스트
+    # def NaverCrowStock(self):
+    #     url_tmp = 'https://finance.naver.com/item/main.nhn?code%s'
+    #     url = url_tmp % ('005930')
+
+    #     item_info = requests.get(url).text
+    #     soup = BeautifulSoup(item_info, 'html.parser')
+    #     finance_info = soup.select('div.section.cop_analysis div.sub_section')[0]
+
+    #     th_data = [item.get_text().strip() for item in finance_info.select('thead th')]
+    #     annual_date = th_data[3:7]
+    #     quarter_date = th_data[7:13]
+
+    #     finance_index = [item.get_text().strip() for item in finance_info.select('th.h_th2')][3:0]
+
+    #     finance_data = [item.get_text().stipt() for item in finance_info.select('td')]
+    #     finance_data = np.array(finance_data)
+    #     finance_data.resize(len(finance_index), 10)
+
+    #     finance_date = annual_date + quarter_date
+
+    #     finance = pd.DataFrame(data=finance_data[0:,0:], index=finance_index, columns = finance_date)
+
+
+    # ### Nice 평가정보 재무정보 크롤링 테스트
+    # def NiceCrow(self):
+    #     url_tmp = 'http://media.kisline.com/highlight/mainHighlight.nice?nav=1&paper_stock=%s'
+    #     url = url_tmp % ('005930')
+    #     tables = pd.read_html(url)
+    #     df = tables[4]
+
+# ### Naver 금융 재무정보 2 크롤링 테스트
+#     def NaverCrowTmp(self):
+#         url_tmp = 'https://finance.naver.com/item/main.nhn?code%s'
+#         url = url_tmp % ('005930')
+#         tables = pd.read_html(url, encoding='euc-kr')
+#         df = tables[3]
 
 # =======================================================================================================================================
 
@@ -414,7 +444,8 @@ class CrowDf(object):
 
     # #     # print(type(positive_word))
 
-    
+
+
 
     # # #==========================================================================================================
         for sentence in morphs : 
@@ -429,41 +460,41 @@ class CrowDf(object):
                         if y == word:
                             neflag.append(y)
 
-    # #                     # print("부정적 :", y)
-    # #             # if text_tag in ['Noun'] and ("것" not in word) and ("내" not in word) and ("첫" not in word) and \
-    # #             #     ("나" not in word) and ("와" not in word) and ("식" not in word) and ("수" not in word) and \
-    # #             #     ("게" not in word) and ("말" not in word):
-    # #                 #  noun_list.append(word)
+                #         print("부정적 :", y)
+                # if text_tag in ['Noun'] and ("것" not in word) and ("내" not in word) and ("첫" not in word) and \
+                #     ("나" not in word) and ("와" not in word) and ("식" not in word) and ("수" not in word) and \
+                #     ("게" not in word) and ("말" not in word):
+                #      noun_list.append(word)
                     
-    # #             # if text_tag in ['Noun'] and ("갑질" not in word) and ("논란" not in word) and ("폭리" not in word) and \
-    # #             #     ("허위" not in word) and ("과징금" not in word) and ("눈물" not in word) and ("피해" not in word) and \
-    # #             #     ("포화" not in word) and ("우롱" not in word) and ("위반" not in word) and ("리스크" not in word) and \
-    # #             #     ("사퇴" not in word) and ("급락" not in word) and ("하락" not in word) and ("폐업" not in word) and \
-    # #             #     ("불만" not in word) and ("산재" not in word) and ("닫아" not in word) and ("손해배상" not in word) and \
-    # #             #     ("구설수" not in word) and ("적발" not in word) and ("침해" not in word) and ("빨간불" not in word) and \
-    # #             #     ("취약" not in word) and ("불명예" not in word) and ("구형" not in word) and ("기소" not in word) and \
-    # #             #     ("반토막" not in word) and ("호소" not in word) and ("불매" not in word) and ("냉담" not in word) and \
-    # #             #     ("문제" not in word) and ("직격탄" not in word) and ("한숨" not in word) and ("불똥" not in word) and \
-    # #             #     ("항의" not in word) and ("싸늘" not in word) and ("일탈" not in word) and ("파문" not in word) and \
-    # #             #     ("횡령" not in word) and ("사과문" not in word) and ("여파" not in word) and ("울상" not in word) and \
-    # #             #     ("초토화" not in word) and ("급감" not in word) and ("우려" not in word) and ("중단" not in word) and \
-    # #             #     ("퇴출" not in word) and ("해지" not in word) and ("일베" not in word) and ("이물질" not in word) and \
-    # #             #     ("엉망" not in word) and ("소송" not in word) and ("하락" not in word) and ("매출하락" not in word) and \
-    # #             #     ("혐의" not in word) and ("부채" not in word) and ("과징금" not in word) and ("포기" not in word) and \
-    # #             #     ("약세" not in word) and ("최악" not in word) and ("손실" not in word) and ("의혹" not in word):
-    # #             #     positive_word.append(word)
+                # if text_tag in ['Noun'] and ("갑질" not in word) and ("논란" not in word) and ("폭리" not in word) and \
+                #     ("허위" not in word) and ("과징금" not in word) and ("눈물" not in word) and ("피해" not in word) and \
+                #     ("포화" not in word) and ("우롱" not in word) and ("위반" not in word) and ("리스크" not in word) and \
+                #     ("사퇴" not in word) and ("급락" not in word) and ("하락" not in word) and ("폐업" not in word) and \
+                #     ("불만" not in word) and ("산재" not in word) and ("닫아" not in word) and ("손해배상" not in word) and \
+                #     ("구설수" not in word) and ("적발" not in word) and ("침해" not in word) and ("빨간불" not in word) and \
+                #     ("취약" not in word) and ("불명예" not in word) and ("구형" not in word) and ("기소" not in word) and \
+                #     ("반토막" not in word) and ("호소" not in word) and ("불매" not in word) and ("냉담" not in word) and \
+                #     ("문제" not in word) and ("직격탄" not in word) and ("한숨" not in word) and ("불똥" not in word) and \
+                #     ("항의" not in word) and ("싸늘" not in word) and ("일탈" not in word) and ("파문" not in word) and \
+                #     ("횡령" not in word) and ("사과문" not in word) and ("여파" not in word) and ("울상" not in word) and \
+                #     ("초토화" not in word) and ("급감" not in word) and ("우려" not in word) and ("중단" not in word) and \
+                #     ("퇴출" not in word) and ("해지" not in word) and ("일베" not in word) and ("이물질" not in word) and \
+                #     ("엉망" not in word) and ("소송" not in word) and ("하락" not in word) and ("매출하락" not in word) and \
+                #     ("혐의" not in word) and ("부채" not in word) and ("과징금" not in word) and ("포기" not in word) and \
+                #     ("약세" not in word) and ("최악" not in word) and ("손실" not in word) and ("의혹" not in word):
+                #     positive_word.append(word)
 
-    # #             # elif text_tag in ['Noun'] and ("MOU" not in word) and ("제휴" not in word) and ("주목" not in word) and \
-    # #             #     ("호응" not in word) and ("돌파" not in word) and ("이목" not in word) and ("수상" not in word) and \
-    # #             #     ("입점" not in word) and ("인기" not in word) and ("열풍" not in word) and ("진화" not in word) and \
-    # #             #     ("대박" not in word) and ("순항" not in word) and ("유치" not in word) and ("1위" not in word) and \
-    # #             #     ("출시" not in word) and ("오픈" not in word) and ("돌풍" not in word) and ("인싸" not in word) and \
-    # #             #     ("줄서서" not in word) and ("대세" not in word) and ("트렌드" not in word) and ("불티" not in word) and \
-    # #             #     ("진출" not in word) and ("체결" not in word) and ("증가" not in word) and ("기부" not in word) and \
-    # #             #     ("신제품" not in word) and ("신상" not in word) and ("최고" not in word) and ("새로운" not in word) and \
-    # #             #     ("착한" not in word) and ("신기록" not in word) and ("전망" not in word) and ("협력" not in word) and \
-    # #             #     ("역대" not in word) and ("상승" not in word) and ("늘어" not in word) and ("승인" not in word):
-    # #             #     negative_word.append(word)
+                # elif text_tag in ['Noun'] and ("MOU" not in word) and ("제휴" not in word) and ("주목" not in word) and \
+                #     ("호응" not in word) and ("돌파" not in word) and ("이목" not in word) and ("수상" not in word) and \
+                #     ("입점" not in word) and ("인기" not in word) and ("열풍" not in word) and ("진화" not in word) and \
+                #     ("대박" not in word) and ("순항" not in word) and ("유치" not in word) and ("1위" not in word) and \
+                #     ("출시" not in word) and ("오픈" not in word) and ("돌풍" not in word) and ("인싸" not in word) and \
+                #     ("줄서서" not in word) and ("대세" not in word) and ("트렌드" not in word) and ("불티" not in word) and \
+                #     ("진출" not in word) and ("체결" not in word) and ("증가" not in word) and ("기부" not in word) and \
+                #     ("신제품" not in word) and ("신상" not in word) and ("최고" not in word) and ("새로운" not in word) and \
+                #     ("착한" not in word) and ("신기록" not in word) and ("전망" not in word) and ("협력" not in word) and \
+                #     ("역대" not in word) and ("상승" not in word) and ("늘어" not in word) and ("승인" not in word):
+                #     negative_word.append(word)
 
     # #     # print(noun_list)
         
@@ -516,16 +547,17 @@ class CrowDf(object):
 # ck = CrowKdd('maxpage', 'keyword', 'order', 's_date', 'e_date').format(ck.keyword)
 # ck = CrowKdd.__init__(keyword)
 # print(ck.keyword)
-cd = CrowDf()
-cd.DataPro()
+
+
 
 # ============================================================
 # ==================                     =====================
 # ==================       Modeling      =====================
 # ==================                     =====================
 # ============================================================
-# class CrowDto(db.Model):
-#     ...
+class CrowDto(db.Model):
+    
+
 # class CrowDao(StockDto):
 #     ...
 # class CrowVo(object):
@@ -539,3 +571,9 @@ cd.DataPro()
 # ==================      Resourcing     =====================
 # ==================                     =====================
 # ============================================================
+
+if __name__ == "__main__":
+    
+    ck = CrowKdd()
+    cd = CrowDf()
+    cd.DataPro()
