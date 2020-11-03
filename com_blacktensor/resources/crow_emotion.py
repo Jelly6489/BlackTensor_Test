@@ -4,10 +4,12 @@ import codecs
 from bs4 import BeautifulSoup
 from konlpy.tag import Twitter
 from collections import Counter
+from com_blacktensor.ext.db import db, openSession, engine
 
-import time
-import multiprocessing
-# pip install lxml
+# import time
+# import multiprocessing
+
+
 # ============================================================
 # ==================                     =====================
 # ==================         KDD         =====================
@@ -100,7 +102,7 @@ import multiprocessing
 
 ##################################################################################################################################################
 
-##  HeadLine
+#  HeadLine
 class CrowKdd(object):
     # ##keyword = '삼성전자'
     info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+"시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
@@ -345,6 +347,7 @@ class CrowDf(object):
         this = self.ck
         self.keyword = this.keyword
         print("검색어1: ", self.keyword)
+
         # this.maxpage = self.maxpage
         # this.keyword = self.ck.keyword
         # this.order = self.order
@@ -373,7 +376,7 @@ class CrowDf(object):
         # this = self.ck
         # this.keyword = self.keyword
 
-        print("검색어2: ", keyword)
+        # print("검색어2: ", keyword)
         # 
         # word = []
         # noun_list =[]
@@ -387,7 +390,8 @@ class CrowDf(object):
         
 
         file = open('{}.csv'.format(keyword), 'r', encoding='utf-8')
-        # file = open('대한항공.csv', 'r', encoding='utf-8')
+
+        # file = open('삼성전자.csv', 'r', encoding='utf-8')
         lists = file.readlines()
         file.close()
         # lists
@@ -529,6 +533,15 @@ class CrowDf(object):
         # print(type(po_words))
         print("부정적인 단어 :", ne_words)
         
+        word_df = {'positive' : [po_words], 
+                   'negative' : [ne_words]}
+
+        df = pd.DataFrame(word_df)
+
+        # df.columns = ['index', 'positive', 'negative']
+        print(df.head())
+        df.to_csv(keyword + '_word.csv', encoding='utf8')
+
         '''
         긍정적인 단어 : {'상승': 141, '인기': 66, '출시': 60, '전망': 36, '오픈': 30, 
         '돌파': 19, '트렌드': 12, '체결': 12, '증가': 12, '역대': 11, '협력': 11, 
@@ -556,12 +569,67 @@ class CrowDf(object):
 # ==================                     =====================
 # ============================================================
 class CrowDto(db.Model):
+    __tablename__ = 'stock'
+    __table_args__={'mysql_collate' : 'utf8_general_ci'}
+
+    date : str = db.Column(db.String(10), primary_key = True, index = True)
+    positive : str = db.Column(db.String(10))
+    negative : str = db.Column(db.String(10))
+    close : int = db.Column(db.Integer)
+    open : int = db.Column(db.Integer)
+    volume : int = db.Column(db.Integer)
+
+    def __init__(self, positive, negative, date, close, open, volume):
+        self.date = date
+        self.close = close
+        self.open = open
+        self.volume = volume
     
+    def __repr__(self):
+        return f'Stock(date={self.date}, positive={self.positive}, negative={self.negative}\
+             close={self.close}, open={self.open}, volume={self.volume})'
+
+# class CrowVo:
+#     date : str = ''
+#     close : int = 0
+#     open : int = 0
+#     volume : int = 0
+
+
+# Session = openSession()
+# session = Session()
+# crow_df = CrowDf()
+
 
 # class CrowDao(StockDto):
-#     ...
-# class CrowVo(object):
-#     ...
+    
+#     @staticmethod
+#     def bulk():
+#         Session = openSession()
+#         session = Session()
+#         crow_df = CrowDf()
+#         df = crow_df.hook()
+#         # print(df.head())
+#         session.bulk_insert_mappings(CrowDto, df.to_dict(orient='records'))
+#         session.commit()
+#         session.close()
+
+#     @staticmethod
+#     def count():
+#         return session.query(func.count(CrowDto.date)).one()
+
+#     @staticmethod
+#     def save(crow):
+#         new_crow = CrowDto(date = crow['date'],
+#                            positive = crow['positive'],
+#                            negative = crow['negative'],
+#                            close = crow['close'],
+#                            open = crow['open'],
+#                            volume = crow['volume'])
+#         session.add(new_crow)
+#         session.commit()
+
+
 # class CrowTf(object):
 #     ...
 # class CrowAi(object):
@@ -572,8 +640,37 @@ class CrowDto(db.Model):
 # ==================                     =====================
 # ============================================================
 
-if __name__ == "__main__":
+# parser = reqparse.RequestParser()
+
+# parser.add_argument('positive', type = str, required = True,
+#                             help='This field should be a userId')
+# parser.add_argument('negative', type = str, required = True,
+#                             help='This field should be a userId')
+# parser.add_argument('close', type = str, required = True,
+#                             help='This field should be a userId')
+# parser.add_argument('open', type = str, required = True,
+#                             help='This field should be a userId')
+# parser.add_argument('volume', type = str, required = True,
+#                             help='This field should be a userId')
+
+# class Crow(Resource):
     
+#     @staticmethod
+#     def post():
+#         args = parser.parse_args()
+#         crow = CrowVo()
+#         crow.positive = args.positive
+#         crow.negative = args.negative
+#         crow.close = args.close
+#         crow.open = args.open
+#         crow.volume = args.volume
+#         # service.assign(crow)
+#         # print("Predicted Crow")
+
+
+
+if __name__ == "__main__":
     ck = CrowKdd()
     cd = CrowDf()
     cd.DataPro()
+
