@@ -6,8 +6,9 @@ import re
 from bs4 import BeautifulSoup
 from konlpy.tag import Twitter
 from collections import Counter
-# from com_blacktensor.ext.db import db, openSession, engine
-
+from flask_restful import Resource, reqparse
+from com_blacktensor.ext.db import db, openSession, engine
+from sqlalchemy import func
 # import time
 # import multiprocessing
 
@@ -130,6 +131,7 @@ class CrawKdd(object):
         results = []
         data_results = []
         date_text = []
+        test_date = []
         # a = ''
         # https://search.naver.com/search.naver?where=news&query={}&sm=tab_opt&sort={}&photo=0&field=0&reporter_article=&pd=3&ds={}&de={}&docid=&nso=so%3Ar%2Cp%3Afrom20201020to20201030%2Ca%3Aall&mynews=0&refresh_start={}&related=0
         # url = r'https://search.naver.com/search.naver?&where=news&query={}&sm=tab_pge&sort={}&photo=0&field=0&reporter_article=&pd=3&ds={}&de={}&docid=&nso=so:da,p:from20201028to20201030,a:all&mynews=0&start={}&refresh_start=0'.format(keyword, order, s_date, e_date, 10*(i-1)+1)
@@ -171,12 +173,13 @@ class CrawKdd(object):
             for date_list in date_lists:
                 test = date_list.text
 
-            print("날짜 데이터!!!!: ", test)
+            # print("날짜 데이터!!!!: ", test)
             try:
                 pattern = '\d+.(\d+).(\d+).'
                 r = re.compile(pattern)
                 match = r.search(test)#.group(0) # 2018.11.05.
                 date_text.append(match)
+                test_date.append(test)
             except AttributeError:
 
                 pattern = '\w* (\d\w*)'
@@ -185,8 +188,10 @@ class CrawKdd(object):
                 match = r.search(test)#.group(1)
                 #print(match)
                 date_text.append(match)
+                test_date.append(test)
             
         print("크롤링 날짜!! :", date_text)
+        print("날짜 데이터!!!!: ", test_date)
 
 ### ------------------------------------------------------
         return results
@@ -622,6 +627,8 @@ class CrawDf(object):
 
         df_len = len(df)
 
+        print("개수: ", df_len)
+
         for m in range(df_len):
             stock_name.append(keyword)
         stock_df = pd.DataFrame((stock_name), columns=['stock'])
@@ -676,68 +683,76 @@ class CrawDf(object):
 # ==================       Modeling      =====================
 # ==================                     =====================
 # ============================================================
-# class CrawDto(db.Model):
-#     __tablename__ = 'stock'
-#     __table_args__={'mysql_collate' : 'utf8_general_ci'}
+class CrawDto(db.Model):
+    __tablename__ = 'stock'
+    __table_args__={'mysql_collate' : 'utf8_general_ci'}
 
-#     date : str = db.Column(db.String(10), primary_key = True, index = True)
-#     stock_name : str = db.Column(db.String(10))
-#     positive : str = db.Column(db.String(10))
-#     negative : str = db.Column(db.String(10))
+    date : str = db.Column(db.String(10), primary_key = True, index = True)
+    stock_name : str = db.Column(db.String(10))
+    positive : str = db.Column(db.String(10))
+    negative : str = db.Column(db.String(10))
 
-#     def __init__(self, date, stock_name, positive, negative):
-#         self.date = date
-#         self.stock_name = stock_name
-#         self.positive = positive
-#         self.negative = negative
+    def __init__(self, date, stock_name, positive, negative):
+        self.date = date
+        self.stock_name = stock_name
+        self.positive = positive
+        self.negative = negative
     
-#     def __repr__(self):
-#         return f'Stock(date={self.date}, positive={self.positive},\
-#                negative={self.negative})'
+    def __repr__(self):
+        return f'Stock(date={self.date}, positive={self.positive},\
+               negative={self.negative})'
 
-# class CrawVo:
-#     date : str = ''
-#     stock_name : str = ''
-#     positive : str = ''
-#     negative : str = ''
-
-
-# Session = openSession()
-# session = Session()
-# craw_df = CrawDf()
+class CrawVo:
+    date : str = ''
+    stock_name : str = ''
+    positive : str = ''
+    negative : str = ''
 
 
-# class CrawDao(StockDto):
+Session = openSession()
+session = Session()
+craw_df = CrawDf()
+
+
+class CrawDao(CrawDto):
     
-#     @staticmethod
-#     def bulk():
-#         Session = openSession()
-#         session = Session()
-#         craw_df = CrawDf()
-#         df = craw_df.hook()
-#         # print(df.head())
-#         session.bulk_insert_mappings(CrawDto, df.to_dict(orient='records'))
-#         session.commit()
-#         session.close()
+    @staticmethod
+    def bulk():
+        Session = openSession()
+        session = Session()
+        craw_df = CrawDf()
+        df = craw_df.hook()
+        # print(df.head())
+        session.bulk_insert_mappings(CrawDto, df.to_dict(orient='records'))
+        session.commit()
+        session.close()
 
-#     @staticmethod
-#     def count():
-#         return session.query(func.count(CrawDto.date)).one()
+    @staticmethod
+    def count():
+        return session.query(func.count(CrawDto.date)).one()
 
-#     @staticmethod
-#     def save(craw):
-#         new_craw = CrawDto(date = craw['date'],
-#                            stock_name = craw['stock_name'],
-#                            positive = craw['positive'],
-#                            negative = craw['negative']
-#         session.add(new_craw)
-#         session.commit()
+    @staticmethod
+    def save(craw):
+        new_craw = CrawDto(date = craw['date'],
+                           stock_name = craw['stock_name'],
+                           positive = craw['positive'],
+                           negative = craw['negative'])
+        session.add(new_craw)
+        session.commit()
+    print('Ok!')
 
 
 # class CrawTf(object):
 #     ...
 # class CrawAi(object):
 #     ...
+
+
+if __name__ == "__main__":
+    ck = CrawKdd()
+    cd = CrawDf()
+    cd.DataPro()
+
 # ============================================================
 # ==================                     =====================
 # ==================      Resourcing     =====================
@@ -746,16 +761,12 @@ class CrawDf(object):
 
 # parser = reqparse.RequestParser()
 
+# parser.add_argument('stock_name', type = str, required = True,
+#                             help='This field should be a userId')
 # parser.add_argument('positive', type = str, required = True,
-#                             help='This field should be a userId')
+#                             help='This field should be a password')
 # parser.add_argument('negative', type = str, required = True,
-#                             help='This field should be a userId')
-# parser.add_argument('close', type = str, required = True,
-#                             help='This field should be a userId')
-# parser.add_argument('open', type = str, required = True,
-#                             help='This field should be a userId')
-# parser.add_argument('volume', type = str, required = True,
-#                             help='This field should be a userId')
+#                             help='This field should be a password')
 
 # class Craw(Resource):
     
@@ -763,17 +774,149 @@ class CrawDf(object):
 #     def post():
 #         args = parser.parse_args()
 #         craw = CrawVo()
+#         craw.stock_name = args.stock_name
 #         craw.positive = args.positive
 #         craw.negative = args.negative
-#         craw.close = args.close
-#         craw.open = args.open
-#         craw.volume = args.volume
 #         # service.assign(craw)
 #         # print("Predicted Craw")
 
+# =========================================================================================================================
 
-if __name__ == "__main__":
-    ck = CrawKdd()
-    cd = CrawDf()
-    cd.DataPro()
+# import requests # 웹 페이지 소스를 얻기 위한 패키지(기본 내장 패키지이다.)
+# from bs4 import BeautifulSoup # 웹 페이지 소스를 얻기 위한 패키지, 더 간단히 얻을 수 있다는 장점이 있다고 한다.
+# from datetime import datetime                                # (!pip install beautifulsoup4 으로 다운받을 수 있다.)
+# import pandas as pd # 데이터를 처리하기 위한 가장 기본적인 패키지
+# import time # 사이트를 불러올 때, 작업 지연시간을 지정해주기 위한 패키지이다. (사이트가 늦게 켜지면 에러가 발생하기 때문)
+# import urllib.request #
+# from selenium.webdriver import Chrome
+# import json
+# import re     
+# from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.common.keys import Keys
+# import datetime as dt
 
+# def ttt(xx):
+#     name = xx
+#     base_url = 'https://finance.naver.com/item/coinfo.nhn?code='+ name + '&target=finsum_more'
+#     return base_url
+    
+# browser  = Chrome()
+# browser.maximize_window()
+
+# browser.get(ttt('066571'))
+
+# browser.switch_to_frame(browser.find_element_by_id('coinfo_cp')) #frame구조 안으로 들어가기
+
+# #재무제표 "연간" 클릭하기
+# browser.find_elements_by_xpath('//*[@class="schtab"][1]/tbody/tr/td[3]')[0].click()
+
+# html0 = browser.page_source #지금 현 상태의 page source불러오기
+# html1 = BeautifulSoup(html0,'html.parser')
+
+# #기업 title불러오기
+# title0 = html1.find('head').find('title').text
+# title0.split('-')[-1]
+
+# html22 = html1.find('table',{'class':'gHead01 all-width','summary':'주요재무정보를 제공합니다.'})
+# #재무제표 영역 불러오기
+
+# thead0 = html22.find('thead') #날짜가 재무제표영역의 head부분에 들어가 있기 때문에 thead를 불러와야 한다.
+# tr0 = thead0.find_all('tr')[1] #존재하고 있는 날짜대로 findall로 모두 수집
+# th0 = tr0.find_all('th')
+# #날짜부분만 따로 저장
+# date = []
+# for i in range(len(th0)):
+#     date.append(''.join(re.findall('[0-9/]',th0[i].text)))
+    
+# tbody0 = html22.find('tbody') #tbody에 column으로 사용할 데이터와 본문 데이터가 모두 담겨져 있다.
+# tr0 = tbody0.find_all('tr')
+
+# #columns 수집
+# col = []
+# for i in range(len(tr0)):
+    
+#     if '\xa0' in tr0[i].find('th').text:
+#         tx = re.sub('\xa0','',tr0[i].find('th').text)
+#     else:
+#         tx = tr0[i].find('th').text
+        
+#     col.append(tx)
+    
+# #본문데아터 수집
+# td = []
+# for i in range(len(tr0)):
+#     td0 = tr0[i].find_all('td')
+#     td1 = []
+#     for j in range(len(td0)):
+#         if td0[j].text == '':
+#             td1.append('0')
+#         else:
+#             td1.append(td0[j].text)
+            
+#     td.append(td1)
+    
+# td2 = list(map(list,zip(*td)))
+
+# browser  = Chrome()
+# browser.maximize_window()
+
+# def stock_crawler(code):
+#     #code = 종목번호
+#     name = code
+#     base_url = 'https://finance.naver.com/item/coinfo.nhn?code='+ name + '&target=finsum_more'
+    
+#     browser.get(base_url)
+#     #frmae구조 안에 필요한 데이터가 있기 때문에 해당 데이터를 수집하기 위해서는 frame구조에 들어가야한다.
+#     browser.switch_to_frame(browser.find_element_by_id('coinfo_cp'))
+    
+#     #재무제표 "연간" 클릭하기
+#     browser.find_elements_by_xpath('//*[@class="schtab"][1]/tbody/tr/td[3]')[0].click()
+
+#     html0 = browser.page_source
+#     html1 = BeautifulSoup(html0,'html.parser')
+    
+#     #기업명 뽑기
+#     title0 = html1.find('head').find('title').text
+#     print(title0.split('-')[-1])
+    
+#     html22 = html1.find('table',{'class':'gHead01 all-width','summary':'주요재무정보를 제공합니다.'})
+    
+#     #date scrapy
+#     thead0 = html22.find('thead')
+#     tr0 = thead0.find_all('tr')[1]
+#     th0 = tr0.find_all('th')
+    
+#     date = []
+#     for i in range(len(th0)):
+#         date.append(''.join(re.findall('[0-9/]',th0[i].text)))
+    
+#     #columns scrapy
+#     tbody0 = html22.find('tbody')
+#     tr0 = tbody0.find_all('tr')
+    
+#     col = []
+#     for i in range(len(tr0)):
+
+#         if '\xa0' in tr0[i].find('th').text:
+#             tx = re.sub('\xa0','',tr0[i].find('th').text)
+#         else:
+#             tx = tr0[i].find('th').text
+
+#         col.append(tx)
+    
+#     #main text scrapy
+#     td = []
+#     for i in range(len(tr0)):
+#         td0 = tr0[i].find_all('td')
+#         td1 = []
+#         for j in range(len(td0)):
+#             if td0[j].text == '':
+#                 td1.append('0')
+#             else:
+#                 td1.append(td0[j].text)
+
+#         td.append(td1)
+    
+#     td2 = list(map(list,zip(*td)))
+    
+#     return pd.DataFrame(td2,columns = col,index = date)
