@@ -1,10 +1,12 @@
 import requests
 import pandas as pd
 import codecs
+import numpy as np
+import re
 from bs4 import BeautifulSoup
 from konlpy.tag import Twitter
 from collections import Counter
-from com_blacktensor.ext.db import db, openSession, engine
+# from com_blacktensor.ext.db import db, openSession, engine
 
 # import time
 # import multiprocessing
@@ -15,7 +17,7 @@ from com_blacktensor.ext.db import db, openSession, engine
 # ==================         KDD         =====================
 # ==================                     =====================
 # ============================================================
-# class CrowKdd(object):
+# class CrawKdd(object):
 # def get_url():
 # search_keyword = '애플'
 # url = f'https://search.naver.com/search.naver?where=news&sm=tab_jum&query={search_keyword}'
@@ -102,8 +104,9 @@ from com_blacktensor.ext.db import db, openSession, engine
 
 ##################################################################################################################################################
 
-#  HeadLine
-class CrowKdd(object):
+
+# ### HeadLine
+class CrawKdd(object):
     # ##keyword = '삼성전자'
     info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+"시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
     maxpage = int(input("최대 크롤링할 페이지 수 입력하시오: "))
@@ -111,7 +114,7 @@ class CrowKdd(object):
     order = input("뉴스 검색 방식 입력(관련도순=0 최신순=1 오래된순=2): ") #관련도순=0 최신순=1 오래된순=2
     s_date = input("시작날짜 입력(예: 2020.07.20):")
     e_date = input("끝날짜 입력(예: 2020.10.30):")
-
+    date_text = []
     def __init__(self):
         info_main = self.info_main
         maxpage = self.maxpage
@@ -119,11 +122,14 @@ class CrowKdd(object):
         order = self.order
         s_date = self.s_date
         e_date = self.e_date
+        date_text = self.date_text
 
     def naver_news(self, maxpage, keyword, order, s_date, e_date):
         # tag = ['']
-
+        # date_text = ''
         results = []
+        data_results = []
+        date_text = []
         # a = ''
         # https://search.naver.com/search.naver?where=news&query={}&sm=tab_opt&sort={}&photo=0&field=0&reporter_article=&pd=3&ds={}&de={}&docid=&nso=so%3Ar%2Cp%3Afrom20201020to20201030%2Ca%3Aall&mynews=0&refresh_start={}&related=0
         # url = r'https://search.naver.com/search.naver?&where=news&query={}&sm=tab_pge&sort={}&photo=0&field=0&reporter_article=&pd=3&ds={}&de={}&docid=&nso=so:da,p:from20201028to20201030,a:all&mynews=0&start={}&refresh_start=0'.format(keyword, order, s_date, e_date, 10*(i-1)+1)
@@ -142,9 +148,6 @@ class CrowKdd(object):
         #         a += j.get_text()
         # return a
 
-
-
-
             # # title_list = soup.select('.news_tit')
             # title_list = soup.find_all('a', class_ = 'news_tit')
 
@@ -157,12 +160,64 @@ class CrowKdd(object):
         # return results
 
             title_list = soup.find_all('a', class_ = 'news_tit')
-            
 
             for tag in title_list:
                 # results += tag.get_text()
                 results.append(tag.text)
+
+
+            date_lists = soup.select('span.info')
+
+            for date_list in date_lists:
+                test = date_list.text
+
+            print("날짜 데이터!!!!: ", test)
+            try:
+                pattern = '\d+.(\d+).(\d+).'
+                r = re.compile(pattern)
+                match = r.search(test)#.group(0) # 2018.11.05.
+                date_text.append(match)
+            except AttributeError:
+
+                pattern = '\w* (\d\w*)'
+
+                r = re.compile(pattern)
+                match = r.search(test)#.group(1)
+                #print(match)
+                date_text.append(match)
+            
+        print("크롤링 날짜!! :", date_text)
         return results
+            
+
+            # #날짜 추출
+            # date_lists = soup.select('.info_group')
+            # for date_list in date_lists:
+            #     test=date_list.text
+            #     DateCleansing(0, test)
+
+        #     for tag in title_list:
+        #         # results += tag.get_text()
+        #         data_results.append(tag.text)
+        #     new_date = {"date" : date_text}
+        # return data_results
+
+    # def DateCleansing(self, test):
+    #     try:
+    #         pattern = '\d+.(\d+).(\d+).'
+    #         r = re.compile(pattern)
+    #         match = r.search(test).group(0) # 2018.11.05.
+    #         date_text.append(match)
+    #     except AttributeError:
+
+    #         pattern = '\w* (\d\w*)'
+
+    #         r = re.compile(pattern)
+    #         match = r.search(test).group(1)
+    #         #print(match)
+    #         date_text.append(match)
+    
+    # print("크롤링 날짜!! :",date_text)
 
     # result = naver_news(object, keyword, 1)
     result = naver_news(object, maxpage, keyword, order, s_date, e_date)
@@ -181,169 +236,169 @@ class CrowKdd(object):
 '''
 
 
-# =======================================================================================================================================
+# # =======================================================================================================================================
 
-# # title_text = []
-# # link_text = []
-# # source_text = []
-# # date_text = []
-# # contents_text = []
+# # # title_text = []
+# # # link_text = []
+# # # source_text = []
+# # # date_text = []
+# # # contents_text = []
 
-# def main():
-#     info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+" 시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
-#     maxpage = input("최대 크롤링할 페이지 수 입력하시오: ")
-#     query = input("검색어 입력: ")
-#     sort = input("뉴스 검색 방식 입력(관련도순=0 최신순=1 오래된순=2): ") #관련도순=0 최신순=1 오래된순=2
-#     s_date = input("시작날짜 입력(2019.01.04):") #2019.01.04
-#     e_date = input("끝날짜 입력(2019.01.05):") #2019.01.05
-#     crawler(maxpage, query, sort, s_date, e_date)
-# main()
+# # def main():
+# #     info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+" 시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
+# #     maxpage = input("최대 크롤링할 페이지 수 입력하시오: ")
+# #     query = input("검색어 입력: ")
+# #     sort = input("뉴스 검색 방식 입력(관련도순=0 최신순=1 오래된순=2): ") #관련도순=0 최신순=1 오래된순=2
+# #     s_date = input("시작날짜 입력(2019.01.04):") #2019.01.04
+# #     e_date = input("끝날짜 입력(2019.01.05):") #2019.01.05
+# #     crawler(maxpage, query, sort, s_date, e_date)
+# # main()
 
-# def crawler(maxpage, query, sort, s_date, e_date):
-#     s_from = s_date.replace(".","")
-#     e_to = e_date.replace(".","")
-#     page = 1
-#     maxpage_t =(int(maxpage)-1)*10+1 # 11= 2페이지 21=3페이지 31=4페이지 ...81=9페이지 , 91=10페이지, 101=11페이지
+# # def crawler(maxpage, query, sort, s_date, e_date):
+# #     s_from = s_date.replace(".","")
+# #     e_to = e_date.replace(".","")
+# #     page = 1
+# #     maxpage_t =(int(maxpage)-1)*10+1 # 11= 2페이지 21=3페이지 31=4페이지 ...81=9페이지 , 91=10페이지, 101=11페이지
 
-#     while page <= maxpage_t:
-#         url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort="+sort+"&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
-#         response = requests.get(url)
-#         html = response.text
+# #     while page <= maxpage_t:
+# #         url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort="+sort+"&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
+# #         response = requests.get(url)
+# #         html = response.text
 
-#         #뷰티풀소프의 인자값 지정
-#         soup = BeautifulSoup(html, 'html.parser')
+# #         #뷰티풀소프의 인자값 지정
+# #         soup = BeautifulSoup(html, 'html.parser')
 
-#         #태그에서 제목과 링크주소 추출
-#         atags = soup.select('.news_tit')
-#         for atag in atags:
-#             title_text.append(atag.text)
-#             link_text.append(atag['href'])
+# #         #태그에서 제목과 링크주소 추출
+# #         atags = soup.select('.news_tit')
+# #         for atag in atags:
+# #             title_text.append(atag.text)
+# #             link_text.append(atag['href'])
 
-#         #신문사 추출
-#         source_lists = soup.select('.thumb_box')
-#         for source_list in source_lists:
-#             source_text.append(source_list.text)
+# #         #신문사 추출
+# #         source_lists = soup.select('.thumb_box')
+# #         for source_list in source_lists:
+# #             source_text.append(source_list.text)
 
-#         #날짜 추출
-#         date_lists = soup.select('.info')
-#         for date_list in date_lists:
-#             test=date_list.text
-#             date_cleansing(test)
+# #         #날짜 추출
+# #         date_lists = soup.select('.info')
+# #         for date_list in date_lists:
+# #             test=date_list.text
+# #             date_cleansing(test)
 
-#         #본문요약본
-#         contents_lists = soup.select('a.api_txt_lines.dsc_txt_wrap')
-#         for contents_list in contents_lists:
-#             #print('==='*40)
-#             #print(contents_list)
-#             contents_cleansing(contents_list)
+# #         #본문요약본
+# #         contents_lists = soup.select('a.api_txt_lines.dsc_txt_wrap')
+# #         for contents_list in contents_lists:
+# #             #print('==='*40)
+# #             #print(contents_list)
+# #             contents_cleansing(contents_list)
 
-#         #모든 리스트 딕셔너리형태로 저장
-#         result= {"date" : date_text , "title":title_text , "source" : source_text ,"contents": contents_text ,"link":link_text }
-#         print(page)
+# #         #모든 리스트 딕셔너리형태로 저장
+# #         result= {"date" : date_text , "title":title_text , "source" : source_text ,"contents": contents_text ,"link":link_text }
+# #         print(page)
 
-#         df = pd.DataFrame(result) #df로 변환
-#         page += 10
+# #         df = pd.DataFrame(result) #df로 변환
+# #         page += 10
 
-# #날짜 정제화 함수
-# def date_cleansing(test):
-#     try:
-#         pattern = '\d+.(\d+).(\d+).'
-#         r = re.compile(pattern)
-#         match = r.search(test).group(0) # 2018.11.05.
-#         date_text.append(match)
-#     except AttributeError:
+# # #날짜 정제화 함수
+# # def date_cleansing(test):
+# #     try:
+# #         pattern = '\d+.(\d+).(\d+).'
+# #         r = re.compile(pattern)
+# #         match = r.search(test).group(0) # 2018.11.05.
+# #         date_text.append(match)
+# #     except AttributeError:
 
-#         pattern = '\w* (\d\w*)'
+# #         pattern = '\w* (\d\w*)'
 
-#         r = re.compile(pattern)
-#         match = r.search(test).group(1)
-#         #print(match)
-#         date_text.append(match)
+# #         r = re.compile(pattern)
+# #         match = r.search(test).group(1)
+# #         #print(match)
+# #         date_text.append(match)
 
-# #내용 정제화 함수
-# def contents_cleansing(contents):
-#     first_cleansing_contents = re.sub('<dl>.*?</a> </div> </dd> <dd>', '',
-#     str(contents)).strip()
-#     second_cleansing_contents = re.sub('<ul class="relation_lst">.*?</dd>', '',
-#     first_cleansing_contents).strip()
-#     third_cleansing_contents = re.sub('<.+?>', '', second_cleansing_contents).strip()
-#     contents_text.append(third_cleansing_contents)
-#     #print(contents_text)
-
-
-# #엑셀로 저장하기 위한 변수
-# RESULT_PATH ='C:/Users/User/Desktop/python study/beautifulSoup_ws/crawling_result/'
-# now = datetime.now()
-
-# # 새로 만들 파일이름 지정
-# outputFileName = '%s-%s-%s %s시 %s분 %s초 merging.xlsx' % (now.year, now.month, now.day, now.hour, now.minute, now.second)
-# df.to_excel(RESULT_PATH+outputFileName,sheet_name='sheet1')
-# =======================================================================================================================================
-
-# from bs4 import BeautifulSoup
-# import requests
-
-# # url = 'https://search.naver.com/search.naver?where=news&sm=tab_jum&query=삼성전자'
-# url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort="+sort+"&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
-# # https://search.naver.com/search.naver?where=news&query=%EC%82%BC%EC%84%B1%EC%A0%84%EC%9E%90&sm=tab_srt&sort=1&photo=0&field=0&reporter_article=&pd=0&ds=&de=&docid=&nso=so%3Add%2Cp%3Aall%2Ca%3Aall&mynews=0&refresh_start=0&related=0
-# res = requests.get(url)
-# html = res.text
-
-# soup = BeautifulSoup(html, 'html.parser')
-
-# title_list = soup.select('.news_tit')
-
-# for tag in title_list:
-#     print(tag.text)
-
-    # ### 네이버 금융 재무정보 크롤링 테스트
-    # def NaverCrowStock(self):
-    #     url_tmp = 'https://finance.naver.com/item/main.nhn?code%s'
-    #     url = url_tmp % ('005930')
-
-    #     item_info = requests.get(url).text
-    #     soup = BeautifulSoup(item_info, 'html.parser')
-    #     finance_info = soup.select('div.section.cop_analysis div.sub_section')[0]
-
-    #     th_data = [item.get_text().strip() for item in finance_info.select('thead th')]
-    #     annual_date = th_data[3:7]
-    #     quarter_date = th_data[7:13]
-
-    #     finance_index = [item.get_text().strip() for item in finance_info.select('th.h_th2')][3:0]
-
-    #     finance_data = [item.get_text().stipt() for item in finance_info.select('td')]
-    #     finance_data = np.array(finance_data)
-    #     finance_data.resize(len(finance_index), 10)
-
-    #     finance_date = annual_date + quarter_date
-
-    #     finance = pd.DataFrame(data=finance_data[0:,0:], index=finance_index, columns = finance_date)
+# # #내용 정제화 함수
+# # def contents_cleansing(contents):
+# #     first_cleansing_contents = re.sub('<dl>.*?</a> </div> </dd> <dd>', '',
+# #     str(contents)).strip()
+# #     second_cleansing_contents = re.sub('<ul class="relation_lst">.*?</dd>', '',
+# #     first_cleansing_contents).strip()
+# #     third_cleansing_contents = re.sub('<.+?>', '', second_cleansing_contents).strip()
+# #     contents_text.append(third_cleansing_contents)
+# #     #print(contents_text)
 
 
-    # ### Nice 평가정보 재무정보 크롤링 테스트
-    # def NiceCrow(self):
-    #     url_tmp = 'http://media.kisline.com/highlight/mainHighlight.nice?nav=1&paper_stock=%s'
-    #     url = url_tmp % ('005930')
-    #     tables = pd.read_html(url)
-    #     df = tables[4]
+# # #엑셀로 저장하기 위한 변수
+# # RESULT_PATH ='C:/Users/User/Desktop/python study/beautifulSoup_ws/crawling_result/'
+# # now = datetime.now()
 
-# ### Naver 금융 재무정보 2 크롤링 테스트
-#     def NaverCrowTmp(self):
-#         url_tmp = 'https://finance.naver.com/item/main.nhn?code%s'
-#         url = url_tmp % ('005930')
-#         tables = pd.read_html(url, encoding='euc-kr')
-#         df = tables[3]
+# # # 새로 만들 파일이름 지정
+# # outputFileName = '%s-%s-%s %s시 %s분 %s초 merging.xlsx' % (now.year, now.month, now.day, now.hour, now.minute, now.second)
+# # df.to_excel(RESULT_PATH+outputFileName,sheet_name='sheet1')
+# # =======================================================================================================================================
 
-# =======================================================================================================================================
+# # from bs4 import BeautifulSoup
+# # import requests
 
-# ============================================================
-# ==================                     =====================
-# ==================    Preprocessing    =====================
-# ==================                     =====================
-# ============================================================
-class CrowDf(object):
+# # # url = 'https://search.naver.com/search.naver?where=news&sm=tab_jum&query=삼성전자'
+# # url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort="+sort+"&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
+# # # https://search.naver.com/search.naver?where=news&query=%EC%82%BC%EC%84%B1%EC%A0%84%EC%9E%90&sm=tab_srt&sort=1&photo=0&field=0&reporter_article=&pd=0&ds=&de=&docid=&nso=so%3Add%2Cp%3Aall%2Ca%3Aall&mynews=0&refresh_start=0&related=0
+# # res = requests.get(url)
+# # html = res.text
+
+# # soup = BeautifulSoup(html, 'html.parser')
+
+# # title_list = soup.select('.news_tit')
+
+# # for tag in title_list:
+# #     print(tag.text)
+
+#     # ### 네이버 금융 재무정보 크롤링 테스트
+#     # def NaverCrawStock(self):
+#     #     url_tmp = 'https://finance.naver.com/item/main.nhn?code%s'
+#     #     url = url_tmp % ('005930')
+
+#     #     item_info = requests.get(url).text
+#     #     soup = BeautifulSoup(item_info, 'html.parser')
+#     #     finance_info = soup.select('div.section.cop_analysis div.sub_section')[0]
+
+#     #     th_data = [item.get_text().strip() for item in finance_info.select('thead th')]
+#     #     annual_date = th_data[3:7]
+#     #     quarter_date = th_data[7:13]
+
+#     #     finance_index = [item.get_text().strip() for item in finance_info.select('th.h_th2')][3:0]
+
+#     #     finance_data = [item.get_text().stipt() for item in finance_info.select('td')]
+#     #     finance_data = np.array(finance_data)
+#     #     finance_data.resize(len(finance_index), 10)
+
+#     #     finance_date = annual_date + quarter_date
+
+#     #     finance = pd.DataFrame(data=finance_data[0:,0:], index=finance_index, columns = finance_date)
+
+
+#     # ### Nice 평가정보 재무정보 크롤링 테스트
+#     # def NiceCraw(self):
+#     #     url_tmp = 'http://media.kisline.com/highlight/mainHighlight.nice?nav=1&paper_stock=%s'
+#     #     url = url_tmp % ('005930')
+#     #     tables = pd.read_html(url)
+#     #     df = tables[4]
+
+# # ### Naver 금융 재무정보 2 크롤링 테스트
+# #     def NaverCrawTmp(self):
+# #         url_tmp = 'https://finance.naver.com/item/main.nhn?code%s'
+# #         url = url_tmp % ('005930')
+# #         tables = pd.read_html(url, encoding='euc-kr')
+# #         df = tables[3]
+
+# # =======================================================================================================================================
+
+# # ============================================================
+# # ==================                     =====================
+# # ==================    Preprocessing    =====================
+# # ==================                     =====================
+# # ============================================================
+class CrawDf(object):
     def __init__(self):
-        self.ck = CrowKdd()
+        self.ck = CrawKdd()
         this = self.ck
         self.keyword = this.keyword
         print("검색어1: ", self.keyword)
@@ -362,6 +417,13 @@ class CrowDf(object):
         self.poflag = []
         self.neflag = []
 
+        self.po_key = []
+        self.ne_key = []
+        self.po_val = []
+        self.ne_val = []
+
+        self.stock_name = []
+
     # def DataPro(self, keyword, word, positive_word, negative_word, poflag, neflag):
     def DataPro(self):
         # 
@@ -372,7 +434,11 @@ class CrowDf(object):
         negative_word = self.negative_word
         poflag = self.poflag
         neflag = self.neflag
-        
+        po_key = self.po_key
+        ne_key = self.ne_key
+        po_val = self.po_val
+        ne_val = self.ne_val
+        stock_name = self.stock_name
         # this = self.ck
         # this.keyword = self.keyword
 
@@ -527,16 +593,56 @@ class CrowDf(object):
         기념', '회장', '도전', '혁신', '계승', '삼성', '전자', '창립', '주년', '기념', '개최']
         '''
 
+        po_key = po_words.keys()
+        po_val = po_words.values()
+
+        ne_key = ne_words.keys()
+        ne_val = ne_words.values()
+        # for key, value in po_words:
+        #     po_key.append(key)
+            
+        #     # po_val.append(value)
+        # print(po_key)
+        # # print(po_val)
+
         # 
-        print("\n긍정적인 단어 :", po_words)
+        print("\n긍정적인 단어 :", po_key, po_val)
         # print("긍정적인 단어", positive_word)
         # print(type(po_words))
-        print("부정적인 단어 :", ne_words)
+        print("부정적인 단어 :", ne_key, ne_val)
         
-        word_df = {'positive' : [po_words], 
-                   'negative' : [ne_words]}
+        # word_df = {}
 
-        df = pd.DataFrame(word_df)
+        po_df = pd.DataFrame(list(po_words.items()), columns=['positive', 'pos_count'])
+        ne_df = pd.DataFrame(list(ne_words.items()), columns=['negative', 'neg_count'])
+
+        df = pd.concat([po_df,ne_df], axis=1)
+
+        df_len = len(df)
+
+        for m in range(df_len):
+            stock_name.append(keyword)
+        stock_df = pd.DataFrame((stock_name), columns=['stock'])
+
+        print(stock_df)
+
+        df = pd.concat([df, stock_df], axis=1)
+
+
+        # word_df = {'stock' : keyword,
+        #            'positive' : po_key,
+        #            'pos_count' : po_val,
+        #            'negative' : ne_key,
+        #            'neg_count' : ne_val}
+
+        # df = pd.DataFrame.from_dict(word_df, orient='index')
+
+        # word_df = {keyword, po_key, po_val, ne_key, ne_val}
+
+        # df = pd.DataFrame.from_dict(word_df, orient='index').rename(
+        #     columns={0:'index', 1:'positive', 2:'pos_count', 3:'negative', 4:'neg_count'})
+
+        # df.transpose()
 
         # df.columns = ['index', 'positive', 'negative']
         print(df.head())
@@ -555,10 +661,10 @@ class CrowDf(object):
         '과징금': 2, '항의': 1, '소송': 1, '불명예': 1, '리스크': 1, '갑질': 1, 
         '침해': 1, '발끈': 1}
         '''
-# ck = CrowKdd(maxpage, keyword, order, s_date, e_date)
+# ck = CrawKdd(maxpage, keyword, order, s_date, e_date)
 
-# ck = CrowKdd('maxpage', 'keyword', 'order', 's_date', 'e_date').format(ck.keyword)
-# ck = CrowKdd.__init__(keyword)
+# ck = CrawKdd('maxpage', 'keyword', 'order', 's_date', 'e_date').format(ck.keyword)
+# ck = CrawKdd.__init__(keyword)
 # print(ck.keyword)
 
 
@@ -568,71 +674,67 @@ class CrowDf(object):
 # ==================       Modeling      =====================
 # ==================                     =====================
 # ============================================================
-class CrowDto(db.Model):
-    __tablename__ = 'stock'
-    __table_args__={'mysql_collate' : 'utf8_general_ci'}
+# class CrawDto(db.Model):
+#     __tablename__ = 'stock'
+#     __table_args__={'mysql_collate' : 'utf8_general_ci'}
 
-    date : str = db.Column(db.String(10), primary_key = True, index = True)
-    positive : str = db.Column(db.String(10))
-    negative : str = db.Column(db.String(10))
-    close : int = db.Column(db.Integer)
-    open : int = db.Column(db.Integer)
-    volume : int = db.Column(db.Integer)
+#     date : str = db.Column(db.String(10), primary_key = True, index = True)
+#     stock_name : str = db.Column(db.String(10))
+#     positive : str = db.Column(db.String(10))
+#     negative : str = db.Column(db.String(10))
 
-    def __init__(self, positive, negative, date, close, open, volume):
-        self.date = date
-        self.close = close
-        self.open = open
-        self.volume = volume
+#     def __init__(self, date, stock_name, positive, negative):
+#         self.date = date
+#         self.stock_name = stock_name
+#         self.positive = positive
+#         self.negative = negative
     
-    def __repr__(self):
-        return f'Stock(date={self.date}, positive={self.positive}, negative={self.negative}\
-             close={self.close}, open={self.open}, volume={self.volume})'
+#     def __repr__(self):
+#         return f'Stock(date={self.date}, positive={self.positive},\
+#                negative={self.negative})'
 
-# class CrowVo:
+# class CrawVo:
 #     date : str = ''
-#     close : int = 0
-#     open : int = 0
-#     volume : int = 0
+#     stock_name : str = ''
+#     positive : str = ''
+#     negative : str = ''
 
 
 # Session = openSession()
 # session = Session()
-# crow_df = CrowDf()
+# craw_df = CrawDf()
 
 
-# class CrowDao(StockDto):
+# class CrawDao(StockDto):
     
 #     @staticmethod
 #     def bulk():
 #         Session = openSession()
 #         session = Session()
-#         crow_df = CrowDf()
-#         df = crow_df.hook()
+#         craw_df = CrawDf()
+#         df = craw_df.hook()
 #         # print(df.head())
-#         session.bulk_insert_mappings(CrowDto, df.to_dict(orient='records'))
+#         session.bulk_insert_mappings(CrawDto, df.to_dict(orient='records'))
 #         session.commit()
 #         session.close()
 
 #     @staticmethod
 #     def count():
-#         return session.query(func.count(CrowDto.date)).one()
+#         return session.query(func.count(CrawDto.date)).one()
 
 #     @staticmethod
-#     def save(crow):
-#         new_crow = CrowDto(date = crow['date'],
-#                            positive = crow['positive'],
-#                            negative = crow['negative'],
-#                            close = crow['close'],
-#                            open = crow['open'],
-#                            volume = crow['volume'])
-#         session.add(new_crow)
+#     def save(craw):
+#         new_craw = CrawDto(date = craw['date'],
+#                            stock_name = craw['stock_name'],
+#                            positive = craw['positive'],
+#                            negative = craw['negative']
+#         session.add(new_craw)
 #         session.commit()
 
 
-# class CrowTf(object):
+# class CrawTf(object):
 #     ...
-# class CrowAi(object):
+# class CrawAi(object):
 #     ...
 # ============================================================
 # ==================                     =====================
@@ -653,24 +755,23 @@ class CrowDto(db.Model):
 # parser.add_argument('volume', type = str, required = True,
 #                             help='This field should be a userId')
 
-# class Crow(Resource):
+# class Craw(Resource):
     
 #     @staticmethod
 #     def post():
 #         args = parser.parse_args()
-#         crow = CrowVo()
-#         crow.positive = args.positive
-#         crow.negative = args.negative
-#         crow.close = args.close
-#         crow.open = args.open
-#         crow.volume = args.volume
-#         # service.assign(crow)
-#         # print("Predicted Crow")
-
+#         craw = CrawVo()
+#         craw.positive = args.positive
+#         craw.negative = args.negative
+#         craw.close = args.close
+#         craw.open = args.open
+#         craw.volume = args.volume
+#         # service.assign(craw)
+#         # print("Predicted Craw")
 
 
 if __name__ == "__main__":
-    ck = CrowKdd()
-    cd = CrowDf()
+    ck = CrawKdd()
+    cd = CrawDf()
     cd.DataPro()
 
