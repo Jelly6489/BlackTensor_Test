@@ -165,7 +165,7 @@ class CrawKdd(object):
                 # results += tag.get_text()
                 results.append(tag.text)
 
-
+### ------------------------------------------------------
             date_lists = soup.select('span.info')
 
             for date_list in date_lists:
@@ -187,6 +187,8 @@ class CrawKdd(object):
                 date_text.append(match)
             
         print("크롤링 날짜!! :", date_text)
+
+### ------------------------------------------------------
         return results
             
 
