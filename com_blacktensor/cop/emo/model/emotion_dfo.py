@@ -18,7 +18,7 @@ from com_blacktensor.resources.stock_craw import keyword
 # # ==================    Preprocessing    =====================
 # # ==================                     =====================
 # # ============================================================
-class EmotionDf(object):
+class EmotionDfo(object):
     def __init__(self, colums):
         # self.ek = EmotionKdd()
         # this = self.ek

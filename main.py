@@ -9,7 +9,11 @@ from com_blacktensor.ext.routes import initialize_routes
 from com_blacktensor.util.checker import Checker 
 from com_blacktensor.util.file_hander import FileHandler as handler
 from com_blacktensor.ext.db import url, db
-from com_blacktensor.resources.craw_emotion import CrawKdd, CrawDf, CrawDao, CrawDto
+# from com_blacktensor.resources.craw_emotion import CrawKdd, CrawDf, CrawDao, CrawDto
+from com_blacktensor.cop.emo.model.emotion_dao import EmotionDao, StockNewsDao
+from com_blacktensor.cop.emo.model.emotion_dfo import EmotionDf
+from com_blacktensor.cop.emo.model.emotion_kdd import EmotionKdd
+from com_blacktensor.cop.emo.model.emotion_dto import EmotionDto, StockNewsDto
 app = Flask(__name__)
 CORS(app, resources={r'/api/*': {"origins": "*"}})
 
@@ -25,24 +29,45 @@ api = Api(app)
 with app.app_context():
     db.create_all()
 
-    status_count = CrawDao.count()
+    status_count = EmotionDto.count()
     
     if status_count == 0:
-        # naver_news(self, maxpage, keyword, order, s_date, e_date):
-        df = CrawKdd().naver_news()
-        CrawDao
+        endDate = datetime.date.today().strftime('%Y%m%d')
+        datas = EmotionKdd().get_covid19_status(endDate)
 
-        if len(df) > 0:
+        if len(datas) > 0:
             if not Checker.check_folder_path('./csv'):
                 handler.crete_folder('./csv')
             
-            keys = list(df[0].keys())
-            handler.save_to_csv('./csv/result_Covid19_status.csv', df, keys, 'utf-8-sig')
+            keys = list(datas[0].keys())
+            handler.save_to_csv('./csv/result_Covid19_status.csv', datas, keys, 'utf-8-sig')
 
-            df = CrawDf(keys).get_dataframe(df)
-            CrawDao.save_data_bulk(df)
+            df = EmotionDf(keys).get_dataframe(datas)
+            EmotionDao.save_data_bulk(df)
 
 initialize_routes(api)
+
+# with app.app_context():
+#     db.create_all()
+
+#     status_count = CrawDao.count()
+    
+#     if status_count == 0:
+#         # naver_news(self, maxpage, keyword, order, s_date, e_date):
+#         df = CrawKdd().naver_news()
+#         CrawDao
+
+#         if len(df) > 0:
+#             if not Checker.check_folder_path('./csv'):
+#                 handler.crete_folder('./csv')
+            
+#             keys = list(df[0].keys())
+#             handler.save_to_csv('./csv/result_Covid19_status.csv', df, keys, 'utf-8-sig')
+
+#             df = CrawDf(keys).get_dataframe(df)
+#             CrawDao.save_data_bulk(df)
+
+# initialize_routes(api)
 
 # with app.app_context():
 #     db.create_all()

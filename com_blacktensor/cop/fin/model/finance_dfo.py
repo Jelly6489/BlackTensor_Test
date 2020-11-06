@@ -7,7 +7,7 @@ from com_blacktensor.util.file_hander import FileReader
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # from com_blacktensor.ext.routes import Resource
 
-class FinancelDfo(object):
+class FinanceDfo(object):
     def __init__(self, colums):
         # self.ck = CrawKdd()
         # this = self.ck
