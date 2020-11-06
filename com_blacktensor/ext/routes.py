@@ -3,6 +3,8 @@ from flask import Blueprint
 from flask_restful import Api
 
 from com_blacktensor.cop.emo.resource.emotion import Emotion
+from com_blacktensor.cop.fin.resource.finance import Finance
+from com_blacktensor.cop.sto.resource.stock import Stock
 # from com_blacktensor.resources.craw_emotion import Craw
 # from com_blackTensor.resources.covid_status import CovidStatus
 # from com_blackTensor.resources.frequency_naver_news import FrequencyNaverNews
@@ -12,6 +14,8 @@ from com_blacktensor.cop.emo.resource.emotion import Emotion
 # from com_blacktensor.resources.crow import Article, Articles
 
 emotion = Blueprint('emotion', __name__, url_prefix='/api/emotion')
+finance = Blueprint('finance', __name__, url_prefix='/api/finance')
+stock = Blueprint('stock', __name__, url_prefix='/api/stock')
 # covid = Blueprint('covidStatus', __name__, url_prefix='/api/covid')
 # frequency = Blueprint('frequencyNaverNews', __name__, url_prefix='/api/frequency')
 
@@ -20,10 +24,21 @@ api = Api(emotion)
 
 def initialize_routes(api):
     api.add_resource(Emotion, '/api/emotion')
-    # api.add_resource(CovidStatus, '/api/covid')
-    # api.add_resource(FrequencyNaverNews, '/api/frequency')
+    api.add_resource(Finance, '/api/finance')
+    api.add_resource(Stock, '/api/stock')
+
 
 @emotion.errorhandler(500)
 def user_api_error(e):
+    logging.exception('An error occurred during emotion request. %s' % str(e))
+    return 'An internal error occurred.', 500
+
+@finance.errorhandler(500)
+def finance_api_error(e):
+    logging.exception('An error occurred during emotion request. %s' % str(e))
+    return 'An internal error occurred.', 500
+
+@stock.errorhandler(500)
+def stock_api_error(e):
     logging.exception('An error occurred during emotion request. %s' % str(e))
     return 'An internal error occurred.', 500

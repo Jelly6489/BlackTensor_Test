@@ -15,8 +15,6 @@ from com_blacktensor.cop.emo.model.emotion_dto import EmotionDto, StockNewsDto
 # import time
 # import multiprocessing
 
-from com_blacktensor.util.file_hander import FileReader
-from com_blacktensor.resources.stock_craw import keyword
 
 Session = openSession()
 session = Session()

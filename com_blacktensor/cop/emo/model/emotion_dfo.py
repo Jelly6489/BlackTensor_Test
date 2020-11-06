@@ -10,9 +10,8 @@ from collections import Counter
 # from sqlalchemy import Column, Integer, String, Date
 # # from sqlalchemy import create_engine
 
-from com_blacktensor.util.file_hander import FileReader
-from com_blacktensor.resources.stock_craw import keyword
-
+from com_blacktensor.util.file_hander import FileHandler
+from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # # ============================================================
 # # ==================                     =====================
 # # ==================    Preprocessing    =====================

@@ -36,9 +36,9 @@ class FinanceKdd(object):
     2  HDC현대산업개발  294870
     3      KG케미칼  001390
     4      LG이노텍  011070
-    '''    
+    '''
 
-    my_folder = 'C:/Users/Admin/VscProject/BlackTensor_Test/com_blacktensor/resources'
+    # my_folder = 'C:/Users/Admin/VscProject/BlackTensor_Test/com_blacktensor/'
 
     def __init__(self):
         self.keyword = keyword
