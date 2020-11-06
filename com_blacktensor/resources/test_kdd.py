@@ -1,5 +1,6 @@
 import requests
 import pandas as pd
+from pandas import DataFrame, Series
 import codecs
 import numpy as np
 import re
@@ -10,6 +11,7 @@ from flask_restful import Resource, reqparse
 from com_blacktensor.ext.db import db, openSession, engine
 from sqlalchemy import func
 import json
+import csv
 
 from sqlalchemy import Column, Integer, String, Date
 # import time
@@ -26,9 +28,28 @@ keyword = input("검색어 입력: ")
 order = input("뉴스 검색 방식 입력(관련도순=0 최신순=1 오래된순=2): ") #관련도순=0 최신순=1 오래된순=2
 s_date = input("시작날짜 입력(예: 2020.07.20):")
 e_date = input("끝날짜 입력(예: 2020.10.30):")
-date_text = []
+# date_text = []
+# my_folder = 'C:/Users/Admin/VscProject/BlackTensor_Test/com_blacktensor/resources'
+
+
+code_df = pd.read_html('http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13',header=0)[0]
+
+# 종목코드가 6자리이기 때문에 6자리를 맞춰주기 위해 설정해둠
+code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
+
+# 회사명과 종목코드 필요 -> 그 이외에 필요 없는 column 제외
+code_df = code_df[['회사명', '종목코드']]
+
+# 한글로된 컬럼명을 영어로 변환
+code_df = code_df.rename(columns={'회사명' : 'name', '종목코드' : 'code'})
+code_df.head() 
+print(code_df.head())
+
+code = code_df.query("name=='{}'".format(keyword))['code'].to_string(index=False)
+code = code.strip()
+
 # ### HeadLine
-class EmotionKdd(object):
+class CrawKdd(object):
     # ##keyword = '삼성전자'
     # info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+"시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
     # maxpage = int(input("최대 크롤링할 페이지 수 입력하시오: "))
@@ -52,6 +73,195 @@ class EmotionKdd(object):
         self.s_date = s_date
         self.e_date = e_date
         # self.date_text = date_text
+        # self.code_df = code_df
+        # self.code = code
+    #원하시는 종목명
+
+    # my_folder = 'C:/Users/Admin/VscProject/BlackTensor_Test/com_blacktensor/resources'
+
+    # https://finance.naver.com/item/sise.nhn?code=005930(삼성전자)
+    def get_finance(self, keyword, code_df):
+        # item_name = self.item_name
+        
+        # this = self.sk
+        # this.code_name = code_name
+        # code = code_df.query("name=='{}'".format(keyword))['code'].to_string(index=False)
+        # code = code.strip()
+
+        # 경로 탐색(http://comp.fnguide.com/SVO2/ASP/SVD_Main.asp?pGB=1&gicode=A005930&cID=&MenuYn=Y&ReportGB=&NewMenuID=101&stkGb=701)
+        url = requests.get('http://comp.fnguide.com/SVO2/ASP/SVD_main.asp?pGB=1&gicode=A%s'%(code))
+        url = url.content
+        
+        # print("요청 URL = {}".format(url))
+    
+        html = BeautifulSoup(url,'html.parser')
+        body = html.find('body')
+
+        fn_body = body.find('div',{'class':'fng_body asp_body'})
+        ur_table = fn_body.find('div',{'id':'div15'})
+        # D_A 전체 / D_Y 연간 / D_Q 분기
+        table = ur_table.find('div',{'id':'highlight_D_Y'})
+
+        tbody = table.find('tbody')
+    
+        tr = tbody.find_all('tr')
+
+        Table = DataFrame()
+
+        for i in tr:
+        
+            # 항목 가져오기
+            category = i.find('span',{'class':'txt_acd'})
+            
+            if category == None:
+                category = i.find('th')   
+        
+            category = category.text.strip()
+
+        
+            # 값 가져오기
+            value_list =[]
+
+            j = i.find_all('td',{'class':'r'})
+            
+            for value in j:
+                temp = value.text.replace(',','').strip()
+                    
+                try:
+                    temp = float(temp)
+                    value_list.append(temp)
+                except:
+                    value_list.append(0)
+            
+            Table['%s'%(category)] = value_list
+            
+            # 기간 가져오기
+            
+            thead = table.find('thead')
+            tr_2 = thead.find('tr',{'class':'td_gapcolor2'}).find_all('th')
+                    
+            year_list = []
+            
+            for i in tr_2:
+                try:
+                    temp_year = i.find('span',{'class':'txt_acd'}).text
+                except:
+                    temp_year = i.text
+                
+                year_list.append(temp_year)
+                    
+            Table.index = year_list
+     
+        Table = Table.T
+    
+        # print(Table)
+        df = pd.DataFrame(Table)
+        # df[loc['매출액', '영업이익', '영업이익(발표기준)', '당기순이익 ', '지배주주순이익', '비지배주주순이익', \
+        #     '자산총계', '부채총계', '자본총계', '지배주주지분', '비지배주주지분', \
+        #     '자본금', '발행주식수']] \
+        # = df[loc['매출액', '영업이익', '영업이익(발표기준)', '당기순이익 ', '지배주주순이익', '비지배주주순이익', \
+        #       '자산총계', '부채총계', '자본총계', '지배주주지분', '비지배주주지분', \
+        #     '자본금', '발행주식수']].astype(int)
+
+        # df = df.drop(['매출액'])
+        df.loc[:, 'stock'] = keyword
+        print(df)
+
+        '''
+                            2015/12     2016/12     2017/12     2018/12     2019/12  2020/12(E)  2021/12(E)  2022/12(E)
+        매출액              2006535.00  2018667.00  2395754.00  2437714.00  2304009.00  2388064.00  2615902.00  2800634.00
+        영업이익            264134.00   292407.00   536450.00   588867.00   277685.00   372393.00   465164.00   548498.00
+        영업이익(발표기준)   264134.00   292407.00   536450.00   588867.00   277685.00        0.00        0.00        0.00     
+        당기순이익          190601.00   227261.00   421867.00   443449.00   217389.00   279829.00   353435.00   418121.00        
+        지배주주순이익      186946.00   224157.00   413446.00   438909.00   215051.00   277341.00   350214.00   414319.00      
+        비지배주주순이익       3655.00     3104.00     8422.00     4540.00     2338.00        0.00        0.00        0.00     
+        자산총계            2421795.00  2621743.00  3017521.00  3393572.00  3525645.00  3757402.00  4056352.00  4418639.00
+        부채총계            631197.00   692113.00   872607.00   916041.00   896841.00   928824.00   986411.00  1036838.00
+        자본총계            1790598.00  1929630.00  2144914.00  2477532.00  2628804.00  2828578.00  3069942.00  3381802.00
+        지배주주지분        1728768.00  1864243.00  2072134.00  2400690.00  2549155.00  2745300.00  2986764.00  3297408.00       
+        비지배주주지분       61830.00    65387.00    72780.00    76842.00    79649.00    83278.00    83178.00    84394.00      
+        자본금              8975.00     8975.00     8975.00     8975.00     8975.00     8979.00     8979.00     8979.00
+        부채비율             35.25       35.87       40.68       36.97       34.12       32.84       32.13       30.66
+        유보율              20659.47    21757.56    23681.42    26648.22    28302.40        0.00        0.00        0.00
+        영업이익률            13.16       14.49       22.39       24.16       12.05       15.59       17.78       19.58        
+        지배주주순이익률       9.32       11.10       17.26       18.00        9.33       11.61       13.39       14.79     
+        ROA                  8.07        9.01       14.96       13.83        6.28        7.68        9.05        9.87
+        ROE                 11.16       12.48       21.01       19.63        8.69       10.48       12.22       13.19
+        EPS                2198.00     2735.00     5421.00     6024.00     3166.00     4083.00     5156.00     6100.00
+        BPS                21903.00    24340.00    28971.00    35342.00    37528.00    40416.00    43970.00    48544.00
+        DPS                420.00      570.00      850.00     1416.00     1416.00     1576.00     1560.00     1543.00
+        PER                 11.47       13.18        9.40        6.42       17.63       14.40       11.40        9.64
+        PBR                 1.15        1.48        1.76        1.10        1.49        1.45        1.34        1.21
+        발행주식수         7364967.00  7033967.00  6454925.00  5969783.00  5969783.00        0.00        0.00        0.00        
+        배당수익률             1.67        1.58        1.67        3.66        2.54        0.00        0.00        0.00 
+        '''
+
+        # csv 파일 저장
+        df.to_csv(keyword + '_finance.csv', encoding='utf8')
+
+    get_finance(0, keyword, code_df)
+
+    def get_url(self, keyword, code_df):
+        # item_name = self.item_name
+        
+        # this = self.sk
+        # this.code_name = code_name
+        # code = code_df.query("name=='{}'".format(keyword))['code'].to_string(index=False)
+        # code = code.strip()
+
+        url = 'http://finance.naver.com/item/sise_day.nhn?code={code}'.format(code=code)
+        
+        print("요청 URL = {}".format(url))
+        # return url
+
+        # url = get_url(0, keyword, code_df)
+
+        df = pd.DataFrame()
+
+        for page in range(1, 16): 
+            pg_url = '{url}&page={page}'.format(url=url, page=page) 
+            df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
+            # df = df.append({'stock' : keyword}, ignore_index=True)
+
+        df = df.dropna()
+
+        df = df.drop(columns= {'전일비', '시가', '고가', '저가'})
+
+        # print(df.head())
+        print(df)
+
+        df = df.rename(columns= {
+            '날짜': 'date', '종가': 'close', '전일비': 'diff', '시가': 'open',
+            '고가': 'high', '저가': 'low', '거래량': 'volume'
+            })
+
+        # df.drop(['diff', 'open', 'high', 'low'], axis=1, inplace=True)
+
+        # 데이터 타입 int 변환
+        df[['close', 'volume']] \
+            = df[['close', 'volume']].astype(int)
+
+        # df.drop(['diff', 'open', 'high', 'low'], axis=0, inplace=True)
+
+        # date를 date type 변환
+        df['date'] = pd.to_datetime(df['date'])
+
+        # date 기준으로 내림차순 sort
+        df = df.sort_values(by=['date'], ascending=False)
+
+        df.loc[:, 'stock'] = keyword
+
+        # df.head()
+        print('-------------------- head -------------------')
+        print(df.head())
+        print('\n-------------------- 전체 -------------------')
+        print(df)
+
+        # csv file 저장
+        # df.to_csv(keyword, '.csv', mode = 'a', header = False)
+        df.to_csv(keyword + '_data.csv', encoding='utf8')
+
+    url = get_url(0, keyword, code_df)
 
     def naver_news(self, maxpage, keyword, order, s_date, e_date):
         results = []
@@ -136,7 +346,6 @@ class EmotionKdd(object):
     df = pd.DataFrame(result)
     # print(df)
     df.columns = ['title']
-    df.loc[:, 'keyword'] = keyword
     print(df.head())
     df.to_csv(keyword + '.csv', encoding='utf8')
 '''
@@ -146,116 +355,20 @@ class EmotionKdd(object):
 3                  [연합뉴스 이 시각 헤드라인] - 12:00
 4   “이건희 회장의 ‘도전 DNA’ 계승… 판도 바꾸는 기업으로 진화하자”
 '''
+    # https://finance.naver.com/item/sise.nhn?code=005930(삼성전자)
 
 
-# # =======================================================================================================================================
-
-# # # title_text = []
-# # # link_text = []
-# # # source_text = []
-# # # date_text = []
-# # # contents_text = []
-
-# # def main():
-# #     info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+" 시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
-# #     maxpage = input("최대 크롤링할 페이지 수 입력하시오: ")
-# #     query = input("검색어 입력: ")
-# #     sort = input("뉴스 검색 방식 입력(관련도순=0 최신순=1 오래된순=2): ") #관련도순=0 최신순=1 오래된순=2
-# #     s_date = input("시작날짜 입력(2019.01.04):") #2019.01.04
-# #     e_date = input("끝날짜 입력(2019.01.05):") #2019.01.05
-# #     crawler(maxpage, query, sort, s_date, e_date)
-# # main()
-
-# # def crawler(maxpage, query, sort, s_date, e_date):
-# #     s_from = s_date.replace(".","")
-# #     e_to = e_date.replace(".","")
-# #     page = 1
-# #     maxpage_t =(int(maxpage)-1)*10+1 # 11= 2페이지 21=3페이지 31=4페이지 ...81=9페이지 , 91=10페이지, 101=11페이지
-
-# #     while page <= maxpage_t:
-# #         url = "https://search.naver.com/search.naver?where=news&query=" + query + "&sort="+sort+"&ds=" + s_date + "&de=" + e_date + "&nso=so%3Ar%2Cp%3Afrom" + s_from + "to" + e_to + "%2Ca%3A&start=" + str(page)
-# #         response = requests.get(url)
-# #         html = response.text
-
-# #         #뷰티풀소프의 인자값 지정
-# #         soup = BeautifulSoup(html, 'html.parser')
-
-# #         #태그에서 제목과 링크주소 추출
-# #         atags = soup.select('.news_tit')
-# #         for atag in atags:
-# #             title_text.append(atag.text)
-# #             link_text.append(atag['href'])
-
-# #         #신문사 추출
-# #         source_lists = soup.select('.thumb_box')
-# #         for source_list in source_lists:
-# #             source_text.append(source_list.text)
-
-# #         #날짜 추출
-# #         date_lists = soup.select('.info')
-# #         for date_list in date_lists:
-# #             test=date_list.text
-# #             date_cleansing(test)
-
-# #         #본문요약본
-# #         contents_lists = soup.select('a.api_txt_lines.dsc_txt_wrap')
-# #         for contents_list in contents_lists:
-# #             #print('==='*40)
-# #             #print(contents_list)
-# #             contents_cleansing(contents_list)
-
-# #         #모든 리스트 딕셔너리형태로 저장
-# #         result= {"date" : date_text , "title":title_text , "source" : source_text ,"contents": contents_text ,"link":link_text }
-# #         print(page)
-
-# #         df = pd.DataFrame(result) #df로 변환
-# #         page += 10
-
-# # #날짜 정제화 함수
-# # def date_cleansing(test):
-# #     try:
-# #         pattern = '\d+.(\d+).(\d+).'
-# #         r = re.compile(pattern)
-# #         match = r.search(test).group(0) # 2018.11.05.
-# #         date_text.append(match)
-# #     except AttributeError:
-
-# #         pattern = '\w* (\d\w*)'
-
-# #         r = re.compile(pattern)
-# #         match = r.search(test).group(1)
-# #         #print(match)
-# #         date_text.append(match)
-
-# # #내용 정제화 함수
-# # def contents_cleansing(contents):
-# #     first_cleansing_contents = re.sub('<dl>.*?</a> </div> </dd> <dd>', '',
-# #     str(contents)).strip()
-# #     second_cleansing_contents = re.sub('<ul class="relation_lst">.*?</dd>', '',
-# #     first_cleansing_contents).strip()
-# #     third_cleansing_contents = re.sub('<.+?>', '', second_cleansing_contents).strip()
-# #     contents_text.append(third_cleansing_contents)
-# #     #print(contents_text)
-
-
-# # #엑셀로 저장하기 위한 변수
-# # RESULT_PATH ='C:/Users/User/Desktop/python study/beautifulSoup_ws/crawling_result/'
-# # now = datetime.now()
-
-# # # 새로 만들 파일이름 지정
-# # outputFileName = '%s-%s-%s %s시 %s분 %s초 merging.xlsx' % (now.year, now.month, now.day, now.hour, now.minute, now.second)
-# # df.to_excel(RESULT_PATH+outputFileName,sheet_name='sheet1')
-
-# # ============================================================
-# # ==================                     =====================
-# # ==================    Preprocessing    =====================
-# # ==================                     =====================
-# # ============================================================
-class EmotionDf(object):
+# # # ============================================================
+# # # ==================                     =====================
+# # # ==================    Preprocessing    =====================
+# # # ==================                     =====================
+# # # ============================================================
+class CrawDf(object):
     def __init__(self):
-        self.ek = EmotionKdd()
-        this = self.ek
-        self.keyword = this.keyword
+        # self.ck = CrawKdd()
+        # this = self.ck
+        # self.keyword = this.keyword
+        self.keyword = keyword
         # print("검색어1: ", self.keyword)
 
         # this.maxpage = self.maxpage
@@ -407,14 +520,67 @@ class EmotionDf(object):
         po_df = pd.DataFrame(list(po_words.items()), columns=['positive', 'pos_count'])
         ne_df = pd.DataFrame(list(ne_words.items()), columns=['negative', 'neg_count'])
 
-        df = pd.concat([po_df,ne_df], axis=1)
+        df = pd.concat([po_df, ne_df], axis=1)
 
-        df.loc[:, 'keyword'] = keyword
+        df.loc[:, 'stock'] = keyword
 
         print(df.head())
         df.to_csv(keyword + '_word.csv', encoding='utf8')
 
+        #
 
+        # df_file = []
+        # print('----------------------------')
+        # with open('{}_word.csv'.format(keyword), 'r', encoding='utf-8') as file_df:
+        #     reader = csv.reader(file_df)
+        #     for row in reader:
+        #         df_file.append(row)
+        #         print(row)
+        #     print('------------df_file----------------')
+        #     print(df_file)
+        # df_file = pd.DataFrame(df_file)
+        # print('------------df_file2----------------')
+        # print(df_file)
+        #
+        news_file = pd.read_csv('{}.csv'.format(keyword), index_col=[0], encoding='utf-8')
+        df_file = pd.read_csv('{}_data.csv'.format(keyword), index_col=[0], encoding='utf-8')
+        fin_file = pd.read_csv('{}_finance.csv'.format(keyword), index_col=[0], encoding='utf-8')
+        print('-----------------df_file------------------')
+        print(df)
+        print('-----------------df_file------------------')
+        print(df_file)
+        # df_file.to_csv(keyword + '_set.csv', index=False, encoding='utf8')
+        df_file.to_csv(keyword + '_set.csv', encoding='utf8')
+        print('-----------------news_file------------------')
+        print(news_file)
+        df_file.to_csv(keyword + '_set.csv', encoding='utf8')
+        print('-----------------fin_file------------------')
+        print(fin_file)
+
+        #     print(type(file_df))
+        #     print('------------DataFrame----------------')
+        #     file_df = pd.DataFrame(file_df)
+        #     print(file_df)
+
+        #     print('------------df_file----------------')
+        #     df_file = []
+        #     for txt in file_df:
+        #         df_file.append(txt)
+        #         print(txt)
+        #     print(df_file)
+        
+        # print('----------------------------')
+        # df_file = open('{}_word.csv'.format(keyword), 'r', encoding='utf-8')
+        # # df = pd.read_csv('{}_word.csv'.format(keyword), encoding='utf-8')
+        # # df = df.drop([df.columns[0]], axis=1)
+        # rdr = csv.reader(df_file)
+        # print("확인: ", rdr)
+        df = pd.concat([df, df_file, news_file, fin_file], axis=1)
+        print('--------------final_df----------------')
+        df.to_csv(keyword + '_set.csv', encoding='utf8')
+        print(df)
+
+#       
 
         '''
         긍정적인 단어 : {'상승': 141, '인기': 66, '출시': 60, '전망': 36, '오픈': 30, 
@@ -435,7 +601,7 @@ class EmotionDf(object):
 # ==================       Modeling      =====================
 # ==================                     =====================
 # ============================================================
-# class EmotionDto(db.Model):
+# class CrawDto(db.Model):
 #     __tablename__ = 'new_emotion'
 #     __table_args__={'mysql_collate' : 'utf8_general_ci'}
 
@@ -471,7 +637,7 @@ class EmotionDf(object):
 #             'negative': self.negative
 #         }
 
-# # class EmotionVo:
+# # class CrawVo:
 # #     no = int = 0
 # #     date : str = ''
 # #     stock_name : str = ''
@@ -481,44 +647,44 @@ class EmotionDf(object):
 
 # Session = openSession()
 # session = Session()
-# emotion_df = EmotionDf()
+# craw_df = CrawDf()
 
 
-# class EmotionDao(EmotionDto):
+# class CrawDao(CrawDto):
     
 #     @staticmethod
 #     def bulk():
 #         Session = openSession()
 #         session = Session()
-#         emotion_df = EmotionDf()
-#         df = emotion_df.hook()
+#         craw_df = CrawDf()
+#         df = craw_df.hook()
 #         # print(df.head())
-#         session.bulk_insert_mappings(EmotionDto, df.to_dict(orient='records'))
+#         session.bulk_insert_mappings(CrawDto, df.to_dict(orient='records'))
 #         session.commit()
 #         session.close()
 
 #     @staticmethod
 #     def count():
-#         return session.query(func.count(EmotionDto.date)).one()
+#         return session.query(func.count(CrawDto.date)).one()
 
 #     @staticmethod
-#     def save(emotion):
-#         new_craw = CrawDto(date = emotion['date'],
-#                            stock_name = emotion['stock_name'],
-#                            positive = emotion['positive'],
-#                            negative = emotion['negative'])
-#         session.add(emotion)
+#     def save(craw):
+#         new_craw = CrawDto(date = craw['date'],
+#                            stock_name = craw['stock_name'],
+#                            positive = craw['positive'],
+#                            negative = craw['negative'])
+#         session.add(new_craw)
 #         session.commit()
 
-# # class EmotionTf(object):
+# # class CrawTf(object):
 # #     ...
-# # class EmotionAi(object):
+# # class CrawAi(object):
 # #     ...
 
 
 # if __name__ == "__main__":
-#     ck = EmotionKdd()
-#     cd = EmotionDf()
+#     ck = CrawKdd()
+#     cd = CrawDf()
 #     cd.DataPro()
 
 # # ============================================================
@@ -536,138 +702,139 @@ class EmotionDf(object):
 # # parser.add_argument('negative', type = str, required = True,
 # #                             help='This field should be a password')
 
-# # class Emotion(Resource):
+# # class Craw(Resource):
     
 # #     @staticmethod
 # #     def post():
 # #         args = parser.parse_args()
-# #         emotion = EmotionVo()
-# #         emotion.stock_name = args.stock_name
-# #         emotion.positive = args.positive
-# #         emotion.negative = args.negative
-# #         # service.assign(emotion)
+# #         craw = CrawVo()
+# #         craw.stock_name = args.stock_name
+# #         craw.positive = args.positive
+# #         craw.negative = args.negative
+# #         # service.assign(craw)
 # #         # print("Predicted Craw")
 
-# class Emotion(Resource):
+# class Craw(Resource):
      
 #      def __init__(self):
-#         self.dao = EmotionDao()
+#         self.dao = CrawDao()
         
 #      def get(self):        
 #         result = self.dao.find_all()
 #         return jsonify(json_list=[item.json for item in result])
 # =========================================================================================================================
-class EmotionDto(db.Model):
-    __tablename__ = 'stock'
-    __table_args__={'mysql_collate' : 'utf8_general_ci'}
-    no : int = db.Column(db.Integer, primary_key = True, index = True)
-    positive : str = db.Column(db.String(10), primary_key = True, index = True)
-    pos_count : int = db.Column(db.Integer)
-    negative : str = db.Column(db.String(10))
-    neg_count : int = db.Column(db.Integer)
-    stock : str = db.Column(db.String(10))
+# class CrawDto(db.Model):
+#     __tablename__ = 'stock'
+#     __table_args__={'mysql_collate' : 'utf8_general_ci'}
+#     no : int = db.Column(db.Integer, primary_key = True, index = True)
+#     positive : str = db.Column(db.String(10), primary_key = True, index = True)
+#     pos_count : int = db.Column(db.Integer)
+#     negative : str = db.Column(db.String(10))
+#     neg_count : int = db.Column(db.Integer)
+#     stock : str = db.Column(db.String(10))
 
-    def __init__(self, no, positive, pos_count, negative, neg_count, stock):
-        self.no = no
-        self.positive = positive
-        self.pos_count = pos_count
-        self.negative = negative
-        self.neg_count = neg_count
-        self.stock = stock
+#     def __init__(self, no, positive, pos_count, negative, neg_count, stock):
+#         self.no = no
+#         self.positive = positive
+#         self.pos_count = pos_count
+#         self.negative = negative
+#         self.neg_count = neg_count
+#         self.stock = stock
     
-    def __repr__(self):
-        return f'Stock(no={self.no}, positive={self.positive}, pos_count{self.pos_count}, \
-               negative={self.negative}, neg_count={self.neg_count}, stock={self.stock})'
+#     def __repr__(self):
+#         return f'Stock(no={self.no}, positive={self.positive}, pos_count{self.pos_count}, \
+#                negative={self.negative}, neg_count={self.neg_count}, stock={self.stock})'
 
-    def json(self):
-            return {
-                'no' : self.no,
-                'positive' : self.positive,
-                'pos_count' : self.pos_count,
-                'negative' : self.negative,
-                'neg_count' : self.neg_count,
-                'stock' : self.stock
-            }
+#     def json(self):
+#             return {
+#                 'no' : self.no,
+#                 'positive' : self.positive,
+#                 'pos_count' : self.pos_count,
+#                 'negative' : self.negative,
+#                 'neg_count' : self.neg_count,
+#                 'stock' : self.stock
+#             }
 
-class EmotionVo:
-    no : int = 0
-    positive : str = ''
-    pos_count : int = 0
-    negative : str = ''
-    neg_count : int = 0
-    stock : str = ''
-
-
-
-Session = openSession()
-session = Session()
-emotion_df = EmotionDf()
+# class CrawVo:
+#     no : int = 0
+#     positive : str = ''
+#     pos_count : int = 0
+#     negative : str = ''
+#     neg_count : int = 0
+#     stock : str = ''
 
 
-class EmotionDao(EmotionDto):
-    ck = EmotionKdd()
-    this = ck
-    keyword = this.keyword
-    print("DAO: ", keyword)
-    # cd = EmotionDf()
-    # this = cd.DataPro()
-    # data = this.df
-    # print("DAO DATA: ", data)
-    # keyword = str(keyword)
-    # df = pd.read_csv(keyword, '_data.csv')
-    # df = pd.read_csv(keyword, '.csv')
-    df = pd.read_csv('{}_word.csv'.format(keyword), encoding='utf-8')
-    df = df.drop([df.columns[0]], axis=1)
-    # df = open('{}.csv'.format(keyword), 'r', encoding='utf-8')
-    print('-----------------------------------')
-    print(df)
-    @staticmethod
-    def bulk():
-        # df = self.df
-        # print('확인!!: ', df)
-        # keyword = str(keyword)
-        # print('확인', keyword)
-        # df = pd.read_csv('_data.csv')
-        # df = self.df
-        print(df.head())
-        Session = openSession()
-        session = Session()
-        emotion_df = EmotionDf()
-        df = emotion_df.hook()
-        # print(df.head())
-        session.bulk_insert_mappings(EmotionDto, df.to_dict(orient='records'))
-        session.commit()
-        session.close()
 
-    @staticmethod
-    def count():
-        return session.query(func.count(EmotionDto.date)).one()
-
-    @staticmethod
-    def save(emotion):
-        new_emotion = EmotionDto(no = emotion['no'],
-                           positive = emotion['positive'],
-                           pos_count = emotion['pos_count'],
-                           negative = emotion['negative'],
-                           neg_count = emotion['neg_count'],
-                           stock = emotion['stock'])
-        session.add(new_emotion)
-        session.commit()
-    print('Ok!')
+# Session = openSession()
+# session = Session()
+# craw_df = CrawDf()
 
 
-# class EmotionTf(object):
-#     ...
-# class EmotionAi(object):
-#     ...
+# class CrawDao(CrawDto):
+#     ck = CrawKdd()
+#     this = ck
+#     keyword = this.keyword
+#     print("DAO: ", keyword)
+#     # cd = CrawDf()
+#     # this = cd.DataPro()
+#     # data = this.df
+#     # print("DAO DATA: ", data)
+#     # keyword = str(keyword)
+#     # df = pd.read_csv(keyword, '_data.csv')
+#     # df = pd.read_csv(keyword, '.csv')
+#     df = pd.read_csv('{}_word.csv'.format(keyword), encoding='utf-8')
+#     df = df.drop([df.columns[0]], axis=1)
+#     # df = open('{}.csv'.format(keyword), 'r', encoding='utf-8')
+#     print('-----------------------------------')
+#     print(df)
+#     @staticmethod
+#     def bulk():
+#         # df = self.df
+#         # print('확인!!: ', df)
+#         # keyword = str(keyword)
+#         # print('확인', keyword)
+#         # df = pd.read_csv('_data.csv')
+#         # df = self.df
+#         print(df.head())
+#         Session = openSession()
+#         session = Session()
+#         craw_df = CrawDf()
+#         df = craw_df.hook()
+#         # print(df.head())
+#         session.bulk_insert_mappings(CrawDto, df.to_dict(orient='records'))
+#         session.commit()
+#         session.close()
+
+#     @staticmethod
+#     def count():
+#         return session.query(func.count(CrawDto.date)).one()
+
+#     @staticmethod
+#     def save(craw):
+#         new_craw = CrawDto(no = craw['no'],
+#                            positive = craw['positive'],
+#                            pos_count = craw['pos_count'],
+#                            negative = craw['negative'],
+#                            neg_count = craw['neg_count'],
+#                            stock = craw['stock'])
+#         session.add(new_craw)
+#         session.commit()
+#     print('Ok!')
+
+
+# # class CrawTf(object):
+# #     ...
+# # class CrawAi(object):
+# #     ...
 
 if __name__ == "__main__":
-    ck = EmotionKdd()
-    cd = EmotionDf()
+    ck = CrawKdd()
+    cd = CrawDf()
+    # ck = get_url()
     cd.data_pro()
-    # c_dto = EmotionDto()
+    # c_dto = CrawDto()
     
-    EmotionDao.bulk() # class
+    # CrawDao.bulk() # class
 
 # ============================================================
 # ==================                     =====================
@@ -689,13 +856,13 @@ if __name__ == "__main__":
 # parser.add_argument('stock', type = str, required = True,
 #                             help='This field should be a password')
 
-# class Emotion(Resource):
+# class Craw(Resource):
 #     @staticmethod
 #     def post():
 #         args = parser.parse_args()
-#         emotion = EmotionVo()
-#         emotion.stock_name = args.stock_name
-#         emotion.positive = args.positive
-#         emotion.negative = args.negative
-#         service.assign(emotion)
-#         print("Predicted emotion")
+#         craw = CrawVo()
+#         craw.stock_name = args.stock_name
+#         craw.positive = args.positive
+#         craw.negative = args.negative
+        # service.assign(craw)
+        # print("Predicted Craw")

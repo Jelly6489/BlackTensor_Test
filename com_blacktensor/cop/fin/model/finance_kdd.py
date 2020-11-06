@@ -1,9 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 from pandas import DataFrame, Series
-import numpy as np
 import pandas as pd
-import codecs
+from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # import re
 
 # from flask_restful import Resource, reqparse
@@ -11,7 +10,6 @@ import codecs
 # from sqlalchemy import func
 # import time
 # import multiprocessing
-keyword = input("종목명 입력: ")
 # ============================================================
 # ==================                     =====================
 # ==================         KDD         =====================
@@ -131,7 +129,7 @@ class FinanceKdd(object):
         #     '자본금', '발행주식수']].astype(int)
 
         # df = df.drop(['매출액'])
-        df.loc[:, 'keyword'] = keyword
+        df.loc[:, 'stock'] = keyword
         print(df)
 
         '''
@@ -167,115 +165,4 @@ class FinanceKdd(object):
         df.to_csv(keyword + '_finance.csv', encoding='utf8')
 
     get_finance(0, keyword, code_df)
-    # Table.to_csv('%s/%s재무.csv'%(my_folder,keyword[code]))
-
-# # ============================================================
-# # ==================                     =====================
-# # ==================    Preprocessing    =====================
-# # ==================                     =====================
-# # ============================================================
-class FinancelDf(object):
-    # def __init__(self):
-        # self.ck = CrawKdd()
-        # this = self.ck
-        # self.keyword = this.keyword
-        # fk = FinanceKdd()
-        # self.fk = FinanceKdd()
-        # this = self.fk
-        # self.keyword = this.keyword
-
-    def fina_pro(self, keyword):
-        print('----------Finance Testing----------')
-#     def DataPro(self):
-        # keyword = str(self.keyword)
-        df = pd.read_csv('{}_finance.csv'.format(keyword), encoding='utf-8')
-
-        df.rename( columns={'Unnamed: 0':'name', '2015/12':'f_2015_12', '2016/12':'f_2016_12',\
-            '2017/12':'f_2017_12', '2018/12':'f_2018_12', '2019/12':'f_2019_12','2020/12(E)':'f_2020_12',\
-            '2021/12(E)':'f_2021_12', '2022/12':'f_2022_12'}, inplace=True)
-        df.to_csv(keyword + '_finance.csv', encoding='utf8')
-        print('-----------------fin_file------------------')
-        print(df)
-    fina_pro(0, keyword)
-
-
-# ============================================================
-# ==================                     =====================
-# ==================       Modeling      =====================
-# ==================                     =====================
-# ============================================================
-# class FinanceDto(db.Model):
-#     __tablename__ = 'stock'
-#     __table_args__={'mysql_collate' : 'utf8_general_ci'}
-
-#     date : str = db.Column(db.String(10), primary_key = True, index = True)
-#     stock_name : str = db.Column(db.String(10))
-#     positive : str = db.Column(db.String(10))
-#     negative : str = db.Column(db.String(10))
-
-#     def __init__(self, date, stock_name, positive, negative):
-#         self.date = date
-#         self.stock_name = stock_name
-#         self.positive = positive
-#         self.negative = negative
-    
-#     def __repr__(self):
-#         return f'Stock(date={self.date}, positive={self.positive},\
-#                negative={self.negative})'
-
-# class FinanceVo:
-#     date : str = ''
-#     stock_name : str = ''
-#     positive : str = ''
-#     negative : str = ''
-
-
-# Session = openSession()
-# session = Session()
-# finance_df = FinanceDf()
-
-
-# class FinanceDao(FinanceDto):
-    
-#     @staticmethod
-#     def bulk():
-#         Session = openSession()
-#         session = Session()
-#         finance_df = FinanceDf()
-#         df = finance_df.hook()
-#         # print(df.head())
-#         session.bulk_insert_mappings(FinanceDto, df.to_dict(orient='records'))
-#         session.commit()
-#         session.close()
-
-#     @staticmethod
-#     def count():
-#         return session.query(func.count(FinanceDto.date)).one()
-
-#     @staticmethod
-#     def save(finance):
-#         new_finance = FinanceDto(date = finance['date'],
-#                            stock_name = finance['stock_name'],
-#                            positive = finance['positive'],
-#                            negative = finance['negative'])
-#         session.add(new_finance)
-#         session.commit()
-#     print('Ok!')
-
-
-# # class FinanceTf(object):
-# #     ...
-# # class FinanceAi(object):
-# #     ...
-
-
-# if __name__ == "__main__":
-#     fk = FinanceKdd()
-#     fd = FinanceDf()
-#     fd.DataPro()
-
-# ============================================================
-# ==================                     =====================
-# ==================      Resourcing     =====================
-# ==================                     =====================
-# ============================================================
+    # Table.to_csv('%s/%s재무.csv'%(my_folder,keyword[code]))                           

@@ -5,16 +5,16 @@ from com_blacktensor.ext.db import db, openSession, engine
 from sqlalchemy import func
 # from com_blacktensor.ext.routes import Resource
 
-from com_blacktensor.cop.sto.model.stock_dto import StockDto
+from com_blacktensor.cop.fin.model.finance_dto import FinanceDto
 
 Session = openSession()
 session = Session()
 
-class StockDao(StockDto):
+class FinanceDao(FinanceDto):
     
     @classmethod
-    def bulk(cls, stock_dfo):
-        dfo = stock_dfo.create()
+    def bulk(cls, finance_dfo):
+        dfo = finance_dfo.create()
         print(dfo.head())
         session.bulk_insert_mappings(cls, dfo.to_dict(orient="records"))
         session.commit()
@@ -27,10 +27,10 @@ class StockDao(StockDto):
         # session.bulk_insert_mappings(StockDto, df.to_dict(orient='records'))
         # session.commit()
         # session.close()
-    @staticmethod
-    def save(stock):
-        session.add(stock)
-        session.commit()
+    # @staticmethod
+    # def save(finance):
+    #     session.add(finance)
+    #     session.commit()
     
     @staticmethod
     def count(cls):
@@ -39,10 +39,11 @@ class StockDao(StockDto):
     @classmethod
     def find_all(cls):
 
-        result = session.query(StockDto).all()
+        result = session.query(FinanceDto).all()
         session.close()
 
         return result
+
 
 # ===========================================================================
 
