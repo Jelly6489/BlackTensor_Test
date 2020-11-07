@@ -1,3 +1,5 @@
+# import sys
+# sys.path.insert(0, '/c/Users/Admin/VscProject/BlackTensor_Test/com_blacktensor/cop/fin/model/')
 import csv
 import pandas as pd
 from com_blacktensor.ext.db import db, openSession, engine
@@ -11,8 +13,9 @@ class FinanceDao(FinanceDto):
     
     @classmethod
     def bulk(cls, finance_dfo):
-        dfo = finance_dfo.create()
-        print(dfo.head())
+        dfo = finance_dfo.fina_pro()
+        print('---------FinanceDao------------')
+        print(f'[ FinanceDao ] {dfo.head()}')
         session.bulk_insert_mappings(cls, dfo.to_dict(orient="records"))
         session.commit()
         session.close()
@@ -29,9 +32,9 @@ class FinanceDao(FinanceDto):
     #     session.add(finance)
     #     session.commit()
     
-    @staticmethod
+    @classmethod
     def count(cls):
-        return session.query(func.count(cls.date)).one()
+        return session.query(func.count(cls.no)).one()
 
     @classmethod
     def find_all(cls):
@@ -40,7 +43,6 @@ class FinanceDao(FinanceDto):
         session.close()
 
         return result
-
 
 # ===========================================================================
 
@@ -56,3 +58,6 @@ class FinanceDao(FinanceDto):
     #                        volume = stock['volume'])
     #     session.add(new_stock)
     #     session.commit()
+
+# if __name__ == '__main__':
+#     FinanceDao.bulk()

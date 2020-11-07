@@ -12,7 +12,7 @@ from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # # # ==================                     =====================
 # # # ============================================================
 class StockKdd(object):
-    keyword = input("검색어 입력: ")
+    # keyword = input("검색어 입력: ")
 
     # def __init__(self):
     #     self.sk = StockKdd()
@@ -35,7 +35,8 @@ class StockKdd(object):
 
     # 한글로된 컬럼명을 영어로 변환
     code_df = code_df.rename(columns={'회사명' : 'name', '종목코드' : 'code'})
-    code_df.head() 
+    code_df.head()
+    print('----------------stock------------------')
     print(code_df.head())
 
     # https://finance.naver.com/item/sise.nhn?code=005930(삼성전자)
@@ -97,4 +98,4 @@ class StockKdd(object):
 
     # csv file 저장
     # df.to_csv(keyword, '.csv', mode = 'a', header = False)
-    df.to_csv(keyword + '_data.csv', encoding='utf8')
+    df.to_csv(keyword + '_data.csv', encoding='utf-8')

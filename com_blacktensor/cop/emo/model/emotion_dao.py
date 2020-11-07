@@ -12,6 +12,7 @@ import json
 
 from sqlalchemy import Column, Integer, String, Date
 from com_blacktensor.cop.emo.model.emotion_dto import EmotionDto, StockNewsDto
+from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # import time
 # import multiprocessing
 
@@ -20,11 +21,21 @@ Session = openSession()
 session = Session()
 
 class EmotionDao(EmotionDto):
-    @classmethod
-    def bulk(cls, emotion_dfo):
-        dfo = emotion_dfo.create()
-        print(dfo.head())
-        session.bulk_insert_mappings(cls, dfo.to_dict(orient="records"))
+    # @classmethod
+    # def bulk(cls, emotion_dfo):
+    #     dfo = emotion_dfo.data_pro(0, keyword)
+    #     print('--------Emotion----------')
+    #     print(dfo.head())
+    #     session.bulk_insert_mappings(cls, dfo.to_dict(orient="records"))
+    #     session.commit()
+    #     session.close()
+
+    @staticmethod
+    def bulk():
+        emotion_dto = EmotionDto()
+        df = emotion_dto.create()
+        session.bulk_insert_mappings(EmotionDto, df.to_dict(orient='records'))
+
         session.commit()
         session.close()
 
@@ -32,11 +43,16 @@ class EmotionDao(EmotionDto):
     def save(emotion):
         session.add(emotion)
         session.commit()
-    
-    @staticmethod
+
+    @classmethod
     def count(cls):
         return session.query(func.count(cls.no)).one()
-
+    '''
+    @staticmethod
+    def count():
+        # return session.query(func.count(EmotionDto.no)).one()[0]
+        return session.query(func.count(EmotionDto.no)).one()
+    '''
     @classmethod
     def find_all(cls):
 
@@ -44,6 +60,9 @@ class EmotionDao(EmotionDto):
         session.close()
 
         return result
+    @staticmethod
+    def test():
+        print(' TEST SUCCESS !!')
 
 class StockNewsDao(StockNewsDto):
     @staticmethod
@@ -68,3 +87,6 @@ class StockNewsDao(StockNewsDto):
         session.close()
 
         return result
+
+# if __name__ == '__main__':
+#     EmotionDao.bulk()

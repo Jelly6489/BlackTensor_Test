@@ -10,8 +10,8 @@ class EmotionDto(db.Model):
     no : int = db.Column(db.Integer, primary_key = True, index = True)
     positive : str = db.Column(db.String(10))
     pos_count : int = db.Column(db.Integer)
-    negative : str = db.Column(db.Integer)
-    neg_count : int = db.Column(db.String(10))
+    negative : str = db.Column(db.String(10))
+    neg_count : int = db.Column(db.Integer)
     keyword : str = db.Column(db.String(10))
 
     def __init__(self, no, positive, pos_count, negative, neg_count, keyword):

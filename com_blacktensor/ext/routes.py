@@ -12,10 +12,9 @@ from com_blacktensor.cop.sto.resource.stock import Stock
 
 # from com_blacktensor.resources.user import User, Users, Auth, Access
 # from com_blacktensor.resources.crow import Article, Articles
-
-emotion = Blueprint('emotion', __name__, url_prefix='/api/emotion')
-finance = Blueprint('finance', __name__, url_prefix='/api/finance')
 stock = Blueprint('stock', __name__, url_prefix='/api/stock')
+finance = Blueprint('finance', __name__, url_prefix='/api/finance')
+emotion = Blueprint('emotion', __name__, url_prefix='/api/emotion')
 # covid = Blueprint('covidStatus', __name__, url_prefix='/api/covid')
 # frequency = Blueprint('frequencyNaverNews', __name__, url_prefix='/api/frequency')
 
@@ -23,13 +22,13 @@ api = Api(emotion)
 # api = Api(frequency)
 
 def initialize_routes(api):
-    api.add_resource(Emotion, '/api/emotion')
-    api.add_resource(Finance, '/api/finance')
     api.add_resource(Stock, '/api/stock')
+    api.add_resource(Finance, '/api/finance')
+    api.add_resource(Emotion, '/api/emotion')
 
 
-@emotion.errorhandler(500)
-def user_api_error(e):
+@stock.errorhandler(500)
+def stock_api_error(e):
     logging.exception('An error occurred during emotion request. %s' % str(e))
     return 'An internal error occurred.', 500
 
@@ -38,7 +37,7 @@ def finance_api_error(e):
     logging.exception('An error occurred during emotion request. %s' % str(e))
     return 'An internal error occurred.', 500
 
-@stock.errorhandler(500)
-def stock_api_error(e):
+@emotion.errorhandler(500)
+def emotion_api_error(e):
     logging.exception('An error occurred during emotion request. %s' % str(e))
     return 'An internal error occurred.', 500

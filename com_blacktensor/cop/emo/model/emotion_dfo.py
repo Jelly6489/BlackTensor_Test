@@ -10,7 +10,7 @@ from collections import Counter
 # from sqlalchemy import Column, Integer, String, Date
 # # from sqlalchemy import create_engine
 
-from com_blacktensor.util.file_hander import FileHandler
+from com_blacktensor.util.file_handler import FileHandler
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # # ============================================================
 # # ==================                     =====================
@@ -18,11 +18,13 @@ from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # # ==================                     =====================
 # # ============================================================
 class EmotionDfo(object):
-    def __init__(self, colums):
+    def __init__(self):
         # self.ek = EmotionKdd()
         # this = self.ek
         # self.keyword = this.keyword
-        self.keyword = keyword
+        # self.keyword = keyword
+        print('-----------emotionDfo--------------')
+        print(keyword)
 
         # print("검색어1: ", self.keyword)
 
@@ -32,43 +34,57 @@ class EmotionDfo(object):
         # this.s_date = self.s_date
         # this.e_date = self.e_date
 
-        self.word = []
-        self.noun_list =[]
-        self.positive_word = []
-        self.negative_word = []
+        # self.word = []
+        # self.noun_list =[]
+        # self.positive_word = []
+        # self.negative_word = []
 
-        self.poflag = []
-        self.neflag = []
+        # self.poflag = []
+        # self.neflag = []
 
-        self.po_key = []
-        self.ne_key = []
-        self.po_val = []
-        self.ne_val = []
-
-        self.stock_name = []
-
-        self.fileReader = FileReader()  
-        self.colums = colums
+        # self.po_key = []
+        # self.ne_key = []
+        # self.po_val = []
+        # self.ne_val = []
 
 
+        self.fileReader = FileHandler()  
+        # self.colums = colums
 
-    # def DataPro(self, keyword, word, positive_word, negative_word, poflag, neflag):
-    def data_pro(self):
+
+
+    # def data_pro(self, word, positive_word, negative_word, poflag, neflag):
+    def data_pro(self, keyword):
+    # def data_pro(self, keyword):
+        print('-----------emotionDfo--------------')
         # 
-        keyword = str(self.keyword)
-        word = self.word
-        noun_list = self.noun_list
-        positive_word = self.positive_word
-        negative_word = self.negative_word
-        poflag = self.poflag
-        neflag = self.neflag
-        po_key = self.po_key
-        ne_key = self.ne_key
-        po_val = self.po_val
-        ne_val = self.ne_val
-        stock_name = self.stock_name
+        # keyword = str(self.keyword)
+        # keyword = self.keyword
+        # word = self.word
+        # noun_list = self.noun_list
+        # positive_word = self.positive_word
+        # negative_word = self.negative_word
+        # poflag = self.poflag
+        # neflag = self.neflag
+        # po_key = self.po_key
+        # ne_key = self.ne_key
+        # po_val = self.po_val
+        # ne_val = self.ne_val
 
-        file = open('{}.csv'.format(keyword), 'r', encoding='utf-8')
+        word = []
+        positive_word = []
+        negative_word = []
+        noun_list =[]
+        poflag = []
+        neflag = []
+
+        po_key = []
+        ne_key = []
+        po_val = []
+        ne_val = []
+
+
+        file = open('{}.csv'.format(keyword), 'r', encoding='UTF8')
 
         lists = file.readlines()
         file.close()
@@ -81,7 +97,7 @@ class EmotionDfo(object):
 
         # print(morphs)
 
-        pos = codecs.open('positive_words_self.txt', 'rb', encoding='UTF-8')
+        pos = codecs.open('positive_words_self.txt', 'rb', encoding='UTF8')
 
         while True:
             line = pos.readline()
@@ -92,7 +108,7 @@ class EmotionDfo(object):
             if not line: break
         pos.close()
 
-        neg = codecs.open('negative_words_self.txt', 'rb', encoding='UTF-8')
+        neg = codecs.open('negative_words_self.txt', 'rb', encoding='UTF8')
 
         while True:
             line = neg.readline()
@@ -185,7 +201,7 @@ class EmotionDfo(object):
         df.loc[:, 'keyword'] = keyword
 
         print(df.head())
-        df.to_csv(keyword + '_word.csv', encoding='utf8')
+        df.to_csv(keyword + '_word.csv', encoding='UTF8')
 
 
 
@@ -207,3 +223,8 @@ class EmotionDfo(object):
 
     def get_df(self, data):
         return pd.DataFrame(data, columns=self.colums)
+    # data_pro(0, keyword)
+    
+# if __name__ == '__main__':
+#     #EmotionDao.bulk()
+#     EmotionDfo.data_pro()

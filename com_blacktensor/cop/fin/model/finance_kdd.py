@@ -28,6 +28,7 @@ class FinanceKdd(object):
     # 한글로된 컬럼명을 영어로 변환
     code_df = code_df.rename(columns={'회사명' : 'name', '종목코드' : 'code'})
     code_df.head() 
+    print('----------------finance------------------')
     print(code_df.head())
     '''
             name    code
@@ -121,6 +122,7 @@ class FinanceKdd(object):
     
         # print(Table)
         df = pd.DataFrame(Table)
+        print('--------get_finance----------')
         # df[loc['매출액', '영업이익', '영업이익(발표기준)', '당기순이익 ', '지배주주순이익', '비지배주주순이익', \
         #     '자산총계', '부채총계', '자본총계', '지배주주지분', '비지배주주지분', \
         #     '자본금', '발행주식수']] \
@@ -130,7 +132,7 @@ class FinanceKdd(object):
 
         # df = df.drop(['매출액'])
         df.loc[:, 'stock'] = keyword
-        print(df)
+        # print(df)
 
         '''
                             2015/12     2016/12     2017/12     2018/12     2019/12  2020/12(E)  2021/12(E)  2022/12(E)
@@ -162,7 +164,11 @@ class FinanceKdd(object):
         '''
 
         # csv 파일 저장
-        df.to_csv(keyword + '_finance.csv', encoding='utf8')
+        df.to_csv(keyword + '_finance.csv', encoding='utf-8')
 
-    get_finance(0, keyword, code_df)
+    # get_finance(0, keyword, code_df)
+
     # Table.to_csv('%s/%s재무.csv'%(my_folder,keyword[code]))                           
+# if __name__ == '__main__':
+#     # FinanceKdd.get_finance(0, keyword, code_df)
+    # FinanceKdd.get_finance()
