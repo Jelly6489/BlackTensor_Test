@@ -6,13 +6,16 @@ import re
 from bs4 import BeautifulSoup
 from konlpy.tag import Twitter
 from collections import Counter
-from com_blacktensor.ext.db import db, openSession, engine
+from com_blacktensor.ext.db import db, openSession
 from sqlalchemy import func
 import json
 
 from sqlalchemy import Column, Integer, String, Date
 from com_blacktensor.cop.emo.model.emotion_dto import EmotionDto, StockNewsDto
+from com_blacktensor.cop.emo.model.emotion_dfo import EmotionDfo
+from com_blacktensor.cop.emo.model.emotion_kdd import EmotionKdd
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
+
 # import time
 # import multiprocessing
 
@@ -32,10 +35,9 @@ class EmotionDao(EmotionDto):
 
     @staticmethod
     def bulk():
-        emotion_dto = EmotionDto()
-        df = emotion_dto.create()
-        session.bulk_insert_mappings(EmotionDto, df.to_dict(orient='records'))
-
+        emotion_dfo = EmotionDfo()
+        dfo = emotion_dfo.data_pro(keyword)
+        session.bulk_insert_mappings(EmotionDto, dfo.to_dict(orient='records'))
         session.commit()
         session.close()
 
@@ -47,27 +49,21 @@ class EmotionDao(EmotionDto):
     @classmethod
     def count(cls):
         return session.query(func.count(cls.no)).one()
-    '''
-    @staticmethod
-    def count():
-        # return session.query(func.count(EmotionDto.no)).one()[0]
-        return session.query(func.count(EmotionDto.no)).one()
-    '''
+
     @classmethod
     def find_all(cls):
+        return session.query(cls).all()
 
-        result = session.query(EmotionDto).all()
-        session.close()
-
-        return result
     @staticmethod
     def test():
         print(' TEST SUCCESS !!')
 
 class StockNewsDao(StockNewsDto):
     @staticmethod
-    def bulk(datas):
-        session.bulk_insert_mappings(StockNewsDto, datas.to_dict(orient="records"))
+    def bulk():
+        emotion_dfo = EmotionDfo()
+        df = emotion_dfo.get_df(keyword)
+        session.bulk_insert_mappings(StockNewsDto, df.to_dict(orient="records"))
         session.commit()
         session.close()
 

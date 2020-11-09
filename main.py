@@ -30,7 +30,9 @@ from com_blacktensor.cop.sto.model.stock_kdd import StockKdd
 from com_blacktensor.cop.emo.model import emotion_dfo
 print(f'========================= START 1 ==============================')
 EmotionDao.test()
-
+# 
+# EmotionDfo.data_pro(0, keyword)
+# 
 app = Flask(__name__)
 CORS(app, resources={r'/api/*': {"origins": "*"}})
 
@@ -42,20 +44,37 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 api = Api(app)
 
+if __name__ == '__main__':
+    EmotionDfo.data_pro(keyword)
+    EmotionDfo.get_df(keyword)
+    
+
 print(f'========================= START 3 ==============================')
 EmotionDao.test()
 
 with app.app_context():
     db.create_all()
     emotion_count = EmotionDao.count()
+    stock_new_count = StockNewsDao.count()
+    stock_count = StockDao.count()
+    finance_count = FinanceDao.count()
     print(f'***** Users Total Count is {emotion_count} *****')
     if emotion_count[0] == 0:
+
         EmotionDao.bulk()
 
-    # cabb_count = CabbageDao.count()
-    # print(f'***** Cabbages Total Count is {cabb_count} *****')
-    # if cabb_count[0] == 0:
-    #     CabbageDao.bulk()
+    print(f'***** Users Total Count is {stock_new_count} *****')
+    if stock_new_count[0] == 0:
+        StockNewsDao.bulk()
+
+    print(f'***** Users Total Count is {stock_count} *****')
+    if stock_count[0] == 0:
+        StockDao.bulk()
+
+    # print(f'***** Users Total Count is {finance_count} *****')
+    # if finance_count[0] == 0:
+    #     FinanceDao.bulk()
+
 
 initialize_routes(api)
 
@@ -73,7 +92,7 @@ initialize_routes(api)
 #                 # handler.crete_folder('./csv')
             
 #             keys = list(datas[0].keys())
-#             handler.save_to_csv('./csv/result_Covid19_status.csv', datas, keys, 'utf-8-sig')
+            # handler.save_to_csv('./csv/result_Covid19_status.csv', datas, keys, 'utf-8-sig')
 #             print('========================oK2====================')
 #             # df = EmotionDfo(keys).get_dataframe(datas)
 #             df = EmotionDfo.data_pro(datas)

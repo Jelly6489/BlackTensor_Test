@@ -44,7 +44,7 @@ class StockNewsDto(db.Model):
     __tablename__ = 'stock_news'
     __table_args__={'mysql_collate' : 'utf8_general_ci'}
     no : int = db.Column(db.Integer, primary_key = True, index = True)
-    title : str = db.Column(db.String(10))
+    title : str = db.Column(db.String(100))
     keyword : str = db.Column(db.String(10))
 
     def __init__(self, no, positive, pos_count, negative, neg_count, keyword):

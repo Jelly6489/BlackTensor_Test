@@ -5,6 +5,7 @@ from com_blacktensor.ext.db import db, openSession, engine
 from sqlalchemy import func
 # from com_blacktensor.ext.routes import Resource
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
+from com_blacktensor.util.file_handler import FileHandler as handler
 
 # # # ============================================================
 # # # ==================                     =====================
@@ -88,7 +89,7 @@ class StockKdd(object):
     # date 기준으로 내림차순 sort
     df = df.sort_values(by=['date'], ascending=False)
 
-    df.loc[:, 'stock'] = keyword
+    df.loc[:, 'keyword'] = keyword
 
     # df.head()
     print('-------------------- head -------------------')
@@ -98,4 +99,5 @@ class StockKdd(object):
 
     # csv file 저장
     # df.to_csv(keyword, '.csv', mode = 'a', header = False)
-    df.to_csv(keyword + '_data.csv', encoding='utf-8')
+    df.to_csv(keyword + '_data.csv', encoding='utf-8-sig')
+

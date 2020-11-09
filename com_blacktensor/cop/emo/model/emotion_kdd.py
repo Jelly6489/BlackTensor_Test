@@ -144,7 +144,7 @@ class EmotionKdd(object):
     df.loc[:, 'keyword'] = keyword
     print('--------EmotionKdd-----------')
     print(df.head())
-    df.to_csv(keyword + '.csv', encoding='utf-8')
+    df.to_csv(keyword + '.csv', encoding='utf-8-sig')
 '''
 0   논어, 새로운 가르침에 겁내지 않으려면 그간의 가르침을 실행해야 한다!       
 1  "전 세계 AI 전문가 모여라"…'삼성 AI 포럼 2020' 온라인 개최

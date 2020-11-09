@@ -84,7 +84,7 @@ class EmotionDfo(object):
         ne_val = []
 
 
-        file = open('{}.csv'.format(keyword), 'r', encoding='UTF8')
+        file = open('{}.csv'.format(keyword), 'r', encoding='utf-8-sig')
 
         lists = file.readlines()
         file.close()
@@ -97,7 +97,7 @@ class EmotionDfo(object):
 
         # print(morphs)
 
-        pos = codecs.open('positive_words_self.txt', 'rb', encoding='UTF8')
+        pos = codecs.open('positive_words_self.txt', 'rb', encoding='utf-8-sig')
 
         while True:
             line = pos.readline()
@@ -108,7 +108,7 @@ class EmotionDfo(object):
             if not line: break
         pos.close()
 
-        neg = codecs.open('negative_words_self.txt', 'rb', encoding='UTF8')
+        neg = codecs.open('negative_words_self.txt', 'rb', encoding='utf-8-sig')
 
         while True:
             line = neg.readline()
@@ -200,8 +200,12 @@ class EmotionDfo(object):
 
         df.loc[:, 'keyword'] = keyword
 
+#
+        df.fillna(0, inplace=True)
+#
+
         print(df.head())
-        df.to_csv(keyword + '_word.csv', encoding='UTF8')
+        df.to_csv(keyword + '_word.csv', encoding='utf-8-sig')
 
 
 
@@ -218,13 +222,27 @@ class EmotionDfo(object):
         '과징금': 2, '항의': 1, '소송': 1, '불명예': 1, '리스크': 1, '갑질': 1, 
         '침해': 1, '발끈': 1}
         '''
+        print('---------------EmotionDfo Success----------------')
         return df
 
 
-    def get_df(self, data):
-        return pd.DataFrame(data, columns=self.colums)
+
+    def get_df(self, keyword):
+        # file = open('{}.csv'.format(keyword), 'r', encoding='utf-8-sig')
+
+        news_df = pd.read_csv('{}.csv'.format(keyword), index_col=[0], encoding='utf-8-sig')
+        # C:/Users/Admin/VscProject/BlackTensor_Test/
+
+        news_df.rename( columns={'Unnamed: 0':'name'}, inplace=True )
+        news_df.to_csv(keyword + '.csv', encoding='utf-8-sig')
+        print('-----------------get_df------------------')
+        print(news_df)
+        return news_df
+        # return pd.DataFrame(data, columns=self.colums)
     # data_pro(0, keyword)
+    # get_df(0, keyword)
     
 # if __name__ == '__main__':
-#     #EmotionDao.bulk()
-#     EmotionDfo.data_pro()
+    #EmotionDao.bulk()
+    # EmotionDfo.data_pro(0, keyword)
+    # EmotionDfo.data_pro()
