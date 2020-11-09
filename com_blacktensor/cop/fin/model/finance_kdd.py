@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from pandas import DataFrame, Series
 import pandas as pd
+import numpy as np
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # import re
 
@@ -43,14 +44,10 @@ class FinanceKdd(object):
 
     def __init__(self):
         self.keyword = keyword
-        self.code_df = code_df
+        # self.code_df = code_df
 
     # https://finance.naver.com/item/sise.nhn?code=005930(삼성전자)
     def get_finance(self, keyword, code_df):
-        # item_name = self.item_name
-        
-        # this = self.sk
-        # this.code_name = code_name
         code = code_df.query("name=='{}'".format(keyword))['code'].to_string(index=False)
         code = code.strip()
 
@@ -131,8 +128,8 @@ class FinanceKdd(object):
         #     '자본금', '발행주식수']].astype(int)
 
         # df = df.drop(['매출액'])
-        df.loc[:, 'stock'] = keyword
-        # print(df)
+        df.loc[:, 'keyword'] = keyword
+
 
         '''
                             2015/12     2016/12     2017/12     2018/12     2019/12  2020/12(E)  2021/12(E)  2022/12(E)
@@ -163,12 +160,24 @@ class FinanceKdd(object):
         배당수익률             1.67        1.58        1.67        3.66        2.54        0.00        0.00        0.00 
         '''
 
+        # df_len = []
+        
+        print('================Test================')
+        # print('=======', df_len, '===========')
+        # df.to_csv(keyword + '_finance.csv', encoding='utf-8-sig')
+        # df = pd.read_csv('{}_finance.csv'.format(keyword), encoding='utf-8-sig')
+        # df = df.rename(columns= {
+        # 'Unnamed: 0':'name', '2015/12' : 'f_2015_12', '2016/12' : 'f_2016_12', '2017/12' : 'f_2017_12',
+        # '2018/12' : 'f_2018/12', '2019/12' : 'f_2019/12', '2020/12(E)' : 'f_2020/12', 
+        # '2021/12(E)' : 'f_2021_12', '2022/12(E)' : 'f_2022/12'})
+        # df.loc[:, 'no'] = range(len(df))
+        # df.insert(0, 'no', range(len(df)))
+
+        print(df)
+
         # csv 파일 저장
-        df.to_csv(keyword + '_finance.csv', encoding='utf-8')
+        df.to_csv(keyword + '_finance.csv', encoding='utf-8-sig')
 
-    # get_finance(0, keyword, code_df)
+        return df
 
-    # Table.to_csv('%s/%s재무.csv'%(my_folder,keyword[code]))                           
-# if __name__ == '__main__':
-#     # FinanceKdd.get_finance(0, keyword, code_df)
-    # FinanceKdd.get_finance()
+    get_finance(0, keyword, code_df)

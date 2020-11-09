@@ -11,9 +11,9 @@ from sqlalchemy import func
 import json
 
 from sqlalchemy import Column, Integer, String, Date
+from com_blacktensor.cop.emo.model.emotion_kdd import EmotionKdd
 from com_blacktensor.cop.emo.model.emotion_dto import EmotionDto, StockNewsDto
 from com_blacktensor.cop.emo.model.emotion_dfo import EmotionDfo
-from com_blacktensor.cop.emo.model.emotion_kdd import EmotionKdd
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 
 # import time
@@ -47,12 +47,39 @@ class EmotionDao(EmotionDto):
         session.commit()
 
     @classmethod
+    def update(cls, emotion):
+        session.query(cls).filter(cls.keyword == emotion['keyword'])\
+            .update({cls.no : emotion['no'],\
+                cls.positive:emotion['positive'],\
+                cls.pos_count:emotion['pos_count'],\
+                cls.negative:emotion['negative'],\
+                cls.neg_count:emotion['neg_count']})                                                        
+        session.commit()
+
+    @classmethod
     def count(cls):
         return session.query(func.count(cls.no)).one()
 
     @classmethod
+    def find_insert(cls, emotion, keyword):
+        session.query(cls).filter(cls.keyword == keyword).last()\
+            .insert({cls.no : emotion['no'],\
+                cls.positive:emotion['positive'],\
+                cls.pos_count:emotion['pos_count'],\
+                cls.negative:emotion['negative'],\
+                cls.neg_count:emotion['neg_count'],\
+                cls.keyword:emotion['keyword']})
+
+        # return session.query(cls).all()
+
+    @classmethod
     def find_all(cls):
         return session.query(cls).all()
+
+    @classmethod
+    def find(cls, keyword):
+        session.query(cls).filter(cls.keyword != keyword).last()
+        return 0
 
     @staticmethod
     def test():

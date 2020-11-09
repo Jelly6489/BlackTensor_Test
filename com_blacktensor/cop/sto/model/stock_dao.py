@@ -5,9 +5,9 @@ from com_blacktensor.ext.db import db, openSession, engine
 from sqlalchemy import func
 # from com_blacktensor.ext.routes import Resource
 
+from com_blacktensor.cop.sto.model.stock_kdd import StockKdd
 from com_blacktensor.cop.sto.model.stock_dto import StockDto
 from com_blacktensor.cop.sto.model.stock_dfo import StockDfo
-from com_blacktensor.cop.sto.model.stock_kdd import StockKdd
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 
 Session = openSession()
@@ -60,9 +60,6 @@ class StockDao(StockDto):
 
     @staticmethod
     def bulk():
-        # emotion_dfo = EmotionDfo()
-        # dfo = emotion_dfo.data_pro(keyword)
-        # session.bulk_insert_mappings(EmotionDto, dfo.to_dict(orient='records'))
         stock_dfo = StockDfo()
         dfo = stock_dfo.get_df(keyword)
         session.bulk_insert_mappings(StockDto, dfo.to_dict(orient='records'))

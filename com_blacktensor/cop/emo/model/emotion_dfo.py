@@ -19,37 +19,10 @@ from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # # ============================================================
 class EmotionDfo(object):
     def __init__(self):
-        # self.ek = EmotionKdd()
-        # this = self.ek
-        # self.keyword = this.keyword
-        # self.keyword = keyword
         print('-----------emotionDfo--------------')
         print(keyword)
-
-        # print("검색어1: ", self.keyword)
-
-        # this.maxpage = self.maxpage
-        # this.keyword = self.ck.keyword
-        # this.order = self.order
-        # this.s_date = self.s_date
-        # this.e_date = self.e_date
-
-        # self.word = []
-        # self.noun_list =[]
-        # self.positive_word = []
-        # self.negative_word = []
-
-        # self.poflag = []
-        # self.neflag = []
-
-        # self.po_key = []
-        # self.ne_key = []
-        # self.po_val = []
-        # self.ne_val = []
-
-
         self.fileReader = FileHandler()  
-        # self.colums = colums
+
 
 
 
@@ -239,7 +212,7 @@ class EmotionDfo(object):
         print(news_df)
         return news_df
         # return pd.DataFrame(data, columns=self.colums)
-    # data_pro(0, keyword)
+    data_pro(0, keyword)
     # get_df(0, keyword)
     
 # if __name__ == '__main__':

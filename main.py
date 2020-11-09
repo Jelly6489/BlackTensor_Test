@@ -9,7 +9,7 @@ from com_blacktensor.ext.routes import initialize_routes
 from com_blacktensor.util.checker import Checker 
 from com_blacktensor.util.file_handler import FileHandler as handler
 from com_blacktensor.ext.db import url, db
-# from com_blacktensor.resources.craw_emotion import CrawKdd, CrawDf, CrawDao, CrawDto
+
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 #Emotion
 from com_blacktensor.cop.emo.model.emotion_dao import EmotionDao, StockNewsDao
@@ -28,6 +28,12 @@ from com_blacktensor.cop.sto.model.stock_dto import StockDto
 from com_blacktensor.cop.sto.model.stock_kdd import StockKdd
 
 from com_blacktensor.cop.emo.model import emotion_dfo
+
+from com_blacktensor.ext.db import db, openSession
+
+Session = openSession()
+session = Session()
+
 print(f'========================= START 1 ==============================')
 EmotionDao.test()
 # 
@@ -45,8 +51,11 @@ db.init_app(app)
 api = Api(app)
 
 if __name__ == '__main__':
-    EmotionDfo.data_pro(keyword)
-    EmotionDfo.get_df(keyword)
+    code_df = FinanceKdd()
+    EmotionDfo.data_pro(0, keyword)
+    EmotionDfo.data_pro(0, keyword)
+    FinanceKdd.get_finance(0, keyword, code_df)
+    # FinanceDfo.fina_pro(keyword)
     
 
 print(f'========================= START 3 ==============================')
@@ -54,113 +63,34 @@ EmotionDao.test()
 
 with app.app_context():
     db.create_all()
+    # emotion_find = EmotionDao.find(EmotionDao, keyword)
     emotion_count = EmotionDao.count()
     stock_new_count = StockNewsDao.count()
     stock_count = StockDao.count()
     finance_count = FinanceDao.count()
-    print(f'***** Users Total Count is {emotion_count} *****')
+    print(f'***** Emotion Total Count is {emotion_count} *****')
     if emotion_count[0] == 0:
-
         EmotionDao.bulk()
+        # if emotion_find == 0:
+            # EmotionDao.find_insert()
+        # session.query(emotion).filter(emotion.keyword == keyword).last()\
+        #     .insert({EmotionDao.no : emotion['no'],\
+        #         EmotionDao.positive:emotion['positive'],\
+        #         EmotionDao.pos_count:emotion['pos_count'],\
+        #         EmotionDao.negative:emotion['negative'],\
+        #         EmotionDao.neg_count:emotion['neg_count'],\
+        #         EmotionDao.keyword:emotion['keyword']})
 
-    print(f'***** Users Total Count is {stock_new_count} *****')
+    print(f'***** StockNews Total Count is {stock_new_count} *****')
     if stock_new_count[0] == 0:
         StockNewsDao.bulk()
 
-    print(f'***** Users Total Count is {stock_count} *****')
+    print(f'***** Stock Total Count is {stock_count} *****')
     if stock_count[0] == 0:
         StockDao.bulk()
 
-    # print(f'***** Users Total Count is {finance_count} *****')
-    # if finance_count[0] == 0:
-    #     FinanceDao.bulk()
-
-
-initialize_routes(api)
-
-# with app.app_context():
-#     db.create_all()
-
-#     status_count = EmotionDao.count()
-#     print('========================oK0====================')
-#     if status_count == 0:
-#         endDate = datetime.date.today().strftime('%Y%m%d')
-#         datas = EmotionDfo().data_pro(keyword)
-#         print('========================oK1====================')
-#         if len(datas) > 0:
-#             # if not Checker.check_folder_path('./csv'):
-#                 # handler.crete_folder('./csv')
-            
-#             keys = list(datas[0].keys())
-            # handler.save_to_csv('./csv/result_Covid19_status.csv', datas, keys, 'utf-8-sig')
-#             print('========================oK2====================')
-#             # df = EmotionDfo(keys).get_dataframe(datas)
-#             df = EmotionDfo.data_pro(datas)
-#             EmotionDao.bulk(df)
-
-# initialize_routes(api)
-
-print(f'========================= START 4 ==============================')
-# EmotionDao.bulk(df)
-# FinanceDao.bulk(FinanceDfo)
-# StockDao.bulk(StockDfo)
-# api.add_resource(HelloWorld, '/')
-
-'''
-with app.app_context():
-    db.create_all()
-
-    status_count = EmotionDao.count()
-    
-    if status_count == 0:
-        endDate = datetime.date.today().strftime('%Y%m%d')
-        datas = EmotionKdd().get_covid19_status(endDate)
-
-        if len(datas) > 0:
-            if not Checker.check_folder_path('./csv'):
-                handler.crete_folder('./csv')
-            
-            keys = list(datas[0].keys())
-            handler.save_to_csv('./csv/result_Covid19_status.csv', datas, keys, 'utf-8-sig')
-
-            df = EmotionDfo(keys).get_dataframe(datas)
-            EmotionDao.save_data_bulk(df)
+    print(f'***** Finance Total Count is {finance_count} *****')
+    if finance_count[0] == 0:
+        FinanceDao.bulk()
 
 initialize_routes(api)
-'''
-# with app.app_context():
-#     db.create_all()
-
-#     status_count = CrawDao.count()
-    
-#     if status_count == 0:
-#         # naver_news(self, maxpage, keyword, order, s_date, e_date):
-#         df = CrawKdd().naver_news()
-#         CrawDao
-
-#         if len(df) > 0:
-#             if not Checker.check_folder_path('./csv'):
-#                 handler.crete_folder('./csv')
-            
-#             keys = list(df[0].keys())
-#             handler.save_to_csv('./csv/result_Covid19_status.csv', df, keys, 'utf-8-sig')
-
-#             df = CrawDf(keys).get_dataframe(df)
-#             CrawDao.save_data_bulk(df)
-
-# initialize_routes(api)
-
-# with app.app_context():
-#     db.create_all()
-#     user_count = CrawDao.count()
-#     print(f'***** Users Total Count is {user_count} *****')
-#     if user_count[0] == 0:
-#         CrawDao.bulk()
-
-    # cabb_count = CabbageDao.count()
-    # print(f'***** Cabbages Total Count is {cabb_count} *****')
-    # if cabb_count[0] == 0:
-    #     CabbageDao.bulk()
-
-# initialize_routes(api)
-    

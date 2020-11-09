@@ -7,7 +7,7 @@ from bs4 import BeautifulSoup
 from konlpy.tag import Twitter
 from collections import Counter
 from flask_restful import Resource, reqparse
-from com_blacktensor.ext.db import db, openSession, engine
+# from com_blacktensor.ext.db import db, openSession, engine
 from sqlalchemy import func
 import json
 

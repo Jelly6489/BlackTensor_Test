@@ -13,6 +13,7 @@ class EmotionDto(db.Model):
     negative : str = db.Column(db.String(10))
     neg_count : int = db.Column(db.Integer)
     keyword : str = db.Column(db.String(10))
+    if_exists : 'append'
 
     def __init__(self, no, positive, pos_count, negative, neg_count, keyword):
         self.no = no
