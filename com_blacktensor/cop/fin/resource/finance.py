@@ -1,18 +1,6 @@
-import requests
-import pandas as pd
-import codecs
-import numpy as np
-import re
 from flask import request
-from bs4 import BeautifulSoup
-from konlpy.tag import Twitter
-from collections import Counter
 from flask_restful import Resource, reqparse
-from com_blacktensor.ext.db import db, openSession, engine
-from sqlalchemy import func
-import json
-
-from sqlalchemy import Column, Integer, String, Date
+from flask import jsonify
 
 from com_blacktensor.cop.fin.model.finance_dao import FinanceDao
 from com_blacktensor.cop.fin.model.finance_dfo import FinanceDfo
@@ -24,6 +12,13 @@ from com_blacktensor.cop.fin.model.finance_dto import FinanceVo
 # ==================      Resourcing     =====================
 # ==================                     =====================
 # ============================================================
+class Finance(Resource):
+    def __init__(self):
+        self. dao = FinanceDao()
+
+    def get(self):
+        result = self.dao.find_all()
+        return jsonify([item.json for item in result])
 
 # parser = reqparse.RequestParser()
 # parser.add_argument('no', type = int, required = True,
@@ -68,36 +63,36 @@ from com_blacktensor.cop.fin.model.finance_dto import FinanceVo
 #         # service.assign(finance)
 #         print("Predicted finance")
 
-parser = reqparse.RequestParser() 
+# parser = reqparse.RequestParser() 
 
-class Finance(Resource):
-    @staticmethod
-    def post():
-        print(f'[ User Signup Resource Enter ] ')
-        body = request.get_json()
-        finance = FinanceDao(**body)
-        FinanceDao.save(finance)
-        finance_id = finance.no
+# class Finance(Resource):
+#     @staticmethod
+#     def post():
+#         print(f'[ User Signup Resource Enter ] ')
+#         body = request.get_json()
+#         finance = FinanceDao(**body)
+#         FinanceDao.save(finance)
+#         finance_id = finance.no
         
-        return {'financeId': str(finance_id)}, 200 
+#         return {'financeId': str(finance_id)}, 200 
 
-    @staticmethod
-    def get(financeId: str):
-        try:
-            print(f'User ID is {financeId} ')
-            finance = FinanceDao.find_one(financeId)
-            if finance:
-                return json.dumps(finance.json()), 200
-        except Exception as e:
-            return {'message': 'Finance not found'}, 404
+#     @staticmethod
+#     def get(financeId: str):
+#         try:
+#             print(f'User ID is {financeId} ')
+#             finance = FinanceDao.find_one(financeId)
+#             if finance:
+#                 return json.dumps(finance.json()), 200
+#         except Exception as e:
+#             return {'message': 'Finance not found'}, 404
 
-class Finances(Resource):
-    @staticmethod
-    def post():
-        print(f'[ Finance Bulk Resource Enter ] ')
-        FinanceDao.bulk()
-    @staticmethod
-    def get():
-        print(f'[ Finance List Resource Enter ] ')
-        data = FinanceDao.find_all()
-        return json.dumps(data), 200
+# class Finances(Resource):
+#     @staticmethod
+#     def post():
+#         print(f'[ Finance Bulk Resource Enter ] ')
+#         FinanceDao.bulk()
+#     @staticmethod
+#     def get():
+#         print(f'[ Finance List Resource Enter ] ')
+#         data = FinanceDao.find_all()
+#         return json.dumps(data), 200

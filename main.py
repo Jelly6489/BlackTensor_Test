@@ -63,14 +63,29 @@ EmotionDao.test()
 
 with app.app_context():
     db.create_all()
-    # emotion_find = EmotionDao.find(EmotionDao, keyword)
+    emotion = session.query(EmotionDto)
+    emotion_find_x = EmotionDao.find_x(keyword)
+    emotion_find_y = EmotionDao.find_y(keyword)
+    emotion_like = EmotionDao.find_like(keyword)
+    emotion_match = EmotionDao.match(keyword)
+    # emotion_fi_insert = EmotionDao.find_insert(emotion, keyword)
     emotion_count = EmotionDao.count()
     stock_new_count = StockNewsDao.count()
     stock_count = StockDao.count()
     finance_count = FinanceDao.count()
     print(f'***** Emotion Total Count is {emotion_count} *****')
     if emotion_count[0] == 0:
+    # if emotion_find == 0:
         EmotionDao.bulk()
+    # elif emotion_find_x == 0:
+    # elif emotion_like != 2:
+    # elif emotion_match != 3:
+        # EmotionDao.bulk()
+    # EmotionDao.emotion_fi_insert()
+    # EmotionDao.find_insert(EmotionDto, keyword)
+
+
+        # session.query(cls).filter(cls.keyword == emotion['keyword'])\
         # if emotion_find == 0:
             # EmotionDao.find_insert()
         # session.query(emotion).filter(emotion.keyword == keyword).last()\

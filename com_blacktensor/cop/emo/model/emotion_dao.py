@@ -60,26 +60,58 @@ class EmotionDao(EmotionDto):
     def count(cls):
         return session.query(func.count(cls.no)).one()
 
-    @classmethod
-    def find_insert(cls, emotion, keyword):
-        session.query(cls).filter(cls.keyword == keyword).last()\
-            .insert({cls.no : emotion['no'],\
-                cls.positive:emotion['positive'],\
-                cls.pos_count:emotion['pos_count'],\
-                cls.negative:emotion['negative'],\
-                cls.neg_count:emotion['neg_count'],\
-                cls.keyword:emotion['keyword']})
+    # @classmethod
+    # def find_insert(cls, emotion, keyword):
+    #     session.query(cls).filter_by(cls.keyword == emotion['keyword']).last()\
+    #         .insert({cls.no : emotion['no'],\
+    #             cls.positive:emotion['positive'],\
+    #             cls.pos_count:emotion['pos_count'],\
+    #             cls.negative:emotion['negative'],\
+    #             cls.neg_count:emotion['neg_count'],\
+    #             cls.keyword:emotion['keyword']})
+            # if session.query(cls).filter(cls.keyword != keyword):
+            # emotion_dfo = EmotionDfo()
+            # dfo = emotion_dfo.data_pro(keyword)
+            # session.bulk_insert_mappings(EmotionDto, dfo.to_dict(orient='records'))
+            # session.commit()
+            # session.close()
 
-        # return session.query(cls).all()
+        return session.query(cls).all()
 
     @classmethod
     def find_all(cls):
         return session.query(cls).all()
 
     @classmethod
-    def find(cls, keyword):
-        session.query(cls).filter(cls.keyword != keyword).last()
+    def find_x(cls, keyword):
+        # session.query(cls).filter(cls.keyword != keyword).last()
+        # session.query(cls).filter(cls.keyword.like('keyword'))
+        session.query(cls).filter(cls.keyword != keyword)
+        session.close()
         return 0
+
+    @classmethod
+    def find_y(cls, keyword):
+        # session.query(cls).filter(cls.keyword != keyword).last()
+        # session.query(cls).filter(cls.keyword.like('keyword'))
+        session.query(cls).filter(cls.keyword == keyword)
+        session.close()
+        return 1
+
+    @classmethod
+    def find_like(cls, keyword):
+        # session.query(cls).filter(cls.keyword.like('%'+keyword+'%'))
+        session.query(cls).filter(cls.keyword.like('%'+keyword+'%'))
+        print(cls.keyword)
+        session.close()
+        return 2
+
+    @staticmethod
+    def match(keyword):
+        # session.query(emotion).filter_by(emotion.keyword.match(keyword))
+        session.commit()
+        session.close()
+        return 3
 
     @staticmethod
     def test():
