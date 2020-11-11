@@ -11,14 +11,14 @@ api = Api(app)
  
 class Rest(Resource):
     def get(self):
-        # return {'rest': 'Good !'}
-        return Emotion()
+        return {'rest': '한국 !'}
+        # return Emotion()
     def post(self):
         return {'rest': 'post success !'}
 api.add_resource(Rest, '/api')
  
 if __name__ == '__main__':
-    app.run(debug=True, host='127.0.0.1', port=8080)
+    app.run(host='192.168.0.10', port='8080', debug=True)
 '''
 '''
 app = Flask(__name__)

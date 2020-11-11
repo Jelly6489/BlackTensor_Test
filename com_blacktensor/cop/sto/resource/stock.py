@@ -31,7 +31,8 @@ class Stock(Resource):
         # # return jsonify([item.json for item in result])
         # # return jsonify(json.dumps(str(result)))
         # return jsonify(res)
-        return jsonify(str(result))
+        # return jsonify(str(result))
+        return jsonify([item.json for item in result])
 
 # parser = reqparse.RequestParser()
 # parser.add_argument('date', type = int, required = True,

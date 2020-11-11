@@ -53,7 +53,7 @@ api = Api(app)
 
 if __name__ == '__main__':
     code_df = FinanceKdd()
-    EmotionDfo.data_pro(0, keyword)
+    # EmotionDfo.data_pro(0, keyword)
     EmotionDfo.data_pro(0, keyword)
     FinanceKdd.get_finance(0, keyword, code_df)
     # FinanceDfo.fina_pro(keyword)

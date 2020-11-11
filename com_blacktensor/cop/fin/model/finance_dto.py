@@ -44,7 +44,7 @@ class FinanceDto(db.Model):
         f_2019_12={self.f_2019_12}, f_2020_12={self.f_2020_12}, f_2021_12={self.f_2021_12}, \
         f_2022_12={self.f_2022_12}, keyword={self.keyword})'
 
-
+    @property
     def json(self):
         return {
         'no' : self.no,

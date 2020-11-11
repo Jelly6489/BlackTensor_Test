@@ -29,8 +29,8 @@ class Emotion(Resource):
     def get(self):
         # result = self.dao.find_all()
         result = EmotionDao().find_all()
-        # return jsonify([item.json for item in result])
-        return jsonify(str(result))
+        return jsonify([item.json for item in result])
+        # return jsonify(str(result))
 
 
 class StockNews(Resource):
@@ -39,8 +39,8 @@ class StockNews(Resource):
 
     def get(self):
         result = self.dao.find_all()
-        # return jsonify([item.json for item in result])
-        return jsonify(str(result))
+        return jsonify([item.json for item in result])
+        # return jsonify(str(result))
         # return jsonify(result)
 
 # if __name__ == "__main__":

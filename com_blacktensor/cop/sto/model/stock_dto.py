@@ -27,6 +27,7 @@ class StockDto(db.Model):
     def __str__(self):
         return f'Stock(no={self.no}, date={self.date}, close={self.close}, volume={self.volume}, keyword={self.keyword})'
 
+    @property
     def json(self):
         return {
         'no' : self.no,

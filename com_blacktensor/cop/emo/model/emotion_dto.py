@@ -29,7 +29,8 @@ class EmotionDto(db.Model):
     def __str__(self):
         return f'Emotion(no={self.no}, positive={self.positive}, pos_count={self.pos_count}, negative={self.negative},\
             neg_count={self.neg_count}, keyword={self.keyword})'
-
+            
+    @property
     def json(self):
         return {
         'no' : self.no,
@@ -58,6 +59,7 @@ class StockNewsDto(db.Model):
     def __str__(self):
         return f'Emotion(no={self.no}, title={self.title}, keyword={self.keyword})'
 
+    @property
     def json(self):
         return {
         'no' : self.no,

@@ -22,13 +22,13 @@ from sqlalchemy import Column, Integer, String, Date
 # ============================================================
 # info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+"시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
 # maxpage = int(input("최대 크롤링할 페이지 수 입력하시오: "))
-keyword = input("검색어 입력: ")
+# keyword = input("검색어 입력: ")
 # order = input("뉴스 검색 방식 입력(관련도순=0 최신순=1 오래된순=2): ") #관련도순=0 최신순=1 오래된순=2
 # s_date = input("시작날짜 입력(예: 2020.07.20):")
 # e_date = input("끝날짜 입력(예: 2020.10.30):")
 # info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+"시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
 maxpage = 20
-# keyword = "신풍제약"
+keyword = "삼성전자"
 order = "0"
 s_date = "2020.01.01"
 e_date = "2020.11.10"
