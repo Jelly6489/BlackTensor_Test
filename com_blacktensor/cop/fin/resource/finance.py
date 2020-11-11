@@ -14,11 +14,12 @@ from com_blacktensor.cop.fin.model.finance_dto import FinanceVo
 # ============================================================
 class Finance(Resource):
     def __init__(self):
-        self. dao = FinanceDao()
+        self.dao = FinanceDao()
 
     def get(self):
         result = self.dao.find_all()
-        return jsonify([item.json for item in result])
+        # return jsonify([item.json for item in result])
+        return jsonify(str(result))
 
 # parser = reqparse.RequestParser()
 # parser.add_argument('no', type = int, required = True,

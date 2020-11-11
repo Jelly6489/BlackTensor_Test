@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 from flask_restful import Resource, Api
 from main import app
+from com_blacktensor.cop.emo.resource.emotion import Emotion
+app.run(host='192.168.0.10', port='8080', debug=True)
 # app.run(host='127.0.0.1', port='8080', debug=True)
 
 '''
@@ -9,7 +11,8 @@ api = Api(app)
  
 class Rest(Resource):
     def get(self):
-        return {'rest': 'Good !'}
+        # return {'rest': 'Good !'}
+        return Emotion()
     def post(self):
         return {'rest': 'post success !'}
 api.add_resource(Rest, '/api')

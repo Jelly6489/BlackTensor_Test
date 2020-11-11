@@ -28,8 +28,8 @@ class StockDfo(object):
         # df.index[6], df.index[214], df.index[215], df.index[216],
         # df.index[217], df.index[218], df.index[219]])
         # df.drop(df.columns[0, 1, 2, 3, 4, 5, 6, 214, 215, 216, 217, 218, 219], axis = 1, inplace = True)
-        df.drop(df.tail(7).index, inplace=True)
-        df.drop(df.head(7).index, inplace=True)
+        df.drop(df.tail(6).index, inplace=True)
+        df.drop(df.head(8).index, inplace=True)
         df = df.reset_index(drop=True)
 
         # news_df.rename( columns={'Unnamed: 0':'name'}, inplace=True )

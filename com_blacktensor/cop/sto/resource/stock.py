@@ -1,11 +1,13 @@
-from flask import request
+from flask import request, make_response
 from flask_restful import Resource, reqparse
 from flask import jsonify
+import json
 
 from com_blacktensor.cop.sto.model.stock_dao import StockDao
 from com_blacktensor.cop.sto.model.stock_dfo import StockDfo
 from com_blacktensor.cop.sto.model.stock_kdd import StockKdd
 from com_blacktensor.cop.sto.model.stock_dto import StockVo
+from com_blacktensor.cop.sto.model.stock_dto import StockDto
 
 # ============================================================
 # ==================                     =====================
@@ -15,11 +17,21 @@ from com_blacktensor.cop.sto.model.stock_dto import StockVo
 
 class Stock(Resource):
     def __init__(self):
-        self. dao = StockDao()
+        self.dao = StockDao()
 
     def get(self):
         result = self.dao.find_all()
-        return jsonify([item.json for item in result])
+        # result = json.dumps(result, ensure_ascii=False)
+
+        # res = make_response(result)
+        # # with open('result.json', 'w', encoding='utf-8') as f:
+        #     # json.dumps(result, f, ensure_ascii=False)
+        # res = json.dumps(result)
+        # results = json.loads(res)
+        # # return jsonify([item.json for item in result])
+        # # return jsonify(json.dumps(str(result)))
+        # return jsonify(res)
+        return jsonify(str(result))
 
 # parser = reqparse.RequestParser()
 # parser.add_argument('date', type = int, required = True,

@@ -14,12 +14,12 @@ class StockDto(db.Model):
     volume : int = db.Column(db.Integer)
     keyword : str = db.Column(db.String(10))
 
-    def __init__(self, no, date, close, volume, keyword):
-        self.no = no
-        self.date = date
-        self.close = close
-        self.volume = volume
-        self.keyword = keyword
+    # def __init__(self, no, date, close, volume, keyword):
+    #     self.no = no
+    #     self.date = date
+    #     self.close = close
+    #     self.volume = volume
+    #     self.keyword = keyword
     
     def __repr__(self):
         return f'Stock(no={self.no}, date={self.date}, close={self.close}, volume={self.volume}, keyword={self.keyword})'
