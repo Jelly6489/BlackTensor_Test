@@ -44,25 +44,16 @@ class EmotionKdd(object):
     # e_date = input("끝날짜 입력(예: 2020.10.30):")
     # date_text = []
     def __init__(self):
-        # info_main = self.info_main
-        # maxpage = self.maxpage
-        # keyword = self.keyword
-        # order = self.order
-        # s_date = self.s_date
-        # e_date = self.e_date
-        # date_text = self.date_text
         self.info_main = info_main
         self.maxpage = maxpage
         self.keyword = keyword
         self.order = order
         self.s_date = s_date
         self.e_date = e_date
-        # self.date_text = date_text
 
     def naver_news(self, maxpage, keyword, order, s_date, e_date):
         results = []
         data_results = []
-        # date_text = []
         test_date = []
         
         for i in range(maxpage)[1:]:

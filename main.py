@@ -98,9 +98,10 @@ with app.app_context():
         EmotionDao.bulk()
         print('ok!')
     elif emotion_find_key == 1:
+        EmotionDao.find_update(keyword)
         # EmotionDao.update()
         print('ok!!')
-    # ================================ kain code ========================================
+    # ================================ kain code =======================================
     if status_count == 0:
         endDate = datetime.date.today().strftime('%Y%m%d')
         datas = CovidStatusKdd().get_covid19_status(endDate)

@@ -14,54 +14,11 @@ Session = openSession()
 session = Session()
 
 class StockDao(StockDto):
-    # @classmethod
-    # def bulk(cls, stock_dfo):
-    #     dfo = stock_dfo.get_df(0, data)
-    #     print('---------StockDao------------')
-    #     print(f'[ StockDao ] {dfo.head()}')
-    #     print(dfo.head())
-    #     session.bulk_insert_mappings(cls, dfo.to_dict(orient="records"))
-    #     session.commit()
-    #     session.close()
-    #     # Session = openSession()
-    #     # session = Session()
-    #     # stock_df = StockDf()
-    #     # df = stock_df.hook()
-    #     # print(df.head())
-    #     # session.bulk_insert_mappings(StockDto, df.to_dict(orient='records'))
-    #     # session.commit()
-    #     # session.close()
-    # #
-    # # @staticmethod
-    # # def bulk(datas):
-
-    # #     session.bulk_insert_mappings(StockDto, datas.to_dict(orient='records'))
-
-    # #     session.commit()
-    # #     session.close()
-
-    # #
-    # @staticmethod
-    # def save(stock):
-    #     session.add(stock)
-    #     session.commit()
-    
-    # @classmethod
-    # def count(cls):
-    #     return session.query(func.count(cls.date)).one()
-
-    # @classmethod
-    # def find_all(cls):
-
-    #     result = session.query(StockDto).all()
-    #     session.close()
-
-    #     return result
-
     @staticmethod
     def bulk():
         stock_dfo = StockDfo()
-        dfo = stock_dfo.get_df(keyword)
+        # dfo = stock_dfo.get_df(keyword)
+        dfo = stock_dfo.get_csv(keyword)
         session.bulk_insert_mappings(StockDto, dfo.to_dict(orient='records'))
         session.commit()
         session.close()
@@ -82,23 +39,4 @@ class StockDao(StockDto):
     @staticmethod
     def test():
         print(' TEST SUCCESS !!')
-
-# if __name__ == '__main__':
-#     StockDao.bulk()
-
-# ===========================================================================
-
-    # @staticmethod
-    # def count():
-    #     return session.query(func.count(StockDto.date)).one()
-
-    # @staticmethod
-    # def save(stock):
-    #     new_stock = StockDto(date = stock['date'],
-    #                        keyword = stock['keyword'],
-    #                        close = stock['close'],
-    #                        volume = stock['volume'])
-    #     session.add(new_stock)
-    #     session.commit()
-
 

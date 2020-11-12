@@ -77,7 +77,7 @@ class EmotionDao(EmotionDto):
             # session.commit()
             # session.close()
 
-        return session.query(cls).all()
+        # return session.query(cls).all()
 
     @classmethod
     def find_all(cls):
@@ -122,6 +122,15 @@ class EmotionDao(EmotionDto):
     #     session.close()
     #     return 0
 
+    @classmethod
+    def find_update(cls, keyword):
+        emotion = session.query(cls).filter(cls.keyword == keyword).first()
+        # emotion.positive += 1
+        # emotion.pos_count += 1
+        # emotion.negative += 1
+        # emotion.neg_count += 1
+        # emotion.keyword += 1
+        # session.commit()
     @classmethod
     def find_by_keyword(cls, keyword):
         print('==============find_by_keyword================')

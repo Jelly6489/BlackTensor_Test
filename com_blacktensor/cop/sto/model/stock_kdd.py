@@ -15,12 +15,6 @@ from com_blacktensor.util.file_handler import FileHandler as handler
 class StockKdd(object):
     # keyword = input("검색어 입력: ")
 
-    # def __init__(self):
-    #     self.sk = StockKdd()
-    #     self.keyword = keyword
-    #     self.code_df = code_df
-    #     self.code_name = code_name
-
     # def get_code(self, keyword, code_df):
         # print("get_code: ", keyword)
     code_df = pd.read_html('http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13',header=0)[0]
@@ -58,15 +52,16 @@ class StockKdd(object):
 
     df = pd.DataFrame()
 
-    for page in range(1, 23): 
+    # for page in range(1, 23): 
+    for page in range(1, 124): 
         pg_url = '{url}&page={page}'.format(url=url, page=page) 
         df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
         # df = df.append({'stock' : keyword}, ignore_index=True)
 
     df = df.dropna()
 
-    df = df.drop(columns= {'전일비', '시가', '고가', '저가'})
-
+    # df = df.drop(columns= {'전일비', '시가', '고가', '저가'})
+    df = df.drop(columns= {'전일비'})
     # print(df.head())
     print(df)
 
@@ -78,8 +73,11 @@ class StockKdd(object):
     # df.drop(['diff', 'open', 'high', 'low'], axis=1, inplace=True)
 
     # 데이터 타입 int 변환
-    df[['close', 'volume']] \
-        = df[['close', 'volume']].astype(int)
+    # df[['close', 'volume']] \
+    #     = df[['close', 'volume']].astype(int)
+
+    df[['close', 'open', 'high', 'low', 'volume']] \
+        = df[['close', 'open', 'high', 'low', 'volume']].astype(float)
 
     # df.drop(['diff', 'open', 'high', 'low'], axis=0, inplace=True)
 
@@ -87,7 +85,8 @@ class StockKdd(object):
     df['date'] = pd.to_datetime(df['date'])
 
     # date 기준으로 내림차순 sort
-    df = df.sort_values(by=['date'], ascending=False)
+    # df = df.sort_values(by=['date'], ascending=False)
+    df = df.sort_values(by=['date'], ascending=True)
 
     df.loc[:, 'keyword'] = keyword
 
@@ -98,6 +97,5 @@ class StockKdd(object):
     print(df)
 
     # csv file 저장
-    # df.to_csv(keyword, '.csv', mode = 'a', header = False)
     df.to_csv(keyword + '_data.csv', encoding='utf-8-sig')
 

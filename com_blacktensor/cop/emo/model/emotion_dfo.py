@@ -23,26 +23,9 @@ class EmotionDfo(object):
         print(keyword)
         self.fileReader = FileHandler()  
 
-
-
-
-    # def data_pro(self, word, positive_word, negative_word, poflag, neflag):
     def data_pro(self, keyword):
     # def data_pro(self, keyword):
         print('-----------emotionDfo--------------')
-        # 
-        # keyword = str(self.keyword)
-        # keyword = self.keyword
-        # word = self.word
-        # noun_list = self.noun_list
-        # positive_word = self.positive_word
-        # negative_word = self.negative_word
-        # poflag = self.poflag
-        # neflag = self.neflag
-        # po_key = self.po_key
-        # ne_key = self.ne_key
-        # po_val = self.po_val
-        # ne_val = self.ne_val
 
         word = []
         positive_word = []
@@ -214,8 +197,3 @@ class EmotionDfo(object):
         # return pd.DataFrame(data, columns=self.colums)
     data_pro(0, keyword)
     # get_df(0, keyword)
-    
-# if __name__ == '__main__':
-    #EmotionDao.bulk()
-    # EmotionDfo.data_pro(0, keyword)
-    # EmotionDfo.data_pro()
