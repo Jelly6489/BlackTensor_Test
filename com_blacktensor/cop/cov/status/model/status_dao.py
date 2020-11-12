@@ -1,5 +1,5 @@
 from com_blacktensor.cop.cov.status.model.status_dto import CovidStatusDto
-from com_blackTensor.ext.db import db, openSeesion
+from com_blacktensor.ext.db import db, openSession
 
 from sqlalchemy import func
 # ============================================================
@@ -11,10 +11,9 @@ from sqlalchemy import func
 
 # JPA Repository
 class CovidStatusDao(CovidStatusDto):
-    
     @staticmethod
     def save_data_bulk(datas):
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
 
         session.bulk_insert_mappings(CovidStatusDto, datas.to_dict(orient='records'))
@@ -24,7 +23,7 @@ class CovidStatusDao(CovidStatusDto):
     
     @staticmethod
     def count():
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
         
         result = session.query(func.count(CovidStatusDto.no)).one()[0]
@@ -34,7 +33,7 @@ class CovidStatusDao(CovidStatusDto):
     @classmethod
     def find_all(self):
         
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
 
         result = session.query(CovidStatusDto).all()

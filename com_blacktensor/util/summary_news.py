@@ -1,4 +1,4 @@
-from gensim.summarization.summarizer import summarize
+# from gensim.summarization.summarizer import summarize
 
 class SummaryUtil:
 

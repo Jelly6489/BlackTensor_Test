@@ -1,13 +1,13 @@
-from com_blacktensor.ext.db import db, openSeesion
+from com_blacktensor.ext.db import db, openSession
 
-from com_blacktensor.news.economy.model.economy_dto import EconomyNewsDto, EconomyExtractionWordDto
+from com_blacktensor.cop.news.economy.model.economy_dto import EconomyNewsDto, EconomyExtractionWordDto
 from sqlalchemy import func
 
 class EconomyExtractionWordDao(EconomyExtractionWordDto):
     
     @staticmethod
     def save_data_bulk(datas):
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
 
         session.bulk_insert_mappings(EconomyExtractionWordDto, datas.to_dict(orient='records'))
@@ -17,7 +17,7 @@ class EconomyExtractionWordDao(EconomyExtractionWordDto):
     
     @staticmethod
     def count():
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
         
         result = session.query(func.count(EconomyExtractionWordDto.no)).one()[0]
@@ -27,7 +27,7 @@ class EconomyExtractionWordDao(EconomyExtractionWordDto):
     @classmethod
     def find_all(self):
         
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
 
         result = session.query(EconomyExtractionWordDto).all()
@@ -39,7 +39,7 @@ class EconomyNewsDao(EconomyNewsDto):
     
     @staticmethod
     def save_data_bulk(datas):
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
 
         session.bulk_insert_mappings(EconomyNewsDto, datas.to_dict(orient='records'))
@@ -49,7 +49,7 @@ class EconomyNewsDao(EconomyNewsDto):
     
     @staticmethod
     def count():
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
         
         result = session.query(func.count(EconomyNewsDto.no)).one()[0]
@@ -59,7 +59,7 @@ class EconomyNewsDao(EconomyNewsDto):
     @classmethod
     def find_all(self):
         
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
 
         result = session.query(EconomyNewsDto).all()

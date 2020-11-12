@@ -1,9 +1,9 @@
 from flask_restful import Resource
 from flask import jsonify
 
-from com_blacktensor.news.economy.model.economy_kdd import EconomyNewsKdd
-from com_blacktensor.news.economy.model.economy_df import EconomyNewsDf
-from com_blacktensor.news.economy.model.economy_dao import EconomyNewsDao, EconomyExtractionWordDao
+from com_blacktensor.cop.news.economy.model.economy_kdd import EconomyNewsKdd
+from com_blacktensor.cop.news.economy.model.economy_df import EconomyNewsDf
+from com_blacktensor.cop.news.economy.model.economy_dao import EconomyNewsDao, EconomyExtractionWordDao
 
 from com_blacktensor.util.checker import Checker
 from com_blacktensor.util.file_handler import FileHandler as handler

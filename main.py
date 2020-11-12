@@ -3,6 +3,8 @@ from flask_restful import Resource, Api
 from hello import HelloWorld
 
 import datetime
+import time
+import threading
 
 from flask_cors import CORS
 from com_blacktensor.ext.routes import initialize_routes
@@ -27,6 +29,15 @@ from com_blacktensor.cop.sto.model.stock_dfo import StockDfo
 from com_blacktensor.cop.sto.model.stock_dto import StockDto
 from com_blacktensor.cop.sto.model.stock_kdd import StockKdd
 
+# ================================== kain code =====================================
+from com_blacktensor.cop.cov.status.model.status_kdd import CovidStatusKdd
+from com_blacktensor.cop.cov.status.model.status_df import CovidStatusDf
+from com_blacktensor.cop.cov.status.model.status_dao import CovidStatusDao
+from com_blacktensor.cop.cov.status.model.status_dto import CovidStatusDto
+from com_blacktensor.cop.news.covid.model.covid_news_dto import CovidNewsDto, CovidExtractionWordDto
+from com_blacktensor.cop.news.economy.model.economy_dto import EconomyNewsDto, EconomyExtractionWordDto
+# ==================================================================================
+
 from com_blacktensor.cop.emo.model import emotion_dfo
 
 from com_blacktensor.ext.db import db, openSession
@@ -36,12 +47,9 @@ session = Session()
 
 print(f'========================= START 1 ==============================')
 EmotionDao.test()
-# 
-# EmotionDfo.data_pro(0, keyword)
-# 
+
 app = Flask(__name__)
 CORS(app, resources={r'/api/*': {"origins": "*"}})
-# app.config['JSON_AS_ASCII'] = False
 
 print(f'========================= START 2 ==============================')
 EmotionDao.test()
@@ -66,6 +74,9 @@ with app.app_context():
     db.create_all()
     emotion = session.query(EmotionDto)
     emotion_find_key = EmotionDao.find_by_keyword(keyword)
+    # ====================== kain code ==============================
+    status_count = CovidStatusDao.count()
+    # ===============================================================
     # emotion_find_x = EmotionDao.find_x(keyword)
     # emotion_find_y = EmotionDao.find_y(keyword)
     # emotion_like = EmotionDao.find_like(keyword)
@@ -89,7 +100,21 @@ with app.app_context():
     elif emotion_find_key == 1:
         # EmotionDao.update()
         print('ok!!')
+    # ================================ kain code ========================================
+    if status_count == 0:
+        endDate = datetime.date.today().strftime('%Y%m%d')
+        datas = CovidStatusKdd().get_covid19_status(endDate)
 
+        if len(datas) > 0:
+            if not Checker.check_folder_path('./csv'):
+                handler.crete_folder('./csv')
+            
+            keys = list(datas[0].keys())
+            handler.save_to_csv('./csv/result_covid19_status.csv', datas, keys, 'utf-8-sig')
+
+            df = CovidStatusDf(keys).get_dataframe(datas)
+            CovidStatusDao.save_data_bulk(df)
+    # ===================================================================================
     # EmotionDao.emotion_fi_insert()
     # EmotionDao.find_insert(EmotionDto, keyword)
 

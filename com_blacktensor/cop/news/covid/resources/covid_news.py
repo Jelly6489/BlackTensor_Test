@@ -2,9 +2,9 @@ from flask_restful import Resource
 from flask import jsonify
 from flask import request
 
-from com_blacktensor.news.covid.model.covid_news_dao import CovidNewsDao, CovidExtractionWordDao
-from com_blacktensor.news.covid.model.covid_news_df import CovidNewsDf
-from com_blacktensor.news.covid.model.covid_news_kdd import CovidNewsKDD
+from com_blacktensor.cop.news.covid.model.covid_news_dao import CovidNewsDao, CovidExtractionWordDao
+from com_blacktensor.cop.news.covid.model.covid_news_df import CovidNewsDf
+from com_blacktensor.cop.news.covid.model.covid_news_kdd import CovidNewsKDD
 
 from com_blacktensor.util.checker import Checker
 from com_blacktensor.util.file_handler import FileHandler as handler

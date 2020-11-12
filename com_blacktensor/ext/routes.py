@@ -9,11 +9,12 @@ from com_blacktensor.cop.sto.resource.stock import Stock
 # =============================================================================================
 # ===================================== kain code =============================================
 # =============================================================================================
-from com_blackTensor.resources.covid.status.resource.status import CovidStatus
-from com_blackTensor.resources.covid.borad.resources.covid_board import CovidBoard
-from com_blackTensor.resources.news.covid.resources.covid_news import CovideNews
-from com_blackTensor.resources.news.economy.resources.economy_news import EconomyNews
-from com_blackTensor.resources.covid.status.resource.status_arr import CovidStatusToArray
+from com_blacktensor.cop.cov.status.resources.status import CovidStatus
+from com_blacktensor.cop.cov.board.resources.covid_board import CovidBoard
+from com_blacktensor.cop.cov.board.resources.covid_board import CovidBoard
+from com_blacktensor.cop.news.covid.resources.covid_news import CovideNews
+from com_blacktensor.cop.news.economy.resources.economy_news import EconomyNews
+from com_blacktensor.cop.cov.status.resources.status_arr import CovidStatusToArray
 
 covid = Blueprint('covidStatus', __name__, url_prefix='/api/status/covid')
 board = Blueprint('covidBoard', __name__, url_prefix='/api/board/covid')

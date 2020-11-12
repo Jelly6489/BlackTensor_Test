@@ -1,13 +1,13 @@
-from com_blacktensor.ext.db import db, openSeesion
+from com_blacktensor.ext.db import db, openSession
 
-from com_blacktensor.news.covid.model.covid_news_dto import CovidExtractionWordDto, CovidNewsDto
+from com_blacktensor.cop.news.covid.model.covid_news_dto import CovidExtractionWordDto, CovidNewsDto
 from sqlalchemy import func
 
 class CovidExtractionWordDao(CovidExtractionWordDto):
     
     @staticmethod
     def save_data_bulk(datas):
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
 
         session.bulk_insert_mappings(CovidExtractionWordDto, datas.to_dict(orient='records'))
@@ -17,7 +17,7 @@ class CovidExtractionWordDao(CovidExtractionWordDto):
     
     @staticmethod
     def count():
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
         
         result = session.query(func.count(CovidExtractionWordDto.no)).one()[0]
@@ -27,7 +27,7 @@ class CovidExtractionWordDao(CovidExtractionWordDto):
     @classmethod
     def find_all(self):
         
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
 
         result = session.query(CovidExtractionWordDto).all()
@@ -39,7 +39,7 @@ class CovidNewsDao(CovidNewsDto):
     
     @staticmethod
     def save_data_bulk(datas):
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
 
         session.bulk_insert_mappings(CovidNewsDto, datas.to_dict(orient='records'))
@@ -49,7 +49,7 @@ class CovidNewsDao(CovidNewsDto):
     
     @staticmethod
     def count():
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
         
         result = session.query(func.count(CovidNewsDto.no)).one()[0]
@@ -59,7 +59,7 @@ class CovidNewsDao(CovidNewsDto):
     @classmethod
     def find_all(self):
         
-        Session = openSeesion()
+        Session = openSession()
         session = Session()
 
         result = session.query(CovidNewsDto).all()
