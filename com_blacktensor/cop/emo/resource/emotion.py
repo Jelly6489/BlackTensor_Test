@@ -31,6 +31,13 @@ class Emotion(Resource):
         # with open('word.json', 'w', encoding='utf-8') as make_file:
         #     json.dump(result, make_file, ensure_ascii=False, indent='\t')
         return jsonify([item.json for item in result])
+        # file_path = './json_test/json_test.json'
+        # with open(file_path, 'r') as json_file:
+        #     json_data = json.load(json_file)
+        #     print(json_data)
+        #     print('======================')
+            # return jsonify(json_data)
+            # return jsonify([item.json for item in json_data])
         # return jsonify(str(result))
 
 
