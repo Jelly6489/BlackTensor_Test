@@ -29,6 +29,12 @@ from com_blacktensor.cop.sto.model.stock_dfo import StockDfo
 from com_blacktensor.cop.sto.model.stock_dto import StockDto
 from com_blacktensor.cop.sto.model.stock_kdd import StockKdd
 
+# Exchange
+from com_blacktensor.cop.exc.model.exchange_kdd import ExchangeKdd
+from com_blacktensor.cop.exc.model.exchange_dfo import ExchangeDfo
+from com_blacktensor.cop.exc.model.exchange_dao import ExchangeDao
+from com_blacktensor.cop.exc.model.exchange_dto import ExchangeDto
+
 # ================================== kain code =====================================
 from com_blacktensor.cop.cov.status.model.status_kdd import CovidStatusKdd
 from com_blacktensor.cop.cov.status.model.status_df import CovidStatusDf
@@ -64,6 +70,8 @@ if __name__ == '__main__':
     # EmotionDfo.data_pro(0, keyword)
     EmotionDfo.data_pro(0, keyword)
     FinanceKdd.get_finance(0, keyword, code_df)
+    ExchangeKdd.market_index_kdd(0)
+    ExchangeDfo.get_ex_df(0)
     # FinanceDfo.fina_pro(keyword)
     
 
@@ -86,6 +94,7 @@ with app.app_context():
     stock_new_count = StockNewsDao.count()
     stock_count = StockDao.count()
     finance_count = FinanceDao.count()
+    exchange_count = ExchangeDao.count()
     print(type(keyword))
     print(f'***** Emotion Total Count is {emotion_count} *****')
     if emotion_count[0] == 0:
@@ -142,5 +151,9 @@ with app.app_context():
     print(f'***** Finance Total Count is {finance_count} *****')
     if finance_count[0] == 0:
         FinanceDao.bulk()
+
+    print(f'***** Exchange Total Count is {exchange_count} *****')
+    if exchange_count[0] == 0:
+        ExchangeDao.bulk()
 
 initialize_routes(api)

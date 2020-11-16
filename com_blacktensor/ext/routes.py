@@ -5,6 +5,7 @@ from flask_restful import Api
 from com_blacktensor.cop.emo.resource.emotion import Emotion, StockNews
 from com_blacktensor.cop.fin.resource.finance import Finance
 from com_blacktensor.cop.sto.resource.stock import Stock
+from com_blacktensor.cop.exc.resource.exchange import Exchange
 
 # =============================================================================================
 # ===================================== kain code =============================================
@@ -29,6 +30,7 @@ stock = Blueprint('stock', __name__, url_prefix='/api/stock')
 finance = Blueprint('finance', __name__, url_prefix='/api/finance')
 emotion = Blueprint('emotion', __name__, url_prefix='/api/emotion')
 stock_news = Blueprint('stock_news', __name__, url_prefix='/api/stock_news')
+exchange = Blueprint('exchange', __name__, url_prefix='/api/exchange')
 
 # =============================================================================================
 # ===================================== kain code =============================================
@@ -45,12 +47,14 @@ api = Api(stock)
 api = Api(finance)
 api = Api(emotion)
 api = Api(stock_news)
+api = Api(exchange)
 
 def initialize_routes(api):
     api.add_resource(Stock, '/api/stock')
     api.add_resource(Finance, '/api/finance')
     api.add_resource(Emotion, '/api/emotion')
     api.add_resource(StockNews, '/api/stock_news')
+    api.add_resource(Exchange, '/api/exchange')
 
 # =============================================================================================
 # ===================================== kain code =============================================
@@ -81,6 +85,11 @@ def emotion_api_error(e):
 
 @stock_news.errorhandler(500)
 def stock_news_api_error(e):
+    logging.exception('An error occurred during emotion request. %s' % str(e))
+    return 'An internal error occurred.', 500
+
+@exchange.errorhandler(500)
+def exchange_api_error(e):
     logging.exception('An error occurred during emotion request. %s' % str(e))
     return 'An internal error occurred.', 500
 

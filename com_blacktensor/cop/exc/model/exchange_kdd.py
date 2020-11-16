@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import datetime as date
 import time
 
-my_folder = '/c/Users/Admin/VscProject/BlackTensor_Test'
+my_folder = '/c/Users/Admin/VscProject/BlackTensor_Test/'
 
 class ExchangeKdd(object):
     def market_index_kdd(self):
@@ -14,10 +14,7 @@ class ExchangeKdd(object):
         url_dict = {'미국 USD':'http://finance.naver.com/marketindex/exchangeDailyQuote.nhn?marketindexCd=FX_USDKRW',
                     '일본 JPY':'http://finance.naver.com/marketindex/exchangeDailyQuote.nhn?marketindexCd=FX_JPYKRW',
                     '유럽연합 EUR':'http://finance.naver.com/marketindex/exchangeDailyQuote.nhn?marketindexCd=FX_EURKRW',
-                    '중국 CNY':'http://finance.naver.com/marketindex/exchangeDailyQuote.nhn?marketindexCd=FX_CNYKRW',
-                    'WTI':'http://finance.naver.com/marketindex/worldDailyQuote.nhn?marketindexCd=OIL_CL&fdtc=2',
-                    '국제 금':'http://finance.naver.com/marketindex/worldDailyQuote.nhn?marketindexCd=CMDT_GC&fdtc=2'}
-
+                    '중국 CNY':'http://finance.naver.com/marketindex/exchangeDailyQuote.nhn?marketindexCd=FX_CNYKRW'}
         for key in url_dict.keys():
             
             date = []
@@ -46,14 +43,15 @@ class ExchangeKdd(object):
 
                     temp = DataFrame(value, index = date, columns = [key])
                     
-                    Data = pd.merge(Data, temp, how='outer', left_index=True, right_index=True)        
+                    Data = pd.merge(Data, temp, how='outer', left_index=True, right_index=True)
                     
                     print(key + '자료 수집 완료')
                     time.sleep(10)
                     break
-
-        Data.to_csv('%s/market_index.csv'%(my_folder))
+        print('=================== test 2 =================')
+        # Data.to_csv('%s/market_index.csv'%(my_folder))
+        Data.to_csv('exchange_index.csv', encoding='utf-8-sig')
+        print('==================== 환율 ok ============================')
         print(Data)
         return Data
-
-    K = market_index_kdd()
+    K = market_index_kdd(0)
