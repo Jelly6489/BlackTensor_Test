@@ -33,12 +33,12 @@ class EmotionDto(db.Model):
     @property
     def json(self):
         return {
-        'no' : self.no,
-        'positive' : self.positive,
-        'pos_count' : self.pos_count,
-        'negative' : self.negative,
-        'neg_count' : self.neg_count,
-        'keyword' : self.keyword
+        "no" : self.no,
+        "positive" : self.positive,
+        "pos_count" : self.pos_count,
+        "negative" : self.negative,
+        "neg_count" : self.neg_count,
+        "keyword" : self.keyword
     }
 
 class StockNewsDto(db.Model):
@@ -54,28 +54,28 @@ class StockNewsDto(db.Model):
     #     self.keyword = keyword
     
     def __repr__(self):
-        return f'Emotion(no={self.no}, title={self.title}, keyword={self.keyword})'
+        return f"Emotion(no={self.no}, title={self.title}, keyword={self.keyword})"
 
     def __str__(self):
-        return f'Emotion(no={self.no}, title={self.title}, keyword={self.keyword})'
+        return f"Emotion(no={self.no}, title={self.title}, keyword={self.keyword})"
 
     @property
     def json(self):
         return {
-        'no' : self.no,
-        'title' : self.title,
-        'keyword' : self.keyword
+        "no" : self.no,
+        "title" : self.title,
+        "keyword" : self.keyword
     }
 
 class EmotionVo:
     no : int = 0
-    positive : str = ''
+    positive : str = ""
     pos_count : int = 0
-    negative : str = ''
+    negative : str = ""
     neg_count : int = 0
-    keyword : str = ''
+    keyword : str = ""
 
 class StockNewsVo:
     no : int = 0
-    title : str = ''
-    keyword : str = ''
+    title : str = ""
+    keyword : str = ""

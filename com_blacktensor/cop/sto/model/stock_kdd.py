@@ -52,8 +52,8 @@ class StockKdd(object):
 
     df = pd.DataFrame()
 
-    for page in range(1, 64): 
-    # for page in range(1, 124): 
+    # for page in range(1, 64): 
+    for page in range(1, 125): 
         pg_url = '{url}&page={page}'.format(url=url, page=page) 
         df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
         # df = df.append({'stock' : keyword}, ignore_index=True)

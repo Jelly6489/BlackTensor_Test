@@ -26,11 +26,11 @@ economy_news = Blueprint('FrequencyNaverNews', __name__, url_prefix='/api/news/e
 # =============================================================================================
 # =============================================================================================
 
-stock = Blueprint('stock', __name__, url_prefix='/api/stock')
-finance = Blueprint('finance', __name__, url_prefix='/api/finance')
-emotion = Blueprint('emotion', __name__, url_prefix='/api/emotion')
-stock_news = Blueprint('stock_news', __name__, url_prefix='/api/stock_news')
-exchange = Blueprint('exchange', __name__, url_prefix='/api/exchange')
+stock = Blueprint('stock', __name__, url_prefix='/api/stock/stock')
+finance = Blueprint('finance', __name__, url_prefix='/api/stock/finance')
+emotion = Blueprint('emotion', __name__, url_prefix='/api/stock/emotion')
+stock_news = Blueprint('stock_news', __name__, url_prefix='/api/stock/mainNews')
+exchange = Blueprint('exchange', __name__, url_prefix='/api/stock/exchange')
 
 # =============================================================================================
 # ===================================== kain code =============================================
@@ -50,11 +50,11 @@ api = Api(stock_news)
 api = Api(exchange)
 
 def initialize_routes(api):
-    api.add_resource(Stock, '/api/stock')
-    api.add_resource(Finance, '/api/finance')
-    api.add_resource(Emotion, '/api/emotion')
-    api.add_resource(StockNews, '/api/stock_news')
-    api.add_resource(Exchange, '/api/exchange')
+    api.add_resource(Stock, '/api/stock/stock')
+    api.add_resource(Finance, '/api/stock/finance')
+    api.add_resource(Emotion, '/api/stock/emotion')
+    api.add_resource(StockNews, '/api/stock/mainNews')
+    api.add_resource(Exchange, '/api/stock/exchange')
 
 # =============================================================================================
 # ===================================== kain code =============================================

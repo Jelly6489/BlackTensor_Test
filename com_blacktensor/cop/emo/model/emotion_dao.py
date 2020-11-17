@@ -124,7 +124,7 @@ class EmotionDao(EmotionDto):
 
     @classmethod
     def find_update(cls, keyword):
-        emotion = session.query(cls).filter(cls.keyword == keyword).first()
+        emotion = session.query(cls).filter(cls.keyword == keyword).all()
         # emotion.positive += 1
         # emotion.pos_count += 1
         # emotion.negative += 1
@@ -137,6 +137,7 @@ class EmotionDao(EmotionDto):
         a = cls.query.filter(cls.keyword != keyword).all()
         b = cls.query.filter(cls.keyword == keyword).all()
         if a: 
+            print(a)
             # emotion = session.query(cls).filter(cls.keyword == keyword).first()
             # emotion.positive += 1
             # emotion.pos_count += 1
@@ -145,6 +146,7 @@ class EmotionDao(EmotionDto):
             # session.commit()
             return 0
         elif b:
+            print(b)
             print('------------중복--------------')
             # emotion = session.query(cls).filter(cls.keyword == keyword).first()
             # emotion.positive += 1

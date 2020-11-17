@@ -24,8 +24,8 @@ class Stock(Resource):
 
     def get(self):
         result = self.dao.find_all()
-        print(result)
-        print(type(result))
+        # print(result)
+        # print(type(result))
         return jsonify([item.json for item in result])
     # def get(self):
     #     result = self.df.get_csv(keyword)

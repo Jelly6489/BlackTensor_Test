@@ -1,3 +1,8 @@
+import requests
+import pandas as pd
+import codecs
+import numpy as np
+import re
 from flask import request
 from flask_restful import Resource, reqparse
 from flask import jsonify
@@ -17,5 +22,8 @@ class Exchange(Resource):
         self.dao = ExchangeDao()
 
     def get(self):
+        print('================Exchange1================')
         result = self.dao.find_all()
+        print('================Exchange2================')
         return jsonify([item.json for item in result])
+ 

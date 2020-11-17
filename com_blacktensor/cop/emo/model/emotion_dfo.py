@@ -155,7 +155,7 @@ class EmotionDfo(object):
         df = pd.concat([po_df,ne_df], axis=1)
 
         df.loc[:, 'keyword'] = keyword
-
+        df.rename( columns={'Unnamed: 0':'name'}, inplace=True )
 #
         df.fillna(0, inplace=True)
 #
@@ -190,6 +190,7 @@ class EmotionDfo(object):
         # C:/Users/Admin/VscProject/BlackTensor_Test/
 
         news_df.rename( columns={'Unnamed: 0':'name'}, inplace=True )
+        # ,positive,pos_count,negative,neg_count,keyword
         news_df.to_csv(keyword + '.csv', encoding='utf-8-sig')
         print('-----------------get_df------------------')
         print(news_df)

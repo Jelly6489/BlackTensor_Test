@@ -17,9 +17,9 @@ class ExchangeDao(ExchangeDto):
     @staticmethod
     def bulk():
         print('============= Test1 ================')
-        exchange_dfo = ExchangeDto()
+        exchange_dfo = ExchangeDfo()
         # dfo = stock_dfo.get_df(keyword)
-        dfo = exchange_dfo.get_ex_df(0)
+        dfo = exchange_dfo.get_ex_df()
         print('============= Test2 ================')
         session.bulk_insert_mappings(ExchangeDto, dfo.to_dict(orient='records'))
         session.commit()
@@ -37,8 +37,4 @@ class ExchangeDao(ExchangeDto):
     @classmethod
     def find_all(cls):
         return session.query(cls).all()
-
-    @staticmethod
-    def test():
-        print(' TEST SUCCESS !!')
 

@@ -33,36 +33,36 @@ class FinanceDto(db.Model):
     #     self.keyword = keyword
     
     def __repr__(self):
-        return f'Finance(no={self.no}, name={self.name}, f_2015_12={self.f_2015_12}, \
+        return f"Finance(no={self.no}, name={self.name}, f_2015_12={self.f_2015_12}, \
         f_2016_12={self.f_2016_12}, f_2017_12={self.f_2017_12}, f_2018_12={self.f_2018_12}, \
         f_2019_12={self.f_2019_12}, f_2020_12={self.f_2020_12}, f_2021_12={self.f_2021_12}, \
-        f_2022_12={self.f_2022_12}, keyword={self.keyword})'
+        f_2022_12={self.f_2022_12}, keyword={self.keyword})"
 
     def __str__(self):
-        return f'Finance(no={self.no}, name={self.name}, f_2015_12={self.f_2015_12}, \
+        return f"Finance(no={self.no}, name={self.name}, f_2015_12={self.f_2015_12}, \
         f_2016_12={self.f_2016_12}, f_2017_12={self.f_2017_12}, f_2018_12={self.f_2018_12}, \
         f_2019_12={self.f_2019_12}, f_2020_12={self.f_2020_12}, f_2021_12={self.f_2021_12}, \
-        f_2022_12={self.f_2022_12}, keyword={self.keyword})'
+        f_2022_12={self.f_2022_12}, keyword={self.keyword})"
 
     @property
     def json(self):
         return {
-        'no' : self.no,
-        'name' : self.name,
-        'f_2015_12' : self.f_2015_12,
-        'f_2016_12' : self.f_2016_12,
-        'f_2017_12' : self.f_2017_12,
-        'f_2018_12' : self.f_2018_12,
-        'f_2019_12' : self.f_2019_12,
-        'f_2020_12' : self.f_2020_12,
-        'f_2021_12' : self.f_2021_12,
-        'f_2022_12' : self.f_2022_12,
-        'keyword' : self.keyword
+        "no" : self.no,
+        "name" : self.name,
+        "f_2015_12" : self.f_2015_12,
+        "f_2016_12" : self.f_2016_12,
+        "f_2017_12" : self.f_2017_12,
+        "f_2018_12" : self.f_2018_12,
+        "f_2019_12" : self.f_2019_12,
+        "f_2020_12" : self.f_2020_12,
+        "f_2021_12" : self.f_2021_12,
+        "f_2022_12" : self.f_2022_12,
+        "keyword" : self.keyword
     }
 
 class FinanceVo:
     no : int = 0
-    name : str = ''
+    name : str = ""
     f_2015_12 : float = 0.0
     f_2016_12 : float = 0.0
     f_2017_12 : float = 0.0
@@ -71,4 +71,4 @@ class FinanceVo:
     f_2020_12 : float = 0.0
     f_2021_12 : float = 0.0
     f_2022_12 : float = 0.0
-    keyword : str = ''
+    keyword : str = ""

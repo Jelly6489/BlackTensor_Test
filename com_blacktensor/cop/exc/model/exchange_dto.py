@@ -9,10 +9,10 @@ class ExchangeDto(db.Model):
     __table_args__={'mysql_collate' : 'utf8_general_ci'}
     no : int = db.Column(db.Integer, primary_key = True, index = True)
     date : str = db.Column(db.String(10))
-    usd : float = db.Column(db.Float)
-    jpy : float = db.Column(db.Float)
-    eur : float = db.Column(db.Float)
-    cny : float = db.Column(db.Float)
+    usd : str = db.Column(db.String(10))
+    jpy : str = db.Column(db.String(10))
+    eur : str = db.Column(db.String(10))
+    cny : str = db.Column(db.String(10))
 
     # def __init__(self, no, date, close, volume, keyword):
     #     self.no = no
@@ -22,26 +22,28 @@ class ExchangeDto(db.Model):
     #     self.keyword = keyword
     
     def __repr__(self):
-        return f'Stock(no={self.no}, date={self.date}, usd={self.usd}, jpy={self.jpy}, eur={self.eur}, cny={self.cny})'
+        return f"Stock(no={self.no}, date={self.date}, usd={self.usd}, jpy={self.jpy}, eur={self.eur}, cny={self.cny})"
 
     def __str__(self):
-        return f'Stock(no={self.no}, date={self.date}, usd={self.usd}, jpy={self.jpy}, eur={self.eur}, cny={self.cny})'
+        return f"Stock(no={self.no}, date={self.date}, usd={self.usd}, jpy={self.jpy}, eur={self.eur}, cny={self.cny})"
 
     @property
     def json(self):
         return {
-        'no' : self.no,
-        'date' : self.date,
-        'usd' : self.usd,
-        'jpy' : self.jpy,
-        'eur' : self.eur,
-        'cny' : self.cny
+        "no" : self.no,
+        "date" : self.date,
+        "usd" : self.usd,
+        "jpy" : self.jpy,
+        "eur" : self.eur,
+        "cny" : self.cny
     }
 
 class StockVo:
     no : int = 0
-    date : str = ''
-    usd : float = 0
-    jpy : float = 0
-    eur : float = 0
-    cny : float = 0
+    date : str = ""
+    usd : str = ""
+    jpy : str = ""
+    eur : str = ""
+    cny : str = ""
+
+# alter table exchange modify eur mediumtext; 

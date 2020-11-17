@@ -21,7 +21,8 @@ class StockDfo(object):
 
         df = pd.read_csv('{}_data.csv'.format(keyword), index_col=[0], encoding='utf-8-sig')
         # df.drop(df.tail(5).index, inplace=True)
-        df.drop(df.head(7).index, inplace=True)
+        # df.drop(df.head(7).index, inplace=True)
+        df.drop(df.head(9).index, inplace=True)
         df = df.reset_index(drop=True)
 
         # news_df.rename( columns={'Unnamed: 0':'name'}, inplace=True )
