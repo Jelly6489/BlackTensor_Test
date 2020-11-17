@@ -24,15 +24,6 @@ Session = openSession()
 session = Session()
 
 class EmotionDao(EmotionDto):
-    # @classmethod
-    # def bulk(cls, emotion_dfo):
-    #     dfo = emotion_dfo.data_pro(0, keyword)
-    #     print('--------Emotion----------')
-    #     print(dfo.head())
-    #     session.bulk_insert_mappings(cls, dfo.to_dict(orient="records"))
-    #     session.commit()
-    #     session.close()
-
     @staticmethod
     def bulk():
         emotion_dfo = EmotionDfo()
@@ -48,132 +39,31 @@ class EmotionDao(EmotionDto):
 
     @classmethod
     def update(cls, emotion):
-        # session.query(cls).filter(cls.keyword == emotion['keyword'])\
         emotion = session.query(cls).filter(cls.keyword == keyword).first()\
                 .update({cls.no : emotion['no'],\
-                cls.positive:emotion['positive'],\
-                cls.pos_count:emotion['pos_count'],\
-                cls.negative:emotion['negative'],\
-                cls.neg_count:emotion['neg_count']})                                                        
+                cls.positive:emotion['tag'],\
+                cls.pos_count:emotion['weight'],\
+                cls.negative:emotion['type']})                                                        
         session.commit()
 
     @classmethod
     def count(cls):
         return session.query(func.count(cls.no)).one()
 
-    # @classmethod
-    # def find_insert(cls, emotion, keyword):
-    #     session.query(cls).filter_by(cls.keyword == emotion['keyword']).last()\
-    #         .insert({cls.no : emotion['no'],\
-    #             cls.positive:emotion['positive'],\
-    #             cls.pos_count:emotion['pos_count'],\
-    #             cls.negative:emotion['negative'],\
-    #             cls.neg_count:emotion['neg_count'],\
-    #             cls.keyword:emotion['keyword']})
-            # if session.query(cls).filter(cls.keyword != keyword):
-            # emotion_dfo = EmotionDfo()
-            # dfo = emotion_dfo.data_pro(keyword)
-            # session.bulk_insert_mappings(EmotionDto, dfo.to_dict(orient='records'))
-            # session.commit()
-            # session.close()
-
-        # return session.query(cls).all()
-
     @classmethod
     def find_all(cls):
         return session.query(cls).all()
 
-    # @classmethod
-    # def find_x(cls, keyword):
-    #     # session.query(cls).filter(cls.keyword != keyword).last()
-    #     # session.query(cls).filter(cls.keyword.like('keyword'))
-    #     session.query(cls).filter(cls.keyword != keyword)
-    #     session.close()
-    #     return 0
-
-    # @classmethod
-    # def find_y(cls, keyword):
-    #     # session.query(cls).filter(cls.keyword != keyword).last()
-    #     # session.query(cls).filter(cls.keyword.like('keyword'))
-    #     session.query(cls).filter(cls.keyword == keyword)
-    #     session.close()
-    #     return 0
-
-    # @classmethod
-    # def find_like(cls, keyword):
-    #     # session.query(cls).filter(cls.keyword.like('%'+keyword+'%'))
-    #     session.query(cls).filter(cls.keyword.like('%'+keyword+'%'))
-    #     print(cls.keyword)
-    #     session.close()
-    #     return 0
-
-    # # @classmethod
-    # # def match(cls, keyword):
-    # @staticmethod
-    # def match(emotion, keyword):
-    #     a = session.query(EmotionDto).filter(EmotionDto.keyword == keyword).all()
-    #     print('===========확인1==========')
-    #     print(a)
-    #     print('===========확인2==========')
-    #     print(EmotionDto.keyword)
-    #     print('===========확인3==========')
-    #     print(keyword)
-    #     session.commit()
-    #     session.close()
-    #     return 0
-
     @classmethod
-    def find_update(cls, keyword):
-        emotion = session.query(cls).filter(cls.keyword == keyword).all()
-        # emotion.positive += 1
-        # emotion.pos_count += 1
-        # emotion.negative += 1
-        # emotion.neg_count += 1
-        # emotion.keyword += 1
-        # session.commit()
-    @classmethod
-    def find_by_keyword(cls, keyword):
-        print('==============find_by_keyword================')
-        a = cls.query.filter(cls.keyword != keyword).all()
-        b = cls.query.filter(cls.keyword == keyword).all()
-        if a: 
-            print(a)
-            # emotion = session.query(cls).filter(cls.keyword == keyword).first()
-            # emotion.positive += 1
-            # emotion.pos_count += 1
-            # emotion.negative += 1
-            # emotion.neg_count += 1
-            # session.commit()
-            return 0
-        elif b:
-            print(b)
-            print('------------중복--------------')
-            # emotion = session.query(cls).filter(cls.keyword == keyword).first()
-            # emotion.positive += 1
-            # emotion.pos_count += 1
-            # emotion.negative += 1
-            # emotion.neg_count += 1
-            # session.commit()
-            return 1
-            # print(a)
-            # print(type(a))
-            # print(keyword)
-            # print(type(keyword))
-            # print(df)
-            # print(type(df))
-        # for word in a:
-        #     if keyword in word:
-        #         print('ok')
-        #         s.append(keyword)
-        #         break;        
-        # print(s)
-        # if any(keyword in word for word in a):
-        #     print('ok')
-        # print('===========s확인1==========')
-        # print(s)
-        
-        # return cls.query.filter(EmotionDto.keyword == keyword).all()
-
+    def find_keyword(cls, keyword):
+        print('==============find_update==============')
+        emotion = session.query(cls).filter(cls.keyword.like(f'%{keyword}%')).all()
+        if emotion != 0:
+            print('============중복 검사===========')
+            print(emotion)
+        if emotion == []:
+            print('============행복회로 가동===========')
+            EmotionDao.bulk()
 
     @staticmethod
     def test():
@@ -199,11 +89,26 @@ class StockNewsDao(StockNewsDto):
 
     @classmethod
     def find_all(cls):
+        return session.query(cls).all()
 
-        result = session.query(StockNewsDto).all()
-        session.close()
+    @classmethod
+    def update(cls, emotion):
+        emotion = session.query(cls).filter(cls.keyword == keyword).first()\
+                .update({cls.no : emotion['no'],\
+                cls.positive:emotion['tag'],\
+                cls.pos_count:emotion['weight'],\
+                cls.negative:emotion['type']})                                                        
+        session.commit()
 
-        return result
+    @classmethod
+    def find_keyword(cls, keyword):
+        print('==============find_update==============')
+        stockNews = session.query(cls).filter(cls.keyword.like(f'%{keyword}%')).all()
+        if stockNews != 0:
+            print('============중복 검사===========')
+        if stockNews == []:
+            print('============행복회로 가동===========')
+            StockNewsDao.bulk()
 
 # if __name__ == '__main__':
 #     EmotionDao.bulk()

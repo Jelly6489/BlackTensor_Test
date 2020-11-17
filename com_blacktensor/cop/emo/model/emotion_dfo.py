@@ -149,10 +149,12 @@ class EmotionDfo(object):
         print("\n긍정적인 단어 :", po_key, po_val)
         print("부정적인 단어 :", ne_key, ne_val)
         
-        po_df = pd.DataFrame(list(po_words.items()), columns=['positive', 'pos_count'])
-        ne_df = pd.DataFrame(list(ne_words.items()), columns=['negative', 'neg_count'])
+        po_df = pd.DataFrame(list(po_words.items()), columns=['tag', 'weight'])
+        ne_df = pd.DataFrame(list(ne_words.items()), columns=['tag', 'weight'])
+        po_df.loc[:, 'type'] = "P"
+        ne_df.loc[:, 'type'] = "N"
 
-        df = pd.concat([po_df,ne_df], axis=1)
+        df = pd.concat([po_df,ne_df], axis=0)
 
         df.loc[:, 'keyword'] = keyword
         df.rename( columns={'Unnamed: 0':'name'}, inplace=True )

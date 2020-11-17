@@ -40,3 +40,12 @@ class StockDao(StockDto):
     def test():
         print(' TEST SUCCESS !!')
 
+    @classmethod
+    def find_keyword(cls, keyword):
+        print('==============find_update==============')
+        stock = session.query(cls).filter(cls.keyword.like(f'%{keyword}%')).all()
+        if stock != 0:
+            print('============중복 검사===========')
+        if stock == []:
+            print('============행복회로 가동===========')
+            StockDao.bulk()

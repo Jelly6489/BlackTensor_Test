@@ -54,4 +54,4 @@ class ExchangeKdd(object):
         print('==================== 환율 ok ============================')
         print(Data)
         return Data
-    K = market_index_kdd(0)
+    # K = market_index_kdd(0)

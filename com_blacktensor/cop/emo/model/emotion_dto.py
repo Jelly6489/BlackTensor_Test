@@ -8,10 +8,9 @@ class EmotionDto(db.Model):
     __tablename__ = 'emotion'
     __table_args__={'mysql_collate' : 'utf8_general_ci'}
     no : int = db.Column(db.Integer, primary_key = True, index = True)
-    positive : str = db.Column(db.String(10))
-    pos_count : int = db.Column(db.Integer)
-    negative : str = db.Column(db.String(10))
-    neg_count : int = db.Column(db.Integer)
+    tag : str = db.Column(db.String(10))
+    weight : int = db.Column(db.Integer)
+    type : str = db.Column(db.String(10))
     keyword : str = db.Column(db.String(10))
 
     # def __init__(self, no, positive, pos_count, negative, neg_count, keyword):
@@ -23,21 +22,20 @@ class EmotionDto(db.Model):
     #     self.keyword = keyword
       
     def __repr__(self):
-        return f'Emotion(no={self.no}, positive={self.positive}, pos_count={self.pos_count}, negative={self.negative},\
-            neg_count={self.neg_count}, keyword={self.keyword})'
+        return f'Emotion(no={self.no}, tag={self.tag}, weight={self.weight}, \
+            type={self.type}, keyword={self.keyword})'
 
     def __str__(self):
-        return f'Emotion(no={self.no}, positive={self.positive}, pos_count={self.pos_count}, negative={self.negative},\
-            neg_count={self.neg_count}, keyword={self.keyword})'
+        return f'Emotion(no={self.no}, tag={self.tag}, weight={self.weight}, \
+            type={self.type}, keyword={self.keyword})'
             
     @property
     def json(self):
         return {
         "no" : self.no,
-        "positive" : self.positive,
-        "pos_count" : self.pos_count,
-        "negative" : self.negative,
-        "neg_count" : self.neg_count,
+        "tag" : self.tag,
+        "weight" : self.weight,
+        "type" : self.type,
         "keyword" : self.keyword
     }
 
@@ -69,10 +67,9 @@ class StockNewsDto(db.Model):
 
 class EmotionVo:
     no : int = 0
-    positive : str = ""
-    pos_count : int = 0
-    negative : str = ""
-    neg_count : int = 0
+    tag : str = ""
+    weight : int = 0
+    type : str = ""
     keyword : str = ""
 
 class StockNewsVo:

@@ -28,9 +28,14 @@ class FinanceDao(FinanceDto):
 
     @classmethod
     def find_all(cls):
+        return session.query(cls).all()
 
-        result = session.query(FinanceDto).all()
-        session.close()
-
-        return result
-
+    @classmethod
+    def find_keyword(cls, keyword):
+        print('==============find_update==============')
+        finance = session.query(cls).filter(cls.keyword.like(f'%{keyword}%')).all()
+        if finance != 0:
+            print('============중복 검사===========')
+        if finance == []:
+            print('============행복회로 가동===========')
+            FinanceDao.bulk()
