@@ -22,7 +22,7 @@ class Stock(Resource):
         self.dao = StockDao()
         self.df = StockDfo()
 
-    def get(self):
+    def get(self, keyword):
         result = self.dao.find_all()
         # print(result)
         # print(type(result))

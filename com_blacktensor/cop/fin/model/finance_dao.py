@@ -28,7 +28,8 @@ class FinanceDao(FinanceDto):
 
     @classmethod
     def find_all(cls):
-        return session.query(cls).all()
+        # return session.query(cls).all()
+        return session.query(cls).filter(cls.keyword.like(f'%{keyword}%')).all()
 
     @classmethod
     def find_keyword(cls, keyword):

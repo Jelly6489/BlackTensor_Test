@@ -18,7 +18,7 @@ class StockDao(StockDto):
     def bulk():
         stock_dfo = StockDfo()
         # dfo = stock_dfo.get_df(keyword)
-        dfo = stock_dfo.get_csv(keyword)
+        dfo = stock_dfo.get_df(keyword)
         session.bulk_insert_mappings(StockDto, dfo.to_dict(orient='records'))
         session.commit()
         session.close()
@@ -34,7 +34,8 @@ class StockDao(StockDto):
 
     @classmethod
     def find_all(cls):
-        return session.query(cls).all()
+        # return session.query(cls).all()
+        return session.query(cls).filter(cls.keyword.like(f'%{keyword}%')).all()
 
     @staticmethod
     def test():

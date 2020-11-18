@@ -34,6 +34,7 @@ from com_blacktensor.cop.exc.model.exchange_kdd import ExchangeKdd
 from com_blacktensor.cop.exc.model.exchange_dfo import ExchangeDfo
 from com_blacktensor.cop.exc.model.exchange_dao import ExchangeDao
 from com_blacktensor.cop.exc.model.exchange_dto import ExchangeDto
+from com_blacktensor.cop.exc.model.exchange_ai import ExchangeAi
 
 # ================================== kain code =====================================
 from com_blacktensor.cop.cov.status.model.status_kdd import CovidStatusKdd

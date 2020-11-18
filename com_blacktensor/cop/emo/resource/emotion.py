@@ -8,6 +8,9 @@ from com_blacktensor.cop.emo.model.emotion_dfo import EmotionDfo
 from com_blacktensor.cop.emo.model.emotion_kdd import EmotionKdd
 from com_blacktensor.cop.emo.model.emotion_dto import EmotionVo
 from com_blacktensor.cop.emo.model.emotion_dto import EmotionDto
+
+from com_blacktensor.cop.emo.model.emotion_kdd import keyword
+
 # ============================================================
 # ==================                     =====================
 # ==================      Resourcing     =====================
@@ -26,7 +29,7 @@ class Emotion(Resource):
         
         return {'emotion': str(emotion)}, 200
 
-    def get(self):
+    def get(self, keyword):
         result = EmotionDao().find_all()
         # with open('word.json', 'w', encoding='utf-8') as make_file:
         #     json.dump(result, make_file, ensure_ascii=False, indent='\t')
@@ -45,6 +48,6 @@ class StockNews(Resource):
     def __init__(self):
         self.dao = StockNewsDao()
 
-    def get(self):
+    def get(self, keyword):
         result = self.dao.find_all()
         return jsonify([item.json for item in result])

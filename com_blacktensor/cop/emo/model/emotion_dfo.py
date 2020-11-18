@@ -164,6 +164,8 @@ class EmotionDfo(object):
 
         print(df.head())
         df.to_csv(keyword + '_word.csv', encoding='utf-8-sig')
+        # df.to_csv('./csv/{}_finance.csv'.format(keyword), encoding='utf-8-sig')
+        './csv/{}_finance.csv'.format(keyword)
 
 
 
@@ -194,6 +196,7 @@ class EmotionDfo(object):
         news_df.rename( columns={'Unnamed: 0':'name'}, inplace=True )
         # ,positive,pos_count,negative,neg_count,keyword
         news_df.to_csv(keyword + '.csv', encoding='utf-8-sig')
+        # news_df.to_csv('./csv/{}_finance.csv'.format(keyword), encoding='utf-8-sig')
         print('-----------------get_df------------------')
         print(news_df)
         return news_df

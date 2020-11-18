@@ -7,6 +7,7 @@ from com_blacktensor.cop.fin.resource.finance import Finance
 from com_blacktensor.cop.sto.resource.stock import Stock
 from com_blacktensor.cop.exc.resource.exchange import Exchange
 
+from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # =============================================================================================
 # ===================================== kain code =============================================
 # =============================================================================================
@@ -26,7 +27,7 @@ economy_news = Blueprint('FrequencyNaverNews', __name__, url_prefix='/api/news/e
 # =============================================================================================
 # =============================================================================================
 
-stock = Blueprint('stock', __name__, url_prefix='/api/stock/stock')
+stock = Blueprint("stock", __name__, url_prefix='/api/stock/stock')
 finance = Blueprint('finance', __name__, url_prefix='/api/stock/finance')
 emotion = Blueprint('emotion', __name__, url_prefix='/api/stock/emotion')
 stock_news = Blueprint('stock_news', __name__, url_prefix='/api/stock/mainNews')
@@ -50,10 +51,10 @@ api = Api(stock_news)
 api = Api(exchange)
 
 def initialize_routes(api):
-    api.add_resource(Stock, '/api/stock/stock')
-    api.add_resource(Finance, '/api/stock/finance')
-    api.add_resource(Emotion, '/api/stock/emotion')
-    api.add_resource(StockNews, '/api/stock/mainNews')
+    api.add_resource(Stock, '/api/stock/stock/<keyword>')
+    api.add_resource(Finance, '/api/stock/finance/<keyword>')
+    api.add_resource(Emotion, '/api/stock/emotion/<keyword>')
+    api.add_resource(StockNews, '/api/stock/mainNews/<keyword>')
     api.add_resource(Exchange, '/api/stock/exchange')
 
 # =============================================================================================

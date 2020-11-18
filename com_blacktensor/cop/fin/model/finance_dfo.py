@@ -27,7 +27,7 @@ class FinanceDfo(object):
         'Unnamed: 0':'name', '2015/12' : 'f_2015_12', '2016/12' : 'f_2016_12', '2017/12' : 'f_2017_12',
         '2018/12' : 'f_2018_12', '2019/12' : 'f_2019_12', '2020/12(E)' : 'f_2020_12', 
         '2021/12(E)' : 'f_2021_12', '2022/12(E)' : 'f_2022_12'})
-        df.to_csv(keyword + '_finance.csv', encoding='utf-8-sig')
+        df.to_csv('./csv/{}_finance.csv'.format(keyword), encoding='utf-8-sig')
         print('-----------------fin_file------------------')
         print(df)
         return df

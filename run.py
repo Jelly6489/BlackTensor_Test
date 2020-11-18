@@ -15,17 +15,22 @@ app.run(host='192.168.0.10', port='8080', debug=True)
 #     app.run(host='192.168.0.10', port='8080', debug=True)
     # return render_template('####.html', num=num)
 
-# @app.route('/api/emotion', method = ['GET', 'POST'])
-# def stock_name():
-#     if request.method == 'GET':
-#         keyword = request.args.get('keyword')
-#         print(request.form)
+@app.route('/api/stock/emotion/', method = ['GET', 'POST'])
+def stock_name():
+    if request.method == 'GET':
+        args_dict = request.args.to.dict()
+        keyword = request.args.get('keyword')
+        print('==========keyword============')
+        print(keyword)
+        print('==========request.form============')
+        print(request.form)
 
-#     # return render_template('.jsx', keyword = keyword)
-#     return render_template(keyword = keyword)
-#     # return 0
-# if __name__ == "__main__":
-#     app.run(host='192.168.0.10', port='8080', debug=True)
+
+    # return render_template('.jsx', keyword = keyword)
+    return render_template(keyword = keyword)
+    # return 0
+if __name__ == "__main__":
+    app.run(host='192.168.0.10', port='8080', debug=True)
 # '''
 '''
 @app.route('/api/emotion', method = ['POST', 'GET'])
