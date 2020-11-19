@@ -2,7 +2,6 @@ import csv
 import json
 import pandas as pd
 from com_blacktensor.ext.db import db, openSession, engine
-# from com_blacktensor.ext.routes import Resource
 
 class StockDto(db.Model):
     __tablename__ = 'stock'
@@ -13,13 +12,6 @@ class StockDto(db.Model):
     close : int = db.Column(db.Integer)
     volume : int = db.Column(db.Integer)
     keyword : str = db.Column(db.String(10))
-
-    # def __init__(self, no, date, close, volume, keyword):
-    #     self.no = no
-    #     self.date = date
-    #     self.close = close
-    #     self.volume = volume
-    #     self.keyword = keyword
     
     def __repr__(self):
         return f"Stock(no={self.no}, date={self.date}, close={self.close}, volume={self.volume}, keyword={self.keyword})"

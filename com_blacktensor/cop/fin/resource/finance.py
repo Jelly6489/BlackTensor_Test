@@ -21,4 +21,3 @@ class Finance(Resource):
     def get(self):
         result = self.dao.find_all()
         return jsonify([item.json for item in result])
-        # return jsonify(str(result))

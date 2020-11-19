@@ -1,9 +1,7 @@
 import csv
 import pandas as pd
-# # from sqlalchemy import create_engine
 from com_blacktensor.ext.db import db, openSession, engine
 from sqlalchemy import func
-# from com_blacktensor.ext.routes import Resource
 
 from com_blacktensor.cop.exc.model.exchange_kdd import ExchangeKdd
 from com_blacktensor.cop.exc.model.exchange_dfo import ExchangeDfo

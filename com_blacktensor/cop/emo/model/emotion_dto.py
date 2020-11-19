@@ -2,7 +2,6 @@ import csv
 import json
 import pandas as pd
 from com_blacktensor.ext.db import db, openSession, engine
-# from com_blacktensor.ext.routes import Resource
 
 class EmotionDto(db.Model):
     __tablename__ = 'emotion'
@@ -12,14 +11,6 @@ class EmotionDto(db.Model):
     weight : int = db.Column(db.Integer)
     type : str = db.Column(db.String(10))
     keyword : str = db.Column(db.String(10))
-
-    # def __init__(self, no, positive, pos_count, negative, neg_count, keyword):
-    #     self.no = no
-    #     self.positive = positive
-    #     self.pos_count = pos_count
-    #     self.negative = negative
-    #     self.neg_count = neg_count
-    #     self.keyword = keyword
       
     def __repr__(self):
         return f'Emotion(no={self.no}, tag={self.tag}, weight={self.weight}, \
@@ -45,11 +36,6 @@ class StockNewsDto(db.Model):
     no : int = db.Column(db.Integer, primary_key = True, index = True)
     title : str = db.Column(db.String(100))
     keyword : str = db.Column(db.String(10))
-
-    # def __init__(self, no, positive, pos_count, negative, neg_count, keyword):
-    #     self.no = no
-    #     self.title = title
-    #     self.keyword = keyword
     
     def __repr__(self):
         return f"Emotion(no={self.no}, title={self.title}, keyword={self.keyword})"

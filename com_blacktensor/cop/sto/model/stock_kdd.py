@@ -1,11 +1,11 @@
 import csv
 import pandas as pd
-# # from sqlalchemy import create_engine
 from com_blacktensor.ext.db import db, openSession, engine
 from sqlalchemy import func
-# from com_blacktensor.ext.routes import Resource
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 from com_blacktensor.util.file_handler import FileHandler as handler
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 # # # ============================================================
 # # # ==================                     =====================
@@ -14,13 +14,12 @@ from com_blacktensor.util.file_handler import FileHandler as handler
 # # # ============================================================
 class StockKdd(object):
     # keyword = input("검색어 입력: ")
+    current = datetime.today()
+    pre_current = datetime.now()-relativedelta(years=5)
+    dx = current.strftime("%Y-%m-%d")
+    dy = pre_current.strftime("%Y-%m-%d")
 
-    # def get_code(self, keyword, code_df):
-        # print("get_code: ", keyword)
     code_df = pd.read_html('http://kind.krx.co.kr/corpgeneral/corpList.do?method=download&searchType=13',header=0)[0]
-    #
-    # self.code = self.code_df.query("name=='{}'".format(item_name))['code'].to_string(index=False).strip()
-    # self.url = 'http://finance.naver.com/item/sise_day.nhn?code={code}'.format(code=code)
     #
     # 종목코드가 6자리이기 때문에 6자리를 맞춰주기 위해 설정해둠
     code_df.종목코드 = code_df.종목코드.map('{:06d}'.format)
@@ -36,10 +35,7 @@ class StockKdd(object):
 
     # https://finance.naver.com/item/sise.nhn?code=005930(삼성전자)
     def get_url(self, keyword, code_df):
-        # item_name = self.item_name
         
-        # this = self.sk
-        # this.code_name = code_name
         code = code_df.query("name=='{}'".format(keyword))['code'].to_string(index=False)
         code = code.strip()
 
@@ -56,12 +52,12 @@ class StockKdd(object):
     for page in range(1, 125): 
         pg_url = '{url}&page={page}'.format(url=url, page=page) 
         df = df.append(pd.read_html(pg_url, header=0)[0], ignore_index=True)
-        # df = df.append({'stock' : keyword}, ignore_index=True)
 
     df = df.dropna()
 
     # df = df.drop(columns= {'전일비', '시가', '고가', '저가'})
     df = df.drop(columns= {'전일비'})
+
     # print(df.head())
     print(df)
 
@@ -82,6 +78,11 @@ class StockKdd(object):
     # df.drop(['diff', 'open', 'high', 'low'], axis=0, inplace=True)
 
     # date를 date type 변환
+    mask = (df['date'] > dy) & (df['date'] <= dx)
+    filterrd_df = df.loc[mask]
+    print('==============filterrd_df===============')
+    print(filterrd_df)
+
     df['date'] = pd.to_datetime(df['date'])
 
     # date 기준으로 내림차순 sort

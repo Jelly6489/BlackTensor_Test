@@ -7,8 +7,6 @@ from bs4 import BeautifulSoup
 from konlpy.tag import Twitter
 from collections import Counter
 from com_blacktensor.util.file_handler import FileHandler
-# from sqlalchemy import Column, Integer, String, Date
-# # from sqlalchemy import create_engine
 
 # # ============================================================
 # # ==================                     =====================
@@ -35,6 +33,5 @@ class ExchangeDfo(object):
         print(df)
         print(type(df))
         return df
-        # return pd.DataFrame(data, columns=self.colums)
     # get_ex_df(0)
 

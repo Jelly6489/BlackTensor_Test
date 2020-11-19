@@ -7,9 +7,6 @@ from bs4 import BeautifulSoup
 from konlpy.tag import Twitter
 from collections import Counter
 
-# from sqlalchemy import Column, Integer, String, Date
-# # from sqlalchemy import create_engine
-
 from com_blacktensor.util.file_handler import FileHandler
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # # ============================================================
@@ -24,7 +21,6 @@ class EmotionDfo(object):
         self.fileReader = FileHandler()  
 
     def data_pro(self, keyword):
-    # def data_pro(self, keyword):
         print('-----------emotionDfo--------------')
 
         word = []
@@ -51,15 +47,12 @@ class EmotionDfo(object):
         for sentence in lists:
             morphs.append(twitter.pos(sentence))
 
-        # print(morphs)
-
         pos = codecs.open('positive_words_self.txt', 'rb', encoding='utf-8-sig')
 
         while True:
             line = pos.readline()
             line = line.replace('\n', '')
             positive_word.append(line)
-            # keyword_text.append(line)
 
             if not line: break
         pos.close()
@@ -70,7 +63,6 @@ class EmotionDfo(object):
             line = neg.readline()
             line = line.replace('\n', '')
             negative_word.append(line)
-            # keyword_text.append(line)
 
             if not line: break
         neg.close()
@@ -86,7 +78,7 @@ class EmotionDfo(object):
                     for y in negative_word:
                         if y == word:
                             neflag.append(y)
-
+                '''
                 #         print("부정적 :", y)
                 # if text_tag in ['Noun'] and ("것" not in word) and ("내" not in word) and ("첫" not in word) and \
                 #     ("나" not in word) and ("와" not in word) and ("식" not in word) and ("수" not in word) and \
@@ -122,7 +114,7 @@ class EmotionDfo(object):
                 #     ("착한" not in word) and ("신기록" not in word) and ("전망" not in word) and ("협력" not in word) and \
                 #     ("역대" not in word) and ("상승" not in word) and ("늘어" not in word) and ("승인" not in word):
                 #     negative_word.append(word)
-
+                '''
         count_po = Counter(poflag)
         count_ne = Counter(neflag)
         po_words = dict(count_po.most_common())

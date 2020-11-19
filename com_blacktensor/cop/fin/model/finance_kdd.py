@@ -4,13 +4,7 @@ from pandas import DataFrame, Series
 import pandas as pd
 import numpy as np
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
-# import re
 
-# from flask_restful import Resource, reqparse
-# from com_blacktensor.ext.db import db, openSession, engine
-# from sqlalchemy import func
-# import time
-# import multiprocessing
 # ============================================================
 # ==================                     =====================
 # ==================         KDD         =====================
@@ -163,15 +157,6 @@ class FinanceKdd(object):
         # df_len = []
         
         print('================Test================')
-        # print('=======', df_len, '===========')
-        # df.to_csv(keyword + '_finance.csv', encoding='utf-8-sig')
-        # df = pd.read_csv('{}_finance.csv'.format(keyword), encoding='utf-8-sig')
-        # df = df.rename(columns= {
-        # 'Unnamed: 0':'name', '2015/12' : 'f_2015_12', '2016/12' : 'f_2016_12', '2017/12' : 'f_2017_12',
-        # '2018/12' : 'f_2018/12', '2019/12' : 'f_2019/12', '2020/12(E)' : 'f_2020/12', 
-        # '2021/12(E)' : 'f_2021_12', '2022/12(E)' : 'f_2022/12'})
-        # df.loc[:, 'no'] = range(len(df))
-        # df.insert(0, 'no', range(len(df)))
 
         print(df)
 

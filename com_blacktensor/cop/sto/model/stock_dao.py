@@ -1,9 +1,7 @@
 import csv
 import pandas as pd
-# # from sqlalchemy import create_engine
 from com_blacktensor.ext.db import db, openSession, engine
 from sqlalchemy import func
-# from com_blacktensor.ext.routes import Resource
 
 from com_blacktensor.cop.sto.model.stock_kdd import StockKdd
 from com_blacktensor.cop.sto.model.stock_dto import StockDto
@@ -17,7 +15,6 @@ class StockDao(StockDto):
     @staticmethod
     def bulk():
         stock_dfo = StockDfo()
-        # dfo = stock_dfo.get_df(keyword)
         dfo = stock_dfo.get_df(keyword)
         session.bulk_insert_mappings(StockDto, dfo.to_dict(orient='records'))
         session.commit()

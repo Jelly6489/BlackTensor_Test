@@ -138,4 +138,4 @@ with app.app_context():
             df = CovidStatusDf(keys).get_dataframe(datas)
             CovidStatusDao.save_data_bulk(df)
     # ===================================================================================
-initialize_routes(api)
+initialize_routes(api) 
