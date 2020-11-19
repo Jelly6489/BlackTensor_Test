@@ -51,10 +51,10 @@ api = Api(stock_news)
 api = Api(exchange)
 
 def initialize_routes(api):
-    api.add_resource(Stock, '/api/stock/stock/<keyword>')
-    api.add_resource(Finance, '/api/stock/finance/<keyword>')
-    api.add_resource(Emotion, '/api/stock/emotion/<keyword>')
-    api.add_resource(StockNews, '/api/stock/mainNews/<keyword>')
+    api.add_resource(Stock, f'/api/stock/stock/{keyword}')
+    api.add_resource(Finance, f'/api/stock/finance/{keyword}')
+    api.add_resource(Emotion, f'/api/stock/emotion/{keyword}')
+    api.add_resource(StockNews, f'/api/stock/mainNews/{keyword}')
     api.add_resource(Exchange, '/api/stock/exchange')
 
 # =============================================================================================

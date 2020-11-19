@@ -18,7 +18,7 @@ class Finance(Resource):
     def __init__(self):
         self.dao = FinanceDao()
 
-    def get(self, keyword):
+    def get(self):
         result = self.dao.find_all()
         return jsonify([item.json for item in result])
         # return jsonify(str(result))

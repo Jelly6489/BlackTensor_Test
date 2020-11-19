@@ -29,7 +29,7 @@ class Emotion(Resource):
         
         return {'emotion': str(emotion)}, 200
 
-    def get(self, keyword):
+    def get(self):
         result = EmotionDao().find_all()
         # with open('word.json', 'w', encoding='utf-8') as make_file:
         #     json.dump(result, make_file, ensure_ascii=False, indent='\t')
@@ -48,6 +48,6 @@ class StockNews(Resource):
     def __init__(self):
         self.dao = StockNewsDao()
 
-    def get(self, keyword):
+    def get(self):
         result = self.dao.find_all()
         return jsonify([item.json for item in result])

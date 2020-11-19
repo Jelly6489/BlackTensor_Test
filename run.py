@@ -32,6 +32,14 @@ def stock_name():
 if __name__ == "__main__":
     app.run(host='192.168.0.10', port='8080', debug=True)
 # '''
+########## 파일 업로드 ###########
+
+# url = 'http://your_url'
+# files = {'file': open('myfile.test', 'rb')}
+# r = requests.post(url, files=files)
+
+
+
 '''
 @app.route('/api/emotion', method = ['POST', 'GET'])
 def stock_name(num=None):
