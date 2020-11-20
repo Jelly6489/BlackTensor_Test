@@ -9,6 +9,7 @@ from collections import Counter
 from com_blacktensor.ext.db import db, openSession
 from sqlalchemy import func
 import json
+from flask import jsonify
 
 from sqlalchemy import Column, Integer, String, Date
 from com_blacktensor.cop.emo.model.emotion_kdd import EmotionKdd
@@ -59,12 +60,15 @@ class EmotionDao(EmotionDto):
     def find_keyword(cls, keyword):
         print('==============find_update==============')
         emotion = session.query(cls).filter(cls.keyword.like(f'%{keyword}%')).all()
-        if emotion != 0:
+        if emotion != []:
             print('============중복 검사===========')
-            print(emotion)
         if emotion == []:
             print('============행복회로 가동===========')
             EmotionDao.bulk()
+
+    @classmethod
+    def find_by_keyword(cls, keyword):
+        return session.query(cls).filter(cls.keyword.like(f'{keyword}')).all()
 
     @staticmethod
     def test():
@@ -106,11 +110,17 @@ class StockNewsDao(StockNewsDto):
     def find_keyword(cls, keyword):
         print('==============find_update==============')
         stockNews = session.query(cls).filter(cls.keyword.like(f'%{keyword}%')).all()
-        if stockNews != 0:
+        if stockNews != []:
             print('============중복 검사===========')
+
         if stockNews == []:
-            print('============행복회로 가동===========')
+            print('============Insert===========')
             StockNewsDao.bulk()
+
+    @classmethod
+    def find_by_keyword(cls, keyword):
+        return session.query(cls).filter(cls.keyword.like(f'{keyword}')).all()
+
 
 # if __name__ == '__main__':
 #     EmotionDao.bulk()

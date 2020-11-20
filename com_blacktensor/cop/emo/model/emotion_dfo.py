@@ -180,6 +180,7 @@ class EmotionDfo(object):
 
 
     def get_df(self, keyword):
+        
         # file = open('{}.csv'.format(keyword), 'r', encoding='utf-8-sig')
 
         news_df = pd.read_csv('{}.csv'.format(keyword), index_col=[0], encoding='utf-8-sig')
@@ -194,4 +195,4 @@ class EmotionDfo(object):
         return news_df
         # return pd.DataFrame(data, columns=self.colums)
     data_pro(0, keyword)
-    # get_df(0, keyword)
+        # get_df(0, keyword)

@@ -14,6 +14,7 @@ from dateutil.relativedelta import relativedelta
 # # # ============================================================
 class StockKdd(object):
     # keyword = input("검색어 입력: ")
+
     current = datetime.today()
     pre_current = datetime.now()-relativedelta(years=5)
     dx = current.strftime("%Y-%m-%d")
@@ -35,7 +36,6 @@ class StockKdd(object):
 
     # https://finance.naver.com/item/sise.nhn?code=005930(삼성전자)
     def get_url(self, keyword, code_df):
-        
         code = code_df.query("name=='{}'".format(keyword))['code'].to_string(index=False)
         code = code.strip()
 

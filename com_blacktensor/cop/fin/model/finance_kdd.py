@@ -108,7 +108,7 @@ class FinanceKdd(object):
                 year_list.append(temp_year)
                     
             Table.index = year_list
-     
+    
         Table = Table.T
     
         # print(Table)

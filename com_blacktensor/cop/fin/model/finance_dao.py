@@ -40,3 +40,7 @@ class FinanceDao(FinanceDto):
         if finance == []:
             print('============행복회로 가동===========')
             FinanceDao.bulk()
+
+    @classmethod
+    def find_by_keyword(cls, keyword):
+        return session.query(cls).filter(cls.keyword.like(f'{keyword}')).all()

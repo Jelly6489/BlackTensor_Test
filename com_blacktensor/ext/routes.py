@@ -6,8 +6,11 @@ from com_blacktensor.cop.emo.resource.emotion import Emotion, StockNews
 from com_blacktensor.cop.fin.resource.finance import Finance
 from com_blacktensor.cop.sto.resource.stock import Stock
 from com_blacktensor.cop.exc.resource.exchange import Exchange
+from com_blacktensor.usr.resource.user import User, Users
+from com_blacktensor.usr.resource.review import Review, Reviews
+from com_blacktensor.usr.resource.login import Login
 
-from com_blacktensor.cop.emo.model.emotion_kdd import keyword
+# from com_blacktensor.cop.emo.model.emotion_kdd import keyword
 # =============================================================================================
 # ===================================== kain code =============================================
 # =============================================================================================
@@ -32,7 +35,9 @@ finance = Blueprint('finance', __name__, url_prefix='/api/stock/finance')
 emotion = Blueprint('emotion', __name__, url_prefix='/api/stock/emotion')
 stock_news = Blueprint('stock_news', __name__, url_prefix='/api/stock/mainNews')
 exchange = Blueprint('exchange', __name__, url_prefix='/api/stock/exchange')
-
+user = Blueprint('user', __name__, url_prefix='/api/access')
+login = Blueprint('user', __name__, url_prefix='/api/login')
+review = Blueprint('review', __name__, url_prefix='/api/mypage')
 # =============================================================================================
 # ===================================== kain code =============================================
 # =============================================================================================
@@ -49,13 +54,20 @@ api = Api(finance)
 api = Api(emotion)
 api = Api(stock_news)
 api = Api(exchange)
+api = Api(user)
+api = Api(login)
+api = Api(review)
 
 def initialize_routes(api):
-    api.add_resource(Stock, f'/api/stock/stock/{keyword}')
-    api.add_resource(Finance, f'/api/stock/finance/{keyword}')
-    api.add_resource(Emotion, f'/api/stock/emotion/{keyword}')
-    api.add_resource(StockNews, f'/api/stock/mainNews/{keyword}')
+    api.add_resource(Stock, f'/api/stock/stock/<keyword>')
+    api.add_resource(Finance, f'/api/stock/finance/<keyword>')
+    api.add_resource(Emotion, f'/api/stock/emotion/<keyword>')
+    api.add_resource(StockNews, f'/api/stock/mainNews/<keyword>')
     api.add_resource(Exchange, '/api/stock/exchange')
+    api.add_resource(User, '/api/access', '/api/access/<user_id>')
+    api.add_resource(Login, '/api/login')
+    api.add_resource(Review, '/api/mypage', '/api/mypage/<name>')
+    
 
 # =============================================================================================
 # ===================================== kain code =============================================
@@ -92,6 +104,16 @@ def stock_news_api_error(e):
 @exchange.errorhandler(500)
 def exchange_api_error(e):
     logging.exception('An error occurred during emotion request. %s' % str(e))
+    return 'An internal error occurred.', 500
+
+@user.errorhandler(500)
+def user_api_error(e):
+    logging.exception('An error occurred during user request. %s' % str(e))
+    return 'An internal error occurred.', 500
+
+@login.errorhandler(500)
+def review_api_error(e):
+    logging.exception('An error occurred during user request. %s' % str(e))
     return 'An internal error occurred.', 500
 
 # =============================================================================================

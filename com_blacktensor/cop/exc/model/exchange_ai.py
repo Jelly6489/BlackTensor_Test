@@ -79,7 +79,8 @@ class ExchangeAi(object):
         # files = {'file': open('./ai_data/{}_LSTM_USD.png'.format(keyword), 'rb')}
         # r = requests.post(url, files=files)
         # ==========================================
-    create_usd(0)
+        
+    # create_usd(0)
 
     def create_jpy(self): # 일본
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
@@ -146,7 +147,7 @@ class ExchangeAi(object):
         fig = plt.gcf()
         fig.savefig('./ai_data/{}_LSTM_JPY.png'.format(keyword), dpi=fig.dpi)
         # plt.show()
-    create_jpy(0)
+    # create_jpy(0)
 
     def create_eur(self): # 유럽 연합
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
@@ -213,7 +214,7 @@ class ExchangeAi(object):
         fig = plt.gcf()
         fig.savefig('./ai_data/{}_LSTM_EUR.png'.format(keyword), dpi=fig.dpi)
         # plt.show()
-    create_eur(0)
+    # create_eur(0)
 
     def create_cny(self): # 중국
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
@@ -280,7 +281,7 @@ class ExchangeAi(object):
         fig = plt.gcf()
         fig.savefig('./ai_data/{}_LSTM_CNY.png'.format(keyword), dpi=fig.dpi)
         # plt.show()
-    create_cny(0)
+    # create_cny(0)
 
     def create_all(self): # All
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
@@ -347,7 +348,7 @@ class ExchangeAi(object):
         fig = plt.gcf()
         fig.savefig('./ai_data/{}_LSTM_All.png'.format(keyword), dpi=fig.dpi)
         # plt.show()
-    create_all(0)
+    # create_all(0)
 
     def create_usd_cny(self): # 미국, 중국
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
@@ -414,7 +415,7 @@ class ExchangeAi(object):
         fig = plt.gcf()
         fig.savefig('./ai_data/{}_LSTM_USD_CNY.png'.format(keyword), dpi=fig.dpi)
         # plt.show()
-    create_usd_cny(0)
+    # create_usd_cny(0)
 
     # ======================================================================================================
 

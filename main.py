@@ -36,6 +36,10 @@ from com_blacktensor.cop.exc.model.exchange_dao import ExchangeDao
 from com_blacktensor.cop.exc.model.exchange_dto import ExchangeDto
 from com_blacktensor.cop.exc.model.exchange_ai import ExchangeAi
 
+from com_blacktensor.usr.model.user_dao import UserDao, ReviewDao
+from com_blacktensor.usr.model.user_dfo import UserDfo
+from com_blacktensor.usr.model.user_dto import UserDto, ReviewDto
+
 # ================================== kain code =====================================
 from com_blacktensor.cop.cov.status.model.status_kdd import CovidStatusKdd
 from com_blacktensor.cop.cov.status.model.status_df import CovidStatusDf
@@ -95,6 +99,9 @@ with app.app_context():
     stock_count = StockDao.count()
     finance_count = FinanceDao.count()
     exchange_count = ExchangeDao.count()
+    # user
+    user_count = UserDao.count()
+    review_count = ReviewDao.count()
     print(type(keyword))
     print(f'***** Emotion Total Count is {emotion_count} *****')
     if emotion_count[0] == 0:
@@ -123,6 +130,18 @@ with app.app_context():
     print(f'***** Exchange Total Count is {exchange_count} *****')
     if exchange_count[0] == 0:
         ExchangeDao.bulk()
+
+    print(f'***** Exchange Total Count is {user_count} *****')
+    if user_count[0] == 0:
+        UserDao.bulk()
+    else:
+        print("Users Data exists...")
+
+    print(f'***** Exchange Total Count is {review_count} *****')
+    if review_count[0] == 0:
+        ReviewDao.bulk()
+    else:
+        print("Reivews Data exists...")
     # ================================ kain code =======================================
     if status_count == 0:
         endDate = datetime.date.today().strftime('%Y%m%d')
