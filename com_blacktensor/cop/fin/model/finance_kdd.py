@@ -161,8 +161,8 @@ class FinanceKdd(object):
         print(df)
 
         # csv 파일 저장
-        df.to_csv(keyword + '_finance.csv', encoding='utf-8-sig')
-
+        # df.to_csv(keyword + '_finance.csv', encoding='utf-8-sig')
+        df.to_csv('./csv/{}_finance.csv'.format(keyword), encoding='utf-8-sig')
         return df
 
     get_finance(0, keyword, code_df)

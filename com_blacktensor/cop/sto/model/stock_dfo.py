@@ -11,7 +11,7 @@ class StockDfo(object):
         self.fileHandler = FileHandler()  
 
     def get_df(self, keyword):
-        df = pd.read_csv('{}_data.csv'.format(keyword), index_col=[0], encoding='utf-8-sig')
+        df = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0], encoding='utf-8-sig')
         # df.drop(df.head(12).index, inplace=True)
         df = df.reset_index(drop=True)
 

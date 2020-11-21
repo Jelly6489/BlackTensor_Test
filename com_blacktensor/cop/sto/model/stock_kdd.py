@@ -98,5 +98,6 @@ class StockKdd(object):
     print(df)
 
     # csv file 저장
-    df.to_csv(keyword + '_data.csv', encoding='utf-8-sig')
+    # df.to_csv(keyword + '_data.csv', encoding='utf-8-sig')
+    df.to_csv('./csv/{}_data.csv'.format(keyword), encoding='utf-8-sig')
 

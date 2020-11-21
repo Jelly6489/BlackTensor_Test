@@ -23,6 +23,8 @@ from sqlalchemy import Column, Integer, String, Date
 # info_main = input("="*50+"\n"+"입력 형식에 맞게 입력해주세요."+"\n"+"시작하시려면 Enter를 눌러주세요."+"\n"+"="*50)
 # maxpage = int(input("최대 크롤링할 페이지 수 입력하시오: "))
 # keyword = input("검색어 입력: ")
+# keyword = ['삼성전자', '셀트리온', '하나투어']
+# key_word = ''
 # order = input("뉴스 검색 방식 입력(관련도순=0 최신순=1 오래된순=2): ") #관련도순=0 최신순=1 오래된순=2
 # s_date = input("시작날짜 입력(예: 2020.07.20):")
 # e_date = input("끝날짜 입력(예: 2020.10.30):")
@@ -128,7 +130,7 @@ class EmotionKdd(object):
     df.loc[:, 'keyword'] = keyword
     print('--------EmotionKdd-----------')
     print(df.head())
-    df.to_csv(keyword + '.csv', encoding='utf-8-sig')
+    df.to_csv('./csv/{}.csv'.format(keyword), encoding='utf-8-sig')
 '''
 0   논어, 새로운 가르침에 겁내지 않으려면 그간의 가르침을 실행해야 한다!       
 1  "전 세계 AI 전문가 모여라"…'삼성 AI 포럼 2020' 온라인 개최

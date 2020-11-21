@@ -36,7 +36,9 @@ class EmotionDfo(object):
         ne_val = []
 
 
-        file = open('{}.csv'.format(keyword), 'r', encoding='utf-8-sig')
+        # file = open('{}.csv'.format(keyword), 'r', encoding='utf-8-sig')
+        file = open('./csv/{}.csv'.format(keyword), 'r', encoding='utf-8-sig')
+        
 
         lists = file.readlines()
         file.close()
@@ -47,7 +49,7 @@ class EmotionDfo(object):
         for sentence in lists:
             morphs.append(twitter.pos(sentence))
 
-        pos = codecs.open('positive_words_self.txt', 'rb', encoding='utf-8-sig')
+        pos = codecs.open('./text/positive_words_self.txt', 'rb', encoding='utf-8-sig')
 
         while True:
             line = pos.readline()
@@ -57,7 +59,7 @@ class EmotionDfo(object):
             if not line: break
         pos.close()
 
-        neg = codecs.open('negative_words_self.txt', 'rb', encoding='utf-8-sig')
+        neg = codecs.open('./text/negative_words_self.txt', 'rb', encoding='utf-8-sig')
 
         while True:
             line = neg.readline()
@@ -155,9 +157,10 @@ class EmotionDfo(object):
 #
 
         print(df.head())
-        df.to_csv(keyword + '_word.csv', encoding='utf-8-sig')
+        # df.to_csv(keyword + '_word.csv', encoding='utf-8-sig')
+        df.to_csv('./csv/{}_word.csv'.format(keyword), encoding='utf-8-sig')
         # df.to_csv('./csv/{}_finance.csv'.format(keyword), encoding='utf-8-sig')
-        './csv/{}_finance.csv'.format(keyword)
+        
 
 
 
@@ -183,12 +186,12 @@ class EmotionDfo(object):
         
         # file = open('{}.csv'.format(keyword), 'r', encoding='utf-8-sig')
 
-        news_df = pd.read_csv('{}.csv'.format(keyword), index_col=[0], encoding='utf-8-sig')
+        news_df = pd.read_csv('./csv/{}.csv'.format(keyword), index_col=[0], encoding='utf-8-sig')
         # C:/Users/Admin/VscProject/BlackTensor_Test/
 
         news_df.rename( columns={'Unnamed: 0':'name'}, inplace=True )
         # ,positive,pos_count,negative,neg_count,keyword
-        news_df.to_csv(keyword + '.csv', encoding='utf-8-sig')
+        news_df.to_csv('./csv/{}.csv'.format(keyword), encoding='utf-8-sig')
         # news_df.to_csv('./csv/{}_finance.csv'.format(keyword), encoding='utf-8-sig')
         print('-----------------get_df------------------')
         print(news_df)

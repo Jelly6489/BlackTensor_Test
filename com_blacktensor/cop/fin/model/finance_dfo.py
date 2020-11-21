@@ -17,7 +17,7 @@ class FinanceDfo(object):
     def fina_pro(self, keyword):
         print('----------FinanceDfo----------')
         # df = pd.read_csv('{}_finance.csv'.format(keyword), index_col=[0], encoding='utf-8-sig')
-        file = pd.read_csv('{}_finance.csv'.format(keyword), encoding='utf-8-sig')
+        file = pd.read_csv('./csv/{}_finance.csv'.format(keyword), encoding='utf-8-sig')
         # C:/Users/Admin/VscProject/BlackTensor_Test/
         df = pd.DataFrame(file)
         df = df.rename(columns= {

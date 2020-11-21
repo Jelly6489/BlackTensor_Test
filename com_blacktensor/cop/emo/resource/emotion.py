@@ -34,23 +34,24 @@ class Emotion(Resource):
     #     return jsonify([item.json for item in result])
     @staticmethod
     def get(keyword: str):
-        """
-        유저 아이디를 받아와 해당 유저 객채를 리턴한다
-        Parameter: User ID 를 받아온다
-        return: 해당 아이디 유저 객체
-        """
-        print('===========Emotion=============')
-        print(keyword)
-        try:
-            print(f'Emotion is {keyword}')
-            emotion = EmotionDao.find_by_keyword(keyword)
-            print('=============확인==============')
-            if emotion:
-                # return jsonify([emotion.json])
-                return jsonify([item.json for item in emotion])
-        except Exception as e:
-            print(e)
-            return {'error': 'Emotion not found'}, 404
+        for key, stockName in enumerate(keyword):
+            """
+            유저 아이디를 받아와 해당 유저 객채를 리턴한다
+            Parameter: User ID 를 받아온다
+            return: 해당 아이디 유저 객체
+            """
+            print('===========Emotion=============')
+            print(stockName)
+            try:
+                print(f'Emotion is {stockName}')
+                emotion = EmotionDao.find_by_keyword(stockName)
+                print('=============확인==============')
+                if emotion:
+                    # return jsonify([emotion.json])
+                    return jsonify([item.json for item in emotion])
+            except Exception as e:
+                print(e)
+                return {'error': 'Emotion not found'}, 404
 
 class StockNews(Resource):
     def __init__(self):
@@ -61,19 +62,20 @@ class StockNews(Resource):
     #     return jsonify([item.json for item in result])
     @staticmethod
     def get(keyword: str):
-        """
-        유저 아이디를 받아와 해당 유저 객채를 리턴한다
-        Parameter: User ID 를 받아온다
-        return: 해당 아이디 유저 객체
-        """
-        print('===========Emotion=============')
-        print(keyword)
-        try:
-            print(f'Emotion is {keyword}')
-            stockNews = StockNewsDao.find_by_keyword(keyword)
-            print('=============확인==============')
-            if stockNews:
-                return jsonify([item.json for item in stockNews])
-        except Exception as e:
-            print(e)
-            return {'error': 'Emotion not found'}, 404
+        for key, stockName in enumerate(keyword):
+            """
+            유저 아이디를 받아와 해당 유저 객채를 리턴한다
+            Parameter: User ID 를 받아온다
+            return: 해당 아이디 유저 객체
+            """
+            print('===========Emotion=============')
+            print(stockName)
+            try:
+                print(f'Emotion is {stockName}')
+                stockNews = StockNewsDao.find_by_keyword(stockName)
+                print('=============확인==============')
+                if stockNews:
+                    return jsonify([item.json for item in stockNews])
+            except Exception as e:
+                print(e)
+                return {'error': 'Emotion not found'}, 404

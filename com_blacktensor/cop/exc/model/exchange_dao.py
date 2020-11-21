@@ -36,3 +36,7 @@ class ExchangeDao(ExchangeDto):
     def find_all(cls):
         return session.query(cls).all()
 
+    @classmethod
+    def find_by_keyword(cls, keyword):
+        return session.query(cls).filter(cls.keyword.like(f'{keyword}')).all()
+

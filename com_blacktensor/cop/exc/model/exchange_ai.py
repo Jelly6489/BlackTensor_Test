@@ -13,7 +13,7 @@ class ExchangeAi(object):
     def create_usd(self): # 미국
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
         st_data.drop(['keyword'], axis='columns', inplace=True)
-        ex_data = pd.read_csv('./csv/exchange_index.csv', index_col=[0])
+        ex_data = pd.read_csv('./csv/exchange_reindex.csv', index_col=[0])
         ex_data.drop(['date', 'jpy', 'eur', 'cny'], axis='columns', inplace=True)
         df = pd.concat([st_data, ex_data], axis=1)
         
@@ -79,13 +79,12 @@ class ExchangeAi(object):
         # files = {'file': open('./ai_data/{}_LSTM_USD.png'.format(keyword), 'rb')}
         # r = requests.post(url, files=files)
         # ==========================================
-        
     # create_usd(0)
 
     def create_jpy(self): # 일본
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
         st_data.drop(['keyword'], axis='columns', inplace=True)
-        ex_data = pd.read_csv('./csv/exchange_index.csv', index_col=[0])
+        ex_data = pd.read_csv('./csv/exchange_reindex.csv', index_col=[0])
         ex_data.drop(['date', 'usd', 'eur', 'cny'], axis='columns', inplace=True)
         df = pd.concat([st_data, ex_data], axis=1)
         
@@ -152,7 +151,7 @@ class ExchangeAi(object):
     def create_eur(self): # 유럽 연합
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
         st_data.drop(['keyword'], axis='columns', inplace=True)
-        ex_data = pd.read_csv('./csv/exchange_index.csv', index_col=[0])
+        ex_data = pd.read_csv('./csv/exchange_reindex.csv', index_col=[0])
         ex_data.drop(['date', 'jpy', 'eur', 'cny'], axis='columns', inplace=True)
         df = pd.concat([st_data, ex_data], axis=1)
         
@@ -219,7 +218,7 @@ class ExchangeAi(object):
     def create_cny(self): # 중국
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
         st_data.drop(['keyword'], axis='columns', inplace=True)
-        ex_data = pd.read_csv('./csv/exchange_index.csv', index_col=[0])
+        ex_data = pd.read_csv('./csv/exchange_reindex.csv', index_col=[0])
         ex_data.drop(['date', 'jpy', 'eur', 'cny'], axis='columns', inplace=True)
         df = pd.concat([st_data, ex_data], axis=1)
         
@@ -286,7 +285,7 @@ class ExchangeAi(object):
     def create_all(self): # All
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
         st_data.drop(['keyword'], axis='columns', inplace=True)
-        ex_data = pd.read_csv('./csv/exchange_index.csv', index_col=[0])
+        ex_data = pd.read_csv('./csv/exchange_reindex.csv', index_col=[0])
         ex_data.drop(['date'], axis='columns', inplace=True)
         df = pd.concat([st_data, ex_data], axis=1)
         
@@ -353,7 +352,7 @@ class ExchangeAi(object):
     def create_usd_cny(self): # 미국, 중국
         st_data = pd.read_csv('./csv/{}_data.csv'.format(keyword), index_col=[0])
         st_data.drop(['keyword'], axis='columns', inplace=True)
-        ex_data = pd.read_csv('./csv/exchange_index.csv', index_col=[0])
+        ex_data = pd.read_csv('./csv/exchange_reindex.csv', index_col=[0])
         ex_data.drop(['date', 'jpy', 'eur' ], axis='columns', inplace=True)
         df = pd.concat([st_data, ex_data], axis=1)
         

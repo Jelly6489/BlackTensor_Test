@@ -1,45 +1,41 @@
 from flask import Flask
 from flask_restful import Resource, Api
-from hello import HelloWorld
-
-import datetime
-import time
-import threading
-
 from flask_cors import CORS
 from com_blacktensor.ext.routes import initialize_routes
 from com_blacktensor.util.checker import Checker 
 from com_blacktensor.util.file_handler import FileHandler as handler
 from com_blacktensor.ext.db import url, db
 
+import datetime
+import time
+import threading
+
+# =============================== Emotion ===============================
 from com_blacktensor.cop.emo.model.emotion_kdd import keyword
-#Emotion
 from com_blacktensor.cop.emo.model.emotion_dao import EmotionDao, StockNewsDao
 from com_blacktensor.cop.emo.model.emotion_dfo import EmotionDfo
 from com_blacktensor.cop.emo.model.emotion_kdd import EmotionKdd
 from com_blacktensor.cop.emo.model.emotion_dto import EmotionDto, StockNewsDto
-# Finance
+# =============================== Finance ===============================
 from com_blacktensor.cop.fin.model.finance_dao import FinanceDao
 from com_blacktensor.cop.fin.model.finance_dfo import FinanceDfo
 from com_blacktensor.cop.fin.model.finance_dto import FinanceDto
 from com_blacktensor.cop.fin.model.finance_kdd import FinanceKdd
-# Stock
+# =============================== Stock ===============================
 from com_blacktensor.cop.sto.model.stock_dao import StockDao
 from com_blacktensor.cop.sto.model.stock_dfo import StockDfo
 from com_blacktensor.cop.sto.model.stock_dto import StockDto
 from com_blacktensor.cop.sto.model.stock_kdd import StockKdd
-
-# Exchange
+# =============================== Exchange ===============================
 from com_blacktensor.cop.exc.model.exchange_kdd import ExchangeKdd
 from com_blacktensor.cop.exc.model.exchange_dfo import ExchangeDfo
 from com_blacktensor.cop.exc.model.exchange_dao import ExchangeDao
 from com_blacktensor.cop.exc.model.exchange_dto import ExchangeDto
 from com_blacktensor.cop.exc.model.exchange_ai import ExchangeAi
-
+# =============================== User ===============================
 from com_blacktensor.usr.model.user_dao import UserDao, ReviewDao
 from com_blacktensor.usr.model.user_dfo import UserDfo
 from com_blacktensor.usr.model.user_dto import UserDto, ReviewDto
-
 # ================================== kain code =====================================
 from com_blacktensor.cop.cov.status.model.status_kdd import CovidStatusKdd
 from com_blacktensor.cop.cov.status.model.status_df import CovidStatusDf
@@ -49,22 +45,8 @@ from com_blacktensor.cop.news.covid.model.covid_news_dto import CovidNewsDto, Co
 from com_blacktensor.cop.news.economy.model.economy_dto import EconomyNewsDto, EconomyExtractionWordDto
 # ==================================================================================
 
-from com_blacktensor.cop.emo.model import emotion_dfo
-
-from com_blacktensor.ext.db import db, openSession
-
-Session = openSession()
-session = Session()
-
-print(f'========================= START 1 ==============================')
-EmotionDao.test()
-
 app = Flask(__name__)
 CORS(app, resources={r'/api/*': {"origins": "*"}})
-
-print(f'========================= START 2 ==============================')
-EmotionDao.test()
-
 app.config['SQLALCHEMY_DATABASE_URI'] = url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
@@ -79,21 +61,11 @@ if __name__ == '__main__':
     ExchangeDfo.get_ex_df(0)
     # FinanceDfo.fina_pro(keyword)
     
-
-print(f'========================= START 3 ==============================')
-EmotionDao.test()
-
 with app.app_context():
     db.create_all()
-    emotion = session.query(EmotionDto)
     # ====================== kain code ==============================
     status_count = CovidStatusDao.count()
     # ===============================================================
-    # emotion_find_x = EmotionDao.find_x(keyword)
-    # emotion_find_y = EmotionDao.find_y(keyword)
-    # emotion_like = EmotionDao.find_like(keyword)
-    # emotion_match = EmotionDao.match(emotion, keyword)
-    # emotion_fi_insert = EmotionDao.find_insert(emotion, keyword)
     emotion_count = EmotionDao.count()
     stock_new_count = StockNewsDao.count()
     stock_count = StockDao.count()
@@ -102,7 +74,6 @@ with app.app_context():
     # user
     user_count = UserDao.count()
     review_count = ReviewDao.count()
-    print(type(keyword))
     print(f'***** Emotion Total Count is {emotion_count} *****')
     if emotion_count[0] == 0:
         EmotionDao.bulk()

@@ -50,8 +50,9 @@ class ExchangeKdd(object):
                     break
         print('=================== test 2 =================')
         # Data.to_csv('%s/market_index.csv'%(my_folder))
-        Data.to_csv('exchange_index.csv', encoding='utf-8-sig')
+        # Data.to_csv('exchange_index.csv', encoding='utf-8-sig')
+        Data.to_csv('./csv/exchange_index.csv', encoding='utf-8-sig')
         print('==================== 환율 ok ============================')
         print(Data)
         return Data
-    # K = market_index_kdd(0)
+    K = market_index_kdd(0)
